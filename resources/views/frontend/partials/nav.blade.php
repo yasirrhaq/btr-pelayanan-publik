@@ -46,10 +46,6 @@
                             </a>
                         </div>
                         <div class="header-banner f-right ">
-                            <div id="ytWidget"></div>
-                            <script
-                                src="https://translate.yandex.net/website-widget/v1/widget.js?widgetId=ytWidget&pageLang=id&widgetTheme=light&&autoMode=false"
-                                type="text/javascript"></script>
                         </div>
                     </div>
                 </div>

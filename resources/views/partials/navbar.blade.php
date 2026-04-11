@@ -23,12 +23,6 @@
                     <a class="nav-link {{ request()->is('categories') ? 'active' : '' }}" aria-current="page"
                         href="{{url('')}}/categories">Kategori</a>
                 </li>
-                <li class="nav-item">
-                    <div id="ytWidget"></div>
-                    <script
-                        src="https://translate.yandex.net/website-widget/v1/widget.js?widgetId=ytWidget&pageLang=id&widgetTheme=light&&autoMode=false"
-                        type="text/javascript"></script>
-                </li>
             </ul>
 
             <ul class="navbar-nav ms-auto">
