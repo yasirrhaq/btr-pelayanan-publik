@@ -1,0 +1,149 @@
+:root {
+    --primary: #354776;
+    --secondary : #e9b117;
+}
+
+.header-advis{
+    background-image: url("../assets/bg-2.png");
+    height: 150px;
+    width: 100%;
+}
+
+
+.content-header-advis{
+    padding: 10px;
+}
+.cover-color{
+    background-color: #35477639;
+    height: 100%;
+    width: 100%;
+    padding-top: 50px;
+}
+
+.header-content{
+    background-color: var(--primary);
+    width: 100%;
+    height: 50px;
+}
+
+.header-title-advis{
+    color : white;
+    font-size: 32px;
+    position: relative;
+    bottom : 5px;
+}
+
+.title-advis {
+    font-family: 'PoppinsNormal';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 49px;
+    line-height: 74px;
+    color: #364878;
+    text-align: center;
+    text-shadow: 0px 4px 4px #FFFFFF;
+}
+.divider-title-advis{
+    width: 80px;
+    height: 10px;
+    margin-top: 10px;
+    border-radius: 10px;
+    background: #FFC928;
+}
+
+.card {
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.10);
+    margin-bottom: 50px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.card-header {
+    background-color: #E7E7E7;
+}
+
+.card-header h5 {
+    font-family: 'PoppinsNormal';
+    font-style: normal;    
+    font-size: 20px;    
+    color: #000000;
+}
+
+.card-text {
+    font-family: 'PoppinsNormal';
+    font-style: normal;    
+    font-size: 15px;    
+    font-weight: normal;
+    color: #000000;
+    margin-bottom: 12px;
+    text-align: justify;
+    text-transform: capitalize;
+}
+
+.btn-daftar-advis {
+    background-color: #364878;    
+    height: 50px;
+    cursor: pointer;
+    border: none;
+}
+.btn-daftar-advis a { 
+    color: #ffffff;
+    font-family: 'PoppinsNormal';
+    font-weight: 700;
+    font-size: 25px;
+    text-transform: capitalize;
+    text-decoration: none;    
+}
+
+.card-title-dokumen {
+    border: 1;
+    border-color: #000000;
+}
+
+.title-unduh {
+    color: #ffffff;
+    font-family: 'PoppinsNormal';
+    font-weight: normal;
+    font-size: 12px;
+    text-transform: capitalize;
+    margin-right: 7px;
+}
+
+.advis-table {
+    display: flex;
+    justify-content: space-between;    
+    align-items: center;
+
+}
+.advis-table-unduh {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-inline: 20px;
+
+}
+
+.card-text-dokumen {
+    font-family: 'PoppinsNormal';
+    font-style: normal;     
+    color: #6992FF;    
+    text-transform: capitalize;
+}
+
+.cards-unduhan {
+    border-width: 2px;
+    border-color: #E7E7E7;
+    margin: 10px  auto;
+    border-style: solid;
+    padding: 10px;
+}
+
+.icon-unduh {
+    width: 30px;
+    height: 30px;
+}
+
+.foto-teknis {
+    width: 40rem;
+    height: 50rem;
+}

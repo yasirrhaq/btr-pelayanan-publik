@@ -1,0 +1,83 @@
+@font-face {
+    font-family: "PoppinsNormal";
+    src: url(../../assets/fonts/Poppins-Medium.ttf);
+}
+
+@font-face {
+    font-family: "PoppinsBold";
+    src: url(../../assets/fonts/Poppins-Bold.ttf);
+}
+:root {
+    --primary: #354776;
+    --secondary : #e9b117;
+}
+
+.header-tugas{
+    background-image: url("../assets/bg-2.png");
+    height: 150px;
+    width: 100%;
+}
+
+
+.content-header-tugas{
+    padding: 10px;
+}
+.cover-color{
+    background-color: #35477639;
+    height: 100%;
+    width: 100%;
+    padding-top: 50px;
+}
+
+.header-content{
+    background-color: var(--primary);
+    width: 100%;
+    height: 50px;
+}
+
+.header-title-tugas{
+    color : white;
+    font-size: 32px;
+    position: relative;
+    bottom : 5px;
+}
+
+.title-tugas {
+    font-family: 'PoppinsNormal';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 49px;
+    line-height: 74px;
+    color: #364878;
+    text-align: center;
+    text-shadow: 0px 4px 4px #FFFFFF;
+}
+.divider-title-tugas{
+    width: 80px;
+    height: 10px;
+    margin-top: 10px;
+    border-radius: 10px;
+    background: #FFC928;
+}
+
+.content-tugas {
+    max-width: 60em;    
+    margin: auto;
+}
+.content-text {
+font-family: 'PoppinsNormal';
+font-style: normal;
+font-weight: 400;
+font-size: 25px;
+line-height: 38px;
+text-align: justify;
+color: rgba(0, 0, 0, 0.7);  
+}
+
+
+.title-list-fungsi {
+    font-family: 'PoppinsNormal';
+    text-align: justify;    
+    text-transform: capitalize;
+    color: #000000;    
+}

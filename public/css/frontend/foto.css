@@ -1,0 +1,15 @@
+.deskripsi-foto-galery{
+font-family: 'PoppinsNormal';
+font-style: normal;
+font-weight: 500;
+font-size: 14px;
+line-height: 21px;
+text-align: center;
+color: #FFFFFF;
+position: relative;
+z-index: 5;
+bottom : 50px;
+text-align: center;
+width: 334px;
+height: 42px;
+}

@@ -1,0 +1,10 @@
+
+
+.wabutton{
+width:230px;
+height:100px;
+position:fixed;
+bottom:50px;
+right:20px;
+z-index:100;
+}

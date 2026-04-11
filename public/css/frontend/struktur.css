@@ -1,0 +1,15 @@
+.content-text{
+    font-family: 'PoppinsNormal';
+font-style: normal;
+font-weight: 400;
+font-size: 25px;
+line-height: 38px;
+text-align: justify;
+color: rgba(0, 0, 0, 0.6);
+}
+
+.body-struktur{
+    margin-top: 57px;
+    display: flex;
+    justify-content: center;
+}

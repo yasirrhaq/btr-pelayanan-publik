@@ -1,0 +1,39 @@
+@font-face {
+    font-family: "PoppinsNormal";
+    src: url(../../assets/fonts/Poppins-Medium.ttf);
+}
+.text-content-login{
+    width: 595px;
+    text-align: center;
+    margin-top: 18px;
+}
+
+.text-header-login{
+    font-family: 'PoppinsNormal';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 15px;
+    line-height: 30px;
+    text-align: center;
+    color: #364878;
+}
+
+
+.title-header-login{
+    font-family: 'PoppinsNormal';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 30px;
+    /* line-height: 30px; */
+    text-align: center;
+    color: #364878;
+}
+.title-header-login2{
+    font-family: 'PoppinsNormal';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 20px;
+    /* line-height: 30px; */
+    text-align: center;
+    color: #364878;
+}

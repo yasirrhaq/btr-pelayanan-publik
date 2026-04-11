@@ -1,0 +1,16 @@
+
+<IfModule mod_rewrite.c>
+	RewriteEngine On
+	#RewriteRule ^(.*)$ public/ [L]
+
+	
+	RewriteCond %{REQUEST_URI} !^/balai/teknikrawa/public/
+	RewriteRule ^(.*)$ /balai/teknikrawa/public [L]
+
+	RewriteCond %{REQUEST_URI} (\.\w+$) [NC]
+    RewriteRule ^(.*)$ balai/teknikrawa/public/$1 
+
+       
+</IfModule>
+
+

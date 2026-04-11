@@ -1,0 +1,129 @@
+:root {
+    --primary: #354776;
+    --secondary : #e9b117;
+}
+
+.header-advis{
+    background-image: url("../assets/bg-2.png");
+    height: 150px;
+    width: 100%;
+}
+
+
+.content-header-advis{
+    padding: 10px;
+}
+.cover-color{
+    background-color: #35477639;
+    height: 100%;
+    width: 100%;
+    padding-top: 50px;
+}
+
+.header-content{
+    background-color: var(--primary);
+    width: 100%;
+    height: 50px;
+}
+
+.header-title-advis{
+    color : white;
+    font-size: 32px;
+    position: relative;
+    bottom : 5px;
+}
+
+.title-advis {
+    font-family: 'PoppinsNormal';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 49px;
+    line-height: 74px;
+    color: #364878;
+    text-align: center;
+    text-shadow: 0px 4px 4px #FFFFFF;
+}
+.divider-title-advis{
+    width: 80px;
+    height: 10px;
+    margin-top: 10px;
+    border-radius: 10px;
+    background: #FFC928;
+}
+
+.bg-text-form {
+    background: #FFC928;
+    padding: 20px;
+    margin-block: 20px;
+}
+.bg-text-form h5 {
+    font-family: 'PoppinsNormal';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 25px;    
+    color: #FFFFFF;    
+}
+.formulir {
+    padding: 20px;
+}
+.form-label {
+    font-family: 'PoppinsNormal';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 15px;    
+    color: #000;
+    text-align: center;
+    text-shadow: 0px 4px 4px #FFFFFF;
+}
+.txt-wajib {
+    color: red;
+}
+.btn-daftar-layanan {
+    background-color: #364878;    
+    height: 50px;
+    cursor: pointer;
+    border: none;
+    width: 100%;
+}
+
+.btn-daftar-layanan a { 
+    color: #ffffff;
+    font-family: 'PoppinsNormal';
+    font-weight: 700;
+    font-size: 15px;
+    text-transform: capitalize;
+    text-decoration: none;    
+}
+
+.title-select {
+    color: #000;
+    font-family: 'PoppinsNormal';
+    font-weight: normal;
+    font-size: 12px;
+    text-transform: capitalize;
+    margin-left: 7px;
+}
+
+.btn-select {
+    display: flex;
+    background: #E9E9E9;
+    width: 20vh;
+    align-items: center;
+    justify-content: center;
+    height: 50px;
+    margin-top: 10px;
+    border-radius: 5px;
+}
+
+.drag-file {
+    background: #E9E9E9;
+    height: 20vh;    
+    align-items: center;
+    justify-content: center;
+}
+.drag-file p {
+    text-align: center;
+    font-style: italic;
+    color: rgba(0, 0, 0, 0.3);
+    padding: auto;
+}

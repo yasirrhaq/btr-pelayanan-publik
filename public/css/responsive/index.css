@@ -1,0 +1,159 @@
+@media screen and (max-width: 1000px) {
+    body{
+        background-color: white;
+    }
+    .logo-text{
+        margin-left: 10px;
+        width : 20vw;
+    }
+    .button-div{
+        margin-right: 20px;
+    }
+    #button-login{
+        background-color: none;
+        width: 100px;
+        margin-top : 20px;
+        margin-bottom : 20px; 
+    }
+    .navbar-item{
+        font-size: 18px;
+    }
+
+    .title-carousel{
+        font-size: 4vw;
+    }
+
+    .text-carousel{
+        font-size: 2vw;
+    }
+
+    .container-carousel{
+        height: 100vw;
+    }
+
+    .image-card-index{
+        width : 4vw;
+        height: 4vw;
+    }
+
+    .card-content-two{
+        padding : 50px 30px 0px 30px;
+        margin-top : 50px;
+    }
+    .text-icon-pelayanan{
+        font-size: 2vw;
+        width: 100%;
+    }
+
+    .title-pelayanan{
+        font-size: 4vw;
+    }
+
+    .container-pelayanan-kami{
+        margin-top : 50px;
+    }
+
+    .col-sm-4{
+        width: 20vw;
+        margin : auto;
+        padding : 0px;
+    }
+
+    .content-index-profile{
+        margin-top: 50px;
+    }
+
+    .vidio-index{
+        width: 100%;
+        height: 100%;
+    }
+
+    .paragraf-pelayanan{
+        font-size: 100%;
+    }
+
+    .paragraf-content-index{
+        margin-top: 100px;
+    }
+
+    .content-index-berita{
+        margin-top: 50px;
+    }
+
+    .title-card-home{
+        font-size: 3vw;
+    }
+
+    .card-text{
+        font-size: 2vw;
+        margin-bottom : 10px;
+    }
+
+    #btn-lihat-semua{
+        width: 100%;
+    }
+
+    .container-button-showAll{
+        margin-bottom: 80px;
+    }
+
+    .title-list-foto{
+        text-align: center;
+    }
+
+    .test{
+        margin-left : 30%;
+        margin-top : 50px;
+        margin-bottom :50px;
+    }
+
+    .vidio-content-index {
+        margin-top: 50px;
+    }
+
+    .photo-logo{
+        height: 12vw;
+    }
+
+    .footer-title{
+        font-size: 3vw;
+    }
+
+    .footer-tex-one{
+        font-size: 2vw;
+    }
+
+    .text-contact-us{
+        font-size: 2vw;
+    }
+
+    .icon-contact{
+        width: 3vw;
+        height: 3vw;
+        margin-top: 5px;
+    }
+    
+
+   
+    
+  }
+
+
+  @media screen and (max-width: 500px) {
+    
+    .icon-contact{
+        width: 3vw;
+        height: 3vw;
+        margin-top: 10px;
+    }
+    
+
+    .test{
+        margin-left : 10%;
+        margin-top : 50px;
+        margin-bottom :50px;
+    }
+
+   
+    
+  }

@@ -1,0 +1,160 @@
+.nav-registers{
+    border-bottom: 1px solid rgba(0, 0, 0, 0.5);
+    display: flex;
+}
+
+.content-register{
+    padding-left: 25px;
+    padding-top : 5px;
+}
+
+.foto{
+    width: 84px;
+    height: 80px;
+}
+
+.nav-title{
+    font-family: 'PoppinsNormal';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 20px;
+    line-height: 30px;
+    color: #364878;
+}
+
+.title-balai{
+    font-family: 'PoppinsNormal';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 30px;
+    line-height: 30px;
+    color: #364878;
+}
+
+.has{
+    font-family: 'PoppinsNormal';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 25px;
+    line-height: 38px;
+    text-align: center;
+    color: #364878;
+    width: 725px;
+}
+
+.cardTwo{
+    background: #E8DAB2;
+border: 1px solid rgba(0, 0, 0, 0.05);
+border-radius: 5px;
+padding : 37px 35px;
+}
+
+.pendaftaran-title{
+    font-family: 'PoppinsNormal';
+font-style: normal;
+font-weight: 600;
+font-size: 23px;
+line-height: 34px;
+text-align: start;
+color: #635E4F;
+}
+
+.text-title{
+    font-family: 'Poppins';
+font-style: normal;
+font-weight: 500;
+font-size: 20px;
+line-height: 30px;
+text-align: start;
+color: #635E4F;
+}
+
+.mandatory{
+    color :red;
+}
+
+.input{
+    background: #FFFFFF;
+border: 1px solid rgba(0, 0, 0, 0.3);
+border-radius: 10px;
+width: 501px;
+height: 66px;
+padding-left: 10px;
+}
+
+.label{
+    font-family: 'PoppinsNormal';
+font-style: normal;
+font-weight: 700;
+font-size: 20px;
+line-height: 30px;
+color: #73879C;
+}
+
+.deskripsi{
+    background: #FFFFFF;
+border: 1px solid rgba(0, 0, 0, 0.3);
+border-radius: 15px;
+width: 501px;
+height: 212px;
+}
+
+.input-file{
+    background: #757575;
+border-radius: 20px;
+width: 172px;
+height: 66px;
+font-family: 'PoppinsNormal';
+font-style: normal;
+font-weight: 400;
+font-size: 20px;
+line-height: 30px;
+color: #FFFFFF;
+padding : 18px 28px;
+}
+
+.datas{
+    font-family: 'PoppinsNormal';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 27px;
+    padding-top : 15px;
+    padding-left : 15px;
+    color: #73879C;  
+    width : 300px;
+    height: 100px;
+    overflow: hidden;
+}
+
+
+.custom-file-input {
+    position: absolute;
+    /* right : 50px; */
+    overflow: visible;
+    width: 172px;
+    height: 66px;
+    cursor: pointer;
+    z-index: 4;
+    display: hidden;
+  }
+
+
+  .button-submit{
+    background: #374874;
+border-radius: 10px;
+width: 501px;
+height: 66px;
+
+font-family: 'PoppinsNormal';
+font-style: normal;
+font-weight: 700;
+font-size: 20px;
+line-height: 30px;
+
+/* identical to box height */
+
+color: #FFFFFF;
+
+
+  }

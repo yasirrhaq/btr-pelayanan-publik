@@ -1,0 +1,75 @@
+@media screen and (max-width: 1000px) {
+    
+    body{
+        background-color: white;
+    }
+
+    .header-title-tugas{
+        font-size: 3vw;
+    }
+
+    h4{
+        font-size: 3vw;
+    }
+
+    .content-text{
+        font-size: 3vw;
+    }
+
+    .title-docs-detail{
+        font-size: 4vw;
+        line-height: 21px;
+    }
+
+    .terbit{
+        font-size: 3vw;
+    }
+    .title-card-detail{
+        font-size: 4vw;
+    }
+    .text-card-detail{
+        font-size: 2vw;
+        width: 100%;
+        line-height: 21px;
+    }
+
+    .button-pdf{
+        font-size: 3vw;
+        margin-top: 50px;
+    }
+
+    .image-button-pdf{
+        width: 3vw;
+        height: 3vw;
+    }
+
+
+    .footer-title{
+        font-size: 3vw;
+    }
+
+    .footer-tex-one{
+        font-size: 2vw;
+    }
+
+    .text-contact-us{
+        font-size: 2vw;
+    }
+
+    .icon-contact{
+        width: 3vw;
+        height: 3vw;
+        margin-top: 5px;
+    }
+
+    .title-docs{
+        font-size: 3vw;
+    }
+
+    .des{
+        margin-left: 20px;
+        width : 100%;
+    }
+   
+    
+  }

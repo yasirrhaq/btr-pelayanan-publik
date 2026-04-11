@@ -1,0 +1,69 @@
+@media screen and (max-width: 1000px) {
+    
+    body{
+        background-color: white;
+    }
+
+    .title-advis{
+        font-size: 4vw;
+    }
+
+    .header-title-advis{
+        font-size: 3vw;
+    }
+
+   
+
+    .card{
+        width: 100%;
+    }
+
+    .title-berita{
+        font-size: 4vw;
+    }
+
+    .header-title-tugas{
+        font-size: 3vw;
+    }
+
+    .foto-teknis{
+        width: 100%;
+    }
+
+    h4{
+        font-size: 3vw;
+    }
+
+    .content-text{
+        font-size: 3vw;
+    }
+
+    .footer-title{
+        font-size: 3vw;
+    }
+
+    .footer-tex-one{
+        font-size: 2vw;
+    }
+
+    .text-contact-us{
+        font-size: 2vw;
+    }
+
+    .icon-contact{
+        width: 3vw;
+        height: 3vw;
+        margin-top: 5px;
+    }
+
+    .struktur-image{
+        width: 100%;
+    }
+
+    .title-tugas{
+        font-size: 3vw;
+        line-height: 21px;
+    }
+   
+    
+  }
