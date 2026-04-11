@@ -19,3 +19,13 @@ composer.lock
 /public/uploads/*
 .claude
 .docs
+.graphify_*
+/graphify-out
+.env.docker
+.mcp*
+.opencode*
+.windsurfrules
+AGENTS.md
+.cursor*
+design
+GEMINI.md
