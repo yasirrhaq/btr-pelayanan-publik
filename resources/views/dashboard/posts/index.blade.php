@@ -1,45 +1,70 @@
 @extends('dashboard.layouts.main')
 
 @section('container')
-    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-        <h1 class="h2">Daftar Berita</h1>
-    </div>
+    <h1 class="btr-page-title">Publikasi - Berita</h1>
 
-    @if (session()->has('success'))
-        <div class="alert alert-success col-lg-8" role="alert">
-            {{ session('success') }}
+    <div class="btr-card">
+        <div class="btr-toolbar">
+            <a href="{{ url('dashboard/posts/create') }}" class="btr-btn">
+                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
+                Buat Berita
+            </a>
+            <a href="{{ url('dashboard/categories') }}" class="btr-btn">
+                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
+                Kategori Berita
+            </a>
+            <div class="spacer"></div>
+            <div class="btr-search">
+                <input type="text" id="btr-post-search" placeholder="Cari berita...">
+                <button type="button">
+                    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35"/></svg>
+                </button>
+            </div>
         </div>
-    @endif
-    <div class="table-responsive col-lg-8">
-        <a href="{{url('')}}/dashboard/posts/create" class="btn btn-primary mb-3">Buat Berita Baru</a>
-        <table class="table table-striped table-sm">
-            <thead>
-                <tr>
-                    <th scope="col">No</th>
-                    <th scope="col">Title</th>
-                    <th scope="col">Category</th>
-                    <th scope="col">Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach ($posts as $post)
+
+        <div class="btr-table-wrap">
+            <table class="btr-table">
+                <thead>
                     <tr>
-                        <td>{{ $loop->iteration }}</td>
-                        <td>{{ $post->title }}</td>
-                        <td>{{ $post->category->name }}</td>
-                        <td>
-                            <a href="{{url('')}}/dashboard/posts/{{ $post->slug }}" class="badge bg-info"><span
-                                    data-feather="eye"></span></a>
-                            <a href="{{url('')}}/dashboard/posts/{{ $post->slug }}/edit" class="badge bg-warning"><span data-feather="edit"></span></a>
-                            <form action="{{url('')}}/dashboard/posts/{{ $post->slug }}" method="post" class="d-inline">
-                                @method('delete')
-                                @csrf
-                                <button class="badge bg-danger border-0" onclick="return confirm('Yakin ingin menghapus data?')"><span data-feather="x-circle"></span></button>
-                            </form>
-                        </td>
+                        <th style="width:60px">No</th>
+                        <th>Judul</th>
+                        <th>Kategori</th>
+                        <th>Tanggal Kegiatan</th>
+                        <th>Status</th>
+                        <th style="width:140px">Aksi</th>
                     </tr>
-                @endforeach
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    @forelse ($posts as $post)
+                        <tr>
+                            <td>{{ $loop->iteration }}</td>
+                            <td style="text-align:left">{{ $post->title }}</td>
+                            <td>{{ $post->category->name ?? '-' }}</td>
+                            <td>{{ optional($post->created_at)->format('d/m/Y') }}</td>
+                            <td><span class="btr-status publish">Publish</span></td>
+                            <td>
+                                <div class="btr-actions">
+                                    <a href="{{ url('dashboard/posts/' . $post->slug) }}" class="btr-action view" title="Lihat">
+                                        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                                    </a>
+                                    <a href="{{ url('dashboard/posts/' . $post->slug . '/edit') }}" class="btr-action edit" title="Edit">
+                                        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path stroke-linecap="round" stroke-linejoin="round" d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                                    </a>
+                                    <form action="{{ url('dashboard/posts/' . $post->slug) }}" method="post" class="btr-action-form" onsubmit="return confirm('Yakin hapus data?')">
+                                        @csrf
+                                        @method('delete')
+                                        <button class="btr-action delete" title="Hapus" type="submit">
+                                            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6h14z"/></svg>
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr><td colspan="6" style="color:var(--text-muted);padding:28px">Belum ada berita.</td></tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
     </div>
 @endsection

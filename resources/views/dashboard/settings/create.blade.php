@@ -1,43 +1,36 @@
 @extends('dashboard.layouts.main')
 
 @section('container')
-    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-        <h1 class="h2">Buat Kategori Baru</h1>
-    </div>
+    <h1 class="btr-page-title">Pengaturan <small>Buat Baru</small></h1>
 
-    <div class="col-lg-8">
-        <form method="post" action="{{url('')}}/dashboard/categories" class="mb-5" enctype="multipart/form-data">
+    <div class="btr-card">
+        <form method="post" action="{{ url('dashboard/categories') }}" enctype="multipart/form-data">
             @csrf
-            <div class="mb-3">
-                <label for="name" class="form-label">Nama</label>
-                <input type="text" class="form-control @error('name') is-invalid @enderror" id="name" name="name"
-                    required autofocus value={{ old('name') }}>
-                @error('name')
-                    <div class="invalid-feedback">
-                        {{ $message }}
-                    </div>
-                @enderror
+
+            <div class="btr-form-group">
+                <label class="btr-label" for="name">Nama</label>
+                <input type="text" class="btr-input" id="name" name="name" required autofocus value="{{ old('name') }}">
+                @error('name') <small style="color:var(--danger-red)">{{ $message }}</small> @enderror
             </div>
-            <div class="mb-3">
-                <label for="slug" class="form-label @error('slug') is-invalid @enderror">Slug</label>
-                <input type="text" name="slug" class="form-control" id="slug" required value={{ old('slug') }}>
-                @error('slug')
-                    <div class="invalid-feedback">
-                        {{ $message }}
-                    </div>
-                @enderror
+
+            <div class="btr-form-group">
+                <label class="btr-label" for="slug">Slug</label>
+                <input type="text" class="btr-input" id="slug" name="slug" required value="{{ old('slug') }}">
+                @error('slug') <small style="color:var(--danger-red)">{{ $message }}</small> @enderror
             </div>
-            <button type="submit" class="btn btn-primary">Buat Kategori</button>
+
+            <div class="btr-form-actions">
+                <a href="{{ url('dashboard/settings') }}" class="btr-btn btr-btn-outline">Batal</a>
+                <button type="submit" class="btr-btn">Simpan</button>
+            </div>
         </form>
     </div>
 
     <script>
-        const name = document.querySelector('#name');
-        const slug = document.querySelector('#slug');
-
-        name.addEventListener('change', function() {
-            fetch('/dashboard/categories/checkSlug?name=' + name.value).then(response => response.json()).then(data =>
-                slug.value = data.slug)
+        document.querySelector('#name').addEventListener('change', function () {
+            fetch('/dashboard/categories/checkSlug?name=' + this.value)
+                .then(r => r.json())
+                .then(d => document.querySelector('#slug').value = d.slug);
         });
     </script>
 @endsection

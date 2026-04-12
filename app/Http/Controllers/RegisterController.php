@@ -8,6 +8,7 @@ use App\Mail\SignupEmail;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
 
 class RegisterController extends Controller
@@ -23,17 +24,31 @@ class RegisterController extends Controller
 
     public function store(Request $request)
     {
-        $validatedData = $request->validate([
-            'name' => 'required|max:255|regex:/^([a-zA-Z]+)(\s[a-zA-Z]+)*$/',
-            'username' => ['required', 'min:3', 'max:255', 'unique:users'],
-            'email' => 'required|email:rfc,dns|unique:users',
-            'password' => 'required|min:8|max:255|regex:/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]/',
+        $rules = [
+            'name'                  => 'required|max:255|regex:/^([a-zA-Z]+)(\s[a-zA-Z]+)*$/',
+            'username'              => ['required', 'min:3', 'max:255', 'unique:users'],
+            'email'                 => 'required|email:rfc,dns|unique:users',
+            'password'              => 'required|min:8|max:255|regex:/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]/',
             'password_confirmation' => 'required_with:password|same:password',
-            'foto_profile' => 'image|file|max:1024',
-            'no_id' => 'required|max:255|unique:users',
-            'alamat' => 'required|max:255',
-            'instansi' => 'required|max:255'
-        ]);
+            'foto_profile'          => 'image|file|max:1024',
+            'no_id'                 => 'required|max:255|unique:users',
+            'alamat'                => 'required|max:255',
+            'instansi'              => 'required|max:255',
+        ];
+        if (config('services.recaptcha.secret_key')) {
+            $rules['g-recaptcha-response'] = ['required', function ($attr, $value, $fail) {
+                $response = Http::asForm()->post('https://www.google.com/recaptcha/api/siteverify', [
+                    'secret'   => config('services.recaptcha.secret_key'),
+                    'response' => $value,
+                    'remoteip' => request()->ip(),
+                ]);
+                if (!($response->json('success'))) {
+                    $fail('Verifikasi CAPTCHA gagal. Silakan coba lagi.');
+                }
+            }];
+        }
+        $validatedData = $request->validate($rules);
+        unset($validatedData['g-recaptcha-response']);
         
         if ($request->file('foto_profile')) {
 

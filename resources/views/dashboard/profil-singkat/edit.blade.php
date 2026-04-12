@@ -1,34 +1,34 @@
 @extends('dashboard.layouts.main')
 
 @section('container')
-    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-        <h1 class="h2">Edit Profil Singkat</h1>
-    </div>
+    <h1 class="btr-page-title">Profil Singkat <small>Edit Profil Singkat</small></h1>
 
-    <div class="col-lg-8">
-        <form method="post" action="{{url('')}}/dashboard/profil-singkat/{{ $urls->id }}" class="mb-5"
-            enctype="multipart/form-data">
+    <div class="btr-card">
+        <form method="post" action="{{ url('dashboard/profil-singkat/' . $urls->id) }}" enctype="multipart/form-data">
             @method('put')
             @csrf
-            <div class="mb-3">
-                <label for="name" class="form-label @error('name') is-invalid @enderror">Nama Layanan</label>
-                <input type="text" name="name" class="form-control" id="name" required
-                    value="{{ old('name', 'Profil Singkat') }}" readonly>
-                @error('name')
-                    <div class="invalid-feedback">
-                        {{ $message }}
-                    </div>
-                @enderror
+
+            <div class="btr-form-group">
+                <label class="btr-label" for="name">Judul</label>
+                <input type="text" class="btr-input" id="name" name="name" required value="{{ old('name', 'Profil Singkat') }}" readonly>
+                @error('name') <small style="color:var(--danger-red)">{{ $message }}</small> @enderror
             </div>
-            <div class="mb-3">
-                <label for="deskripsi" class="form-label">deskripsi</label>
-                @error('deskripsi')
-                    <p class="text-danger"> {{ $message }}</p>
-                @enderror
-                <input id="deskripsi" type="hidden" name="deskripsi" value="{{ old('url', $urls->deskripsi) }}" required>
+
+            <div class="btr-form-group">
+                <label class="btr-label" for="deskripsi">Deskripsi</label>
+                <input id="deskripsi" type="hidden" name="deskripsi" value="{{ old('deskripsi', $urls->deskripsi) }}" required>
                 <trix-editor input="deskripsi"></trix-editor>
+                @error('deskripsi') <small style="color:var(--danger-red)">{{ $message }}</small> @enderror
             </div>
-            <button type="submit" class="btn btn-primary">Update Deskripsi Profil Singkat</button>
+
+            <div class="btr-form-actions">
+                <a href="{{ url('dashboard/profil-singkat') }}" class="btr-btn btr-btn-outline">Batal</a>
+                <button type="submit" class="btr-btn">Update</button>
+            </div>
         </form>
     </div>
+
+    <script>
+        document.addEventListener('trix-file-accept', e => e.preventDefault());
+    </script>
 @endsection

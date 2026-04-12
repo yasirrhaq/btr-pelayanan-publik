@@ -1,58 +1,46 @@
 @extends('dashboard.layouts.main')
 
 @section('container')
-    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-        <h1 class="h2">Buat Status Layanan Baru</h1>
-    </div>
+    <h1 class="btr-page-title">Status Layanan <small>Buat Status Baru</small></h1>
 
-    <div class="col-lg-8">
-        <form method="post" action="{{url('')}}/dashboard/status-layanan" class="mb-5" enctype="multipart/form-data">
+    <div class="btr-card">
+        <form method="post" action="{{ url('dashboard/status-layanan') }}" enctype="multipart/form-data">
             @csrf
-            <div class="mb-3">
-                <label for="email" class="form-label">Email</label>
-                <input type="text" class="form-control @error('email') is-invalid @enderror" id="email"
-                    name="email" required autofocus value={{ old('email') }}>
-                @error('email')
-                    <div class="invalid-feedback">
-                        {{ $message }}
-                    </div>
-                @enderror
+
+            <div class="btr-form-group">
+                <label class="btr-label" for="email">Email User</label>
+                <input type="text" class="btr-input" id="email" name="email" required autofocus value="{{ old('email') }}">
+                @error('email') <small style="color:var(--danger-red)">{{ $message }}</small> @enderror
             </div>
-            <div class="mb-3">
-                <label for="statusLayanan" class="form-label">Jenis Layanan</label>
-                <select name="layanan_id" class="form-select">
+
+            <div class="btr-form-group">
+                <label class="btr-label" for="layanan_id">Jenis Layanan</label>
+                <select name="layanan_id" id="layanan_id" class="btr-input">
                     @foreach ($jenisLayanan as $layanan)
-                        @if (old('layanan_id') == $layanan->id)
-                            <option value="{{ $layanan->id }}" selected> {{ $layanan->name }}</option>
-                        @else
-                            <option value="{{ $layanan->id }}"> {{ $layanan->name }}</option>
-                        @endif
+                        <option value="{{ $layanan->id }}" {{ old('layanan_id') == $layanan->id ? 'selected' : '' }}>{{ $layanan->name }}</option>
                     @endforeach
                 </select>
             </div>
-            <div class="mb-3">
-                <label for="statusLayanan" class="form-label">Status Layanan</label>
-                <select name="status_id" class="form-select">
+
+            <div class="btr-form-group">
+                <label class="btr-label" for="status_id">Status Layanan</label>
+                <select name="status_id" id="status_id" class="btr-input">
                     @foreach ($statusLayanan as $status)
-                        @if (old('status_id') == $status->id)
-                            <option value="{{ $status->id }}" selected> {{ $status->name }}</option>
-                        @else
-                            <option value="{{ $status->id }}"> {{ $status->name }}</option>
-                        @endif
+                        <option value="{{ $status->id }}" {{ old('status_id') == $status->id ? 'selected' : '' }}>{{ $status->name }}</option>
                     @endforeach
                 </select>
             </div>
-            <div class="mb-3">
-                <label for="detail" class="form-label @error('detail') is-invalid @enderror">Detail Status</label>
-                <input type="text" name="detail" class="form-control" id="detail" required
-                    value={{ old('detail') }}>
-                @error('detail')
-                    <div class="invalid-feedback">
-                        {{ $message }}
-                    </div>
-                @enderror
+
+            <div class="btr-form-group">
+                <label class="btr-label" for="detail">Detail Status</label>
+                <input type="text" class="btr-input" id="detail" name="detail" required value="{{ old('detail') }}">
+                @error('detail') <small style="color:var(--danger-red)">{{ $message }}</small> @enderror
             </div>
-            <button type="submit" class="btn btn-primary">Buat Status Layanan</button>
+
+            <div class="btr-form-actions">
+                <a href="{{ url('dashboard/status-layanan') }}" class="btr-btn btr-btn-outline">Batal</a>
+                <button type="submit" class="btr-btn">Simpan</button>
+            </div>
         </form>
     </div>
 @endsection

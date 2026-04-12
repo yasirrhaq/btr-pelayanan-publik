@@ -1,64 +1,44 @@
 @extends('dashboard.layouts.main')
 
 @section('container')
-    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-        <h1 class="h2">Buat Galeri Baru</h1>
-    </div>
+    <h1 class="btr-page-title">Publikasi - Galeri <small>Upload Foto</small></h1>
 
-    <div class="col-lg-8">
-        <form method="post" action="{{url('')}}/dashboard/galeri/foto-video" class="mb-5" enctype="multipart/form-data">
+    <div class="btr-card">
+        <form method="post" action="{{ url('dashboard/galeri/foto-video') }}" enctype="multipart/form-data">
             @csrf
-            <div class="mb-3">
-                <label for="title" class="form-label">Title</label>
-                <input type="text" class="form-control @error('title') is-invalid @enderror" id="title"
-                    name="title" required autofocus value="{{ old('title') }}">
-                @error('title')
-                    <div class="invalid-feedback">
-                        {{ $message }}
-                    </div>
-                @enderror
-            </div>
-            <div class="mb-3">
-                <label for="path_image" class="form-label">Gambar (Max File Size: 1MB)</label>
-                <img class="img-preview img-fluid mb-3 col-sm-5" src="" alt="">
-                <input class="form-control @error('path_image') is-invalid @enderror" type="file" id="path_image"
-                    name="path_image" onchange="previewImage()" required>
-                @error('path_image')
-                    <div class="invalid-feedback">
-                        {{ $message }}
-                    </div>
-                @enderror
+            <div class="btr-form-group">
+                <label class="btr-label" for="title">Judul</label>
+                <input type="text" class="btr-input" id="title" name="title" required autofocus value="{{ old('title') }}">
+                @error('title') <small style="color:var(--danger-red)">{{ $message }}</small> @enderror
             </div>
 
-            <button type="submit" class="btn btn-primary">Buat Galeri</button>
+            <div class="btr-form-group">
+                <label class="btr-label">Gambar <small style="color:var(--text-muted)">(Max 1MB)</small></label>
+                <img class="img-preview" src="" alt="" style="display:none;max-width:280px;border-radius:10px;margin-bottom:10px">
+                <div class="btr-file-row">
+                    <label class="btr-file-pill">
+                        <span class="btr-file-icon">
+                            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M7 16V8m0 0l-3 3m3-3l3 3"/></svg>
+                        </span>
+                        <input type="file" id="path_image" name="path_image" onchange="btrPreview(this,'.img-preview')" required>
+                    </label>
+                </div>
+                @error('path_image') <small style="color:var(--danger-red)">{{ $message }}</small> @enderror
+            </div>
+
+            <div class="btr-form-actions">
+                <a href="{{ url('dashboard/galeri/foto-video') }}" class="btr-btn btr-btn-outline">Batal</a>
+                <button type="submit" class="btr-btn">Simpan</button>
+            </div>
         </form>
     </div>
 
     <script>
-        const title = document.querySelector('#title');
-        const slug = document.querySelector('#slug');
-
-        title.addEventListener('change', function() {
-            fetch('/dashboard/galeri/foto-video/checkSlug?title=' + title.value).then(response => response.json()).then(data =>
-                slug.value = data.slug)
-        });
-
-        document.addEventListener('trix-file-accept', function(e) {
-            e.preventDefault();
-        })
-
-        function previewImage() {
-            const image = document.querySelector('#path_image');
-            const imgPreview = document.querySelector('.img-preview');
-
-            imgPreview.style.display = 'block';
-
-            const oFReader = new FileReader();
-            oFReader.readAsDataURL(image.files[0]);
-
-            oFReader.onload = function(oFREvent){
-                imgPreview.src = oFREvent.target.result;
-            }
+        function btrPreview(input, sel) {
+            var img = document.querySelector(sel);
+            var r = new FileReader();
+            r.onload = function (e) { img.src = e.target.result; img.style.display = 'block'; };
+            if (input.files[0]) r.readAsDataURL(input.files[0]);
         }
     </script>
 @endsection

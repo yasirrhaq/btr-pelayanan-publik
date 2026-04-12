@@ -10,6 +10,30 @@
     <meta name="csrf-token" content="{{ csrf_token() }}" />
     <link rel="manifest" href="site.webmanifest">
     <link rel="icon" href="{{ asset('assets/logo.png') }}" type="image/icon type">
+
+    {{-- Tailwind (for new header/footer/kaura partials) --}}
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: { 'btr': '#354776', 'btr-dark': '#2a3a61', 'btr-yellow': '#F5A623' },
+                    fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] }
+                }
+            }
+        }
+    </script>
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        [x-cloak] { display: none !important; }
+        .nav-dropdown { display: none; }
+        .nav-item:hover .nav-dropdown { display: block; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
     <!-- <link rel="shortcut icon" type="image/x-icon" href="{{ asset('img/favicon.ico') }}"> -->
 
     <!-- CSS here -->
@@ -58,32 +82,12 @@
         </div>
     </div> -->
 
-    <!-- floating live chat -->
-    <!-- <button class="open-button rounded-pill" onclick="openForm()">Chat</button>
-
-<div class="chat-popup" id="myForm">
-  <form action="/action_page.php" class="form-container">
-    <h1>Chat</h1>
-
-    <label for="msg"><b>Message</b></label>
-    <textarea placeholder="Type message.." name="msg" required></textarea>
-
-    <button type="submit" class="btn" style="background-color:#354776;">Send</button>
-    <button type="button" class="btn cancel" onclick="closeForm()">Close</button>
-  </form>
-</div> -->
-    <header>
-        @include('frontend.partials.nav', ['urls' => \App\Models\UrlLayanan::all()])
-    </header>
+    @include('frontend.partials.headerTailwind')
     <main>
         @yield('container')
     </main>
-    <a href="{{ \App\Models\UrlLayanan::find(8)->url ?? '#' }}" class="float" target="_blank">
-        <!-- <i class="fa fa-plus my-float"></i> -->
-        <img src="{{ asset('assets/livechat.png') }}" width="50%" height="100" alt="">
-        <p class="card-home text-white p-1">Tanya Kami 24 Jam</p>
-    </a>
-    @include('frontend.partials.footerNew', ['sosmed' => \App\Models\UrlLayanan::all(), 'footer_setting' => \App\Models\FooterSetting::all()->first()])
+    @include('frontend.partials.footerTailwind')
+    @include('frontend.partials.floatingKaura')
 
     <!-- JS here -->
 
@@ -137,17 +141,19 @@
         AOS.init({
             duration: 1000
         });
-        const time = document.querySelector(".time");
-        const d = new Date(Date.now());
-        let month = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober",
-            "November", "Desember"
-        ];
-        let tanggal = d.getDate();
-        let bulan = d.getMonth();
-        let jam = d.getHours() < 10 ? '0' + d.getHours() : d.getHours();
-        let menit = d.getMinutes() < 10 ? "0" + d.getMinutes() : d.getMinutes();
-        let detik = d.getSeconds() < 10 ? "0" + d.getSeconds() : d.getSeconds();
-        time.textContent = `${tanggal} ${month[bulan]} ${d.getFullYear()} | ${jam}:${menit}:${detik} WITA`
+        (function () {
+            const months = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+            function tick() {
+                const d = new Date();
+                const el = document.getElementById('topbar-time');
+                if (el) el.textContent = d.getDate() + ' ' + months[d.getMonth()] + ' ' + d.getFullYear() + '  |  ' +
+                    String(d.getHours()).padStart(2,'0') + ':' + String(d.getMinutes()).padStart(2,'0') + ':' + String(d.getSeconds()).padStart(2,'0');
+            }
+            tick();
+            setInterval(tick, 1000);
+            const yr = document.getElementById('copy-year');
+            if (yr) yr.textContent = new Date().getFullYear();
+        })();
     </script>
     <script>
         function openForm() {

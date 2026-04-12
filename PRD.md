@@ -192,3 +192,191 @@ footer_settings
 ---
 
 *This PRD was reverse-engineered from source code analysis. Feature descriptions reflect implemented behavior as observed in routes, controllers, models, and migrations.*
+
+---
+
+## 9. Admin Dashboard Redesign Requirements
+
+**Source**: `design/Admin Web/Hal Admin Web fix_pages-to-jpg-0001..0028.jpg`
+**Status**: MANDATORY — follow mockups exactly
+**Goal**: Replace current admin UI. Current admin looks unprofessional. Polish to match provided design.
+
+### 9.1 Global Layout
+
+Full-height app shell. Two-column layout.
+
+| Region | Specification |
+|--------|---------------|
+| **Sidebar** | Fixed left, dark navy background, ~260px width, full height |
+| **Top bar** | Thin white strip, contains date+time (left), admin profile (right) |
+| **Content** | Light gray (#F5F5F7) background, white rounded cards, generous padding |
+
+### 9.2 Color Palette
+
+| Token | Hex | Usage |
+|-------|-----|-------|
+| `--sidebar-bg` | `#1E3A6B` | Sidebar background, primary buttons |
+| `--accent-yellow` | `#FDC300` | Active menu highlight, logo mark, tab inactive |
+| `--content-bg` | `#F5F5F7` | Main content background |
+| `--card-bg` | `#FFFFFF` | Card surfaces |
+| `--text-primary` | `#1E3A6B` | Headings, table headers |
+| `--text-muted` | `#6B7280` | Secondary text |
+| `--danger-red` | `#DC2626` | Delete action icons |
+| `--info-blue` | `#2563EB` | Edit action icons |
+| `--success-green` | `#10B981` | View/preview action icons |
+| **Stat card colors** | blue, pink, cyan, yellow, gray | Dashboard metric cards |
+
+### 9.3 Sidebar Menu (New Structure)
+
+Menu groups collapsed under parent with `>` indicator for children. Active item shown as full-width yellow bar with navy text.
+
+```
+BALAI TEKNIK RAWA (logo)
+
+ Dashboard
+ Profil
+   > Identitas
+   > SDM
+   > Fasilitas
+ Layanan
+ Publikasi
+   > Banner
+   > Berita
+   > Galeri
+   > Pengumuman
+   > Renstra
+   > PPID
+ Tautan
+ Pengaturan
+   > Hak Akses
+   > Sistem
+
+ Logout
+```
+
+Logout pinned bottom with power icon.
+
+### 9.4 Top Bar
+
+- Left: calendar icon + date (`09 Maret 2026`), clock icon + time (`10:44:02`)
+- Right: admin name + role subtitle (`Iswatunnisa / Admin Master`) + circular avatar
+
+### 9.5 Page Specifications
+
+#### Dashboard (`0001`)
+- Heading `DASHBOARD`
+- Mascot illustration card (top-left)
+- Stat cards grid (5 metrics): Total Admin Web (blue), Total Admin Layanan (pink), Total Berita (cyan), Total Pengumuman (yellow), Total Galeri (gray)
+- Line chart card: `Grafik Pengunjung Situs Web Balai Teknik Rawa` with year dropdown and total visitor count
+
+#### Profil - Identitas (`0002-0006`)
+- Yellow tab bar: `Tentang Kami | Sejarah | Visi & Misi | Tugas & Fungsi | Maskot`
+- Tab content: WYSIWYG rich text editor (bold, italic, strike, link, headings, quote, code, list) + file upload row + SUBMIT button
+- Visi & Misi + Tugas & Fungsi use table layout: `Gambar | Deskripsi | Status | Aksi`
+
+#### Profil - SDM (`0007-0008`)
+- Tabs: `Struktur Organisasi | Pegawai`
+- Struktur: upload image + inline SUBMIT + preview panel
+- Pegawai: `(+) Pegawai` button, search box, table `No | Foto | Nama Pegawai | Jabatan | Golongan | Status (PNS/PPPK) | Aksi`
+
+#### Profil - Fasilitas (`0009`)
+- `(+) Fasilitas` button + search
+- Table: `No | Foto | Nama Fasilitas | Deskripsi | Status (Publish/Draft) | Aksi`
+
+#### Layanan (`0010-0014`)
+- Tabs: `Advis Teknik | Laboratorium | Permohonan Data | Maklumat | Standart Pelayanan`
+- WYSIWYG + file upload pattern
+- Maklumat + Standart Pelayanan use image/PDF preview pane
+
+#### Publikasi - Banner (`0015`)
+- Note banner (pink icon): `Gunakan halaman ini untuk mengelola foto slider di Beranda. Ukuran 1920 x 600 px (maks. 1 MB)`
+- `(+) Foto Banner` button
+- Table: `No | Gambar | Judul | Deskripsi | Status | Aksi`
+
+#### Publikasi - Berita (`0016`)
+- Buttons: `(+) Buat Berita`, `(+) Kategori Berita`, search
+- Table: `No | Judul | Kategori | Tanggal Kegiatan | Status | Aksi`
+
+#### Publikasi - Galeri (`0017-0019`)
+- Tabs: `Foto | Video | Dokumen`
+- Foto/Video: card grid (3 cols × 2 rows), each card shows date, thumbnail, judul, deskripsi, action icons
+- Dokumen: table `No | Judul | Jenis | Ukuran | Tanggal | Status | Aksi`
+
+#### Publikasi - Pengumuman (`0020`)
+- `(+) Pengumuman` + search
+- Table: `No | Judul | Deskripsi | Tanggal | Status | Aksi`
+
+#### Publikasi - Renstra (`0021`)
+- `(+) Renstra` + search
+- Table: `No | Judul | Tahun | Status | Aksi` (with download icon)
+
+#### Publikasi - PPID (`0022-0025`)
+- Tabs: `Kebijakan PPID | Info Berkala | Info Serta Merta | Info Setiap Saat`
+- Kebijakan PPID: `Judul` input + `Isi Kebijakan` textarea + `Unggah Dokumen` + SUBMIT
+- Others: WYSIWYG editor + SIMPAN button
+
+#### Tautan (`0026`)
+- `(+) Tautan` + search
+- Table: `Nama Tautan | Kategori | URL | Logo | Status | Aksi`
+- Kategori values: `Sosial Media`, `Situs Terkait`, `Link Fitur Menu`, `Laporan Pengaduan`
+
+#### Pengaturan - Hak Akses (`0027`)
+- Note banner: `Gunakan halaman ini untuk mengelola akun admin dan kewenangan dalam mengelola web Balai Teknik Rawa`
+- `(+) Buat Akun` + search
+- Table: `No | Nama | Username | Hak Akses | Status | Aksi`
+- Roles: `Admin Master`, `Admin Web - Editor`, `Admin Web - Kelola`, `Admin Layanan - Lab`, `Admin Layanan - Advis`, `Admin Layanan - Data`
+
+#### Pengaturan - Sistem (`0028`)
+- Collapsible sections: `Header`, `Footer`
+- Header table: `Keterangan | Upload Data | Status | Aksi` (rows: Kop Balai)
+- Footer table: rows for `No. Telp`, `No. Wa`, `Email`, `Alamat`, `Embed Gmaps`, `Copyright Text`
+- SUBMIT button bottom-right
+
+### 9.6 Component Specs
+
+| Component | Rules |
+|-----------|-------|
+| **Cards** | White bg, `border-radius: 12px`, soft shadow, 24px padding |
+| **Tables** | Header row navy text on white, centered cells, thin gray borders, rounded outer corners |
+| **Primary button** | Navy bg, white text, pill shape (`border-radius: 999px`), icon prefix for `(+)` actions |
+| **Tabs** | Yellow inactive, white active, bottom-attached to content card |
+| **Action icons** | Red trash, blue pencil, green eye — inline in `Aksi` column |
+| **Search** | Rounded pill input with magnifier icon on right |
+| **Status pills** | Text-only: `Publish`, `Draft`, `Aktif`, `Tidak Aktif` (no badge bg per mockup) |
+| **WYSIWYG** | Toolbar: B, I, S, link, headings, quote, code, bullet list, ordered list |
+| **File upload** | Pill-shaped field, navy circular upload icon on left, filename text, optional SUBMIT inline |
+
+### 9.7 Scope Expansion (New Features Implied by Design)
+
+Mockups introduce modules not in current codebase. Treat as new requirements:
+
+| New Module | Notes |
+|------------|-------|
+| **Maskot** | New tab under Profil/Identitas — WYSIWYG + image upload |
+| **Pengumuman** | New publication type separate from Berita |
+| **Renstra** | Strategic plan docs with year field |
+| **PPID** | Four-tab public info disclosure module |
+| **Banner slider** | Homepage slider management (1920×600, max 1MB) |
+| **Dokumen gallery** | Third tab alongside Foto/Video |
+| **Tautan categorization** | Add `kategori` field: Sosial Media / Situs Terkait / Link Fitur / Laporan Pengaduan |
+| **Role-based Hak Akses** | Expand beyond `is_admin` flag — six roles listed above |
+| **Admin Layanan roles** | Split admin responsibilities: Lab, Advis, Data |
+| **Permohonan Data tab** | New sub-service under Layanan |
+| **Maklumat Pelayanan** | File upload module under Layanan |
+| **Standart Pelayanan** | PDF upload module under Layanan |
+| **Dashboard visitor chart** | Monthly visitor line chart with year filter |
+| **Dashboard stat cards** | Five metric counters |
+| **Header/Footer CMS** | Pengaturan-Sistem replaces current footer_settings with structured table |
+
+### 9.8 Implementation Priority
+
+1. Global shell: sidebar + top bar + color tokens + card styles
+2. Dashboard layout with stat cards + chart
+3. Refactor existing CRUD pages to new table style
+4. Build new modules (Pengumuman, Renstra, PPID, Maskot, Banner slider)
+5. Expand role system beyond `is_admin`
+6. Migrate footer_settings into Pengaturan-Sistem structure
+
+### 9.9 Fidelity Rule
+
+Match mockups pixel-close where possible. No deviation on: sidebar color, yellow accent, tab pattern, table header style, action icon colors, button shape. Typography: sans-serif (Inter or Poppins). Icons: Lucide or Feather set.

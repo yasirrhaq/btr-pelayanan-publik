@@ -1,71 +1,49 @@
 @extends('dashboard.layouts.main')
 
 @section('container')
-    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-        <h1 class="h2">Edit Fasilitas Balai</h1>
-    </div>
+    <h1 class="btr-page-title">Profil - Fasilitas <small>Edit Fasilitas</small></h1>
 
-    <div class="col-lg-8">
-        <form method="post" action="{{url('')}}/dashboard/fasilitas-balai/{{ $fasilitasBalai->id }}" class="mb-5" enctype="multipart/form-data">
+    <div class="btr-card">
+        <form method="post" action="{{ url('dashboard/fasilitas-balai/' . $fasilitasBalai->id) }}" enctype="multipart/form-data">
             @method('put')
             @csrf
-            <div class="mb-3">
-                <label for="title" class="form-label">Title</label>
-                <input type="text" class="form-control @error('title') is-invalid @enderror" id="title"
-                    name="title" required autofocus value="{{ old('title', $fasilitasBalai->title) }}">
-                @error('title')
-                    <div class="invalid-feedback">
-                        {{ $message }}
-                    </div>
-                @enderror
+            <div class="btr-form-group">
+                <label class="btr-label" for="title">Nama Fasilitas</label>
+                <input type="text" class="btr-input" id="title" name="title" required autofocus value="{{ old('title', $fasilitasBalai->title) }}">
+                @error('title') <small style="color:var(--danger-red)">{{ $message }}</small> @enderror
             </div>
-            <div class="mb-3">
-                <label for="image" class="form-label">Gambar Galeri</label>
+
+            <div class="btr-form-group">
+                <label class="btr-label">Gambar</label>
                 <input type="hidden" name="oldImage" value="{{ $fasilitasBalai->path_image }}">
                 @if ($fasilitasBalai->path_image)
-                    <img src="{{ asset($fasilitasBalai->path_image) }}" class="img-preview img-fluid mb-3 col-sm-5 d-block">
+                    <img src="{{ asset($fasilitasBalai->path_image) }}" class="img-preview" style="display:block;max-width:280px;border-radius:10px;margin-bottom:10px">
                 @else
-                    <img class="img-preview img-fluid mb-3 col-sm-5" src="" alt="">
+                    <img class="img-preview" src="" alt="" style="display:none;max-width:280px;border-radius:10px;margin-bottom:10px">
                 @endif
-                <input class="form-control @error('image') is-invalid @enderror" type="file" id="image"
-                    name="path_image" onchange="previewImage()">
-                @error('image')
-                    <div class="invalid-feedback">
-                        {{ $message }}
-                    </div>
-                @enderror
-
+                <div class="btr-file-row">
+                    <label class="btr-file-pill">
+                        <span class="btr-file-icon">
+                            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M7 16V8m0 0l-3 3m3-3l3 3"/></svg>
+                        </span>
+                        <input type="file" id="image" name="path_image" onchange="btrPreview(this,'.img-preview')">
+                    </label>
+                </div>
             </div>
 
-            <button type="submit" class="btn btn-primary">Update Galeri</button>
+            <div class="btr-form-actions">
+                <a href="{{ url('dashboard/fasilitas-balai') }}" class="btr-btn btr-btn-outline">Batal</a>
+                <button type="submit" class="btr-btn">Update</button>
+            </div>
         </form>
     </div>
 
     <script>
-        const title = document.querySelector('#title');
-        const slug = document.querySelector('#slug');
-
-        title.addEventListener('change', function() {
-            fetch('/dashboard/posts/checkSlug?title=' + title.value).then(response => response.json()).then(data =>
-                slug.value = data.slug)
-        });
-
-        document.addEventListener('trix-file-accept', function(e) {
-            e.preventDefault();
-        })
-
-        function previewImage() {
-            const image = document.querySelector('#image');
-            const imgPreview = document.querySelector('.img-preview');
-
-            imgPreview.style.display = 'block';
-
-            const oFReader = new FileReader();
-            oFReader.readAsDataURL(image.files[0]);
-
-            oFReader.onload = function(oFREvent) {
-                imgPreview.src = oFREvent.target.result;
-            }
+        function btrPreview(input, sel) {
+            var img = document.querySelector(sel);
+            var r = new FileReader();
+            r.onload = function (e) { img.src = e.target.result; img.style.display = 'block'; };
+            if (input.files[0]) r.readAsDataURL(input.files[0]);
         }
     </script>
 @endsection

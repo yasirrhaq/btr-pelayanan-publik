@@ -1,32 +1,23 @@
 @extends('dashboard.layouts.main')
 
 @section('container')
-    <div class="container">
-        <div class="row my-3">
-            <div class="col-lg-8">
-                <h1 class="mb-3">{{ $fasilitasBalai->title }}</h1>
+    <h1 class="btr-page-title">Profil - Fasilitas <small>Detail</small></h1>
 
-                <a href="{{url('')}}/dashboard/fasilitas-balai" class="btn btn-success"><span data-feather="arrow-left"></span> Back to daftar
-                    Fasilitas Balai</a>
-                <a href="{{url('')}}/dashboard/fasilitas-balai/{{ $fasilitasBalai->id }}/edit" class="btn btn-warning"><span data-feather="edit"></span>
-                    Edit</a>
-                <form action="{{url('')}}/dashboard/fasilitas-balai/{{ $fasilitasBalai->id }}" method="post" class="d-inline">
-                    @method('delete')
-                    @csrf
-                    <button class="btn btn-danger" onclick="return confirm('Yakin ingin menghapus data?')"><span
-                            data-feather="x-circle"></span>Delete</button>
-                </form>
-
-                @if ($fasilitasBalai->path_image)
-                    <div style="max-height:350px; overflow:hidden">
-                        <img src="{{ asset($fasilitasBalai->path_image) }}" alt="{{ $fasilitasBalai->title }}"
-                            class="img-fluid mt-3">
-                    </div>
-                @else
-                    <img src="https://source.unsplash.com/1200x400?{{ $fasilitasBalai->title }}"
-                        alt="{{ $fasilitasBalai->title }}" class="img-fluid mt-3">
-                @endif
-            </div>
+    <div class="btr-card">
+        <div style="display:flex;gap:10px;margin-bottom:20px;flex-wrap:wrap">
+            <a href="{{ url('dashboard/fasilitas-balai') }}" class="btr-btn btr-btn-outline">Kembali</a>
+            <a href="{{ url('dashboard/fasilitas-balai/' . $fasilitasBalai->id . '/edit') }}" class="btr-btn btr-btn-yellow">Edit</a>
+            <form action="{{ url('dashboard/fasilitas-balai/' . $fasilitasBalai->id) }}" method="post" style="display:inline" onsubmit="return confirm('Yakin hapus data?')">
+                @method('delete')
+                @csrf
+                <button type="submit" class="btr-btn" style="background:var(--danger-red)">Hapus</button>
+            </form>
         </div>
+
+        <h2 style="color:var(--text-primary);margin-bottom:18px">{{ $fasilitasBalai->title }}</h2>
+
+        @if ($fasilitasBalai->path_image)
+            <img src="{{ asset($fasilitasBalai->path_image) }}" style="max-width:100%;border-radius:12px">
+        @endif
     </div>
 @endsection

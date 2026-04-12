@@ -1,49 +1,38 @@
 @extends('dashboard.layouts.main')
 
 @section('container')
-    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-        <h1 class="h2">Edit Status Layanan</h1>
-    </div>
+    <h1 class="btr-page-title">Status Layanan <small>Edit Status</small></h1>
 
-    <div class="col-lg-8">
-        <form method="post" action="{{url('')}}/dashboard/status-layanan/{{ $statusLayanan->id }}" class="mb-5"
-            enctype="multipart/form-data">
+    <div class="btr-card">
+        <form method="post" action="{{ url('dashboard/status-layanan/' . $statusLayanan->id) }}" enctype="multipart/form-data">
             @method('put')
             @csrf
-            <div class="mb-3">
-                <label for="email" class="form-label">Email</label>
-                <input type="text" class="form-control @error('email') is-invalid @enderror" id="email" name="email"
-                    required autofocus value="{{ old('email', $statusLayanan->user->email) }}">
-                @error('email')
-                    <div class="invalid-feedback">
-                        {{ $message }}
-                    </div>
-                @enderror
+
+            <div class="btr-form-group">
+                <label class="btr-label" for="email">Email User</label>
+                <input type="text" class="btr-input" id="email" name="email" required autofocus value="{{ old('email', $statusLayanan->user->email) }}">
+                @error('email') <small style="color:var(--danger-red)">{{ $message }}</small> @enderror
             </div>
-            <div class="mb-3">
-                <label for="statusLayanan" class="form-label">Status Layanan</label>
-                <select name="status_id" class="form-select">
+
+            <div class="btr-form-group">
+                <label class="btr-label" for="status_id">Status Layanan</label>
+                <select name="status_id" id="status_id" class="btr-input">
                     @foreach ($status as $stat)
-                        @php
-                            $selected = '';
-                            if($stat->id == $statusLayanan->status_id)
-                                $selected = 'selected';
-                        @endphp
-                        <option value="{{ $stat->id }}" {{ $selected }}> {{ $stat->name }}</option>
+                        <option value="{{ $stat->id }}" {{ $stat->id == $statusLayanan->status_id ? 'selected' : '' }}>{{ $stat->name }}</option>
                     @endforeach
                 </select>
             </div>
-            <div class="mb-3">
-                <label for="detail" class="form-label @error('detail') is-invalid @enderror">Detail Status</label>
-                <input type="text" name="detail" class="form-control" id="detail" required
-                    value="{{ old('detail', $statusLayanan->detail) }}">
-                @error('detail')
-                    <div class="invalid-feedback">
-                        {{ $message }}
-                    </div>
-                @enderror
+
+            <div class="btr-form-group">
+                <label class="btr-label" for="detail">Detail Status</label>
+                <input type="text" class="btr-input" id="detail" name="detail" required value="{{ old('detail', $statusLayanan->detail) }}">
+                @error('detail') <small style="color:var(--danger-red)">{{ $message }}</small> @enderror
             </div>
-            <button type="submit" class="btn btn-primary">Update Status Layanan</button>
+
+            <div class="btr-form-actions">
+                <a href="{{ url('dashboard/status-layanan') }}" class="btr-btn btr-btn-outline">Batal</a>
+                <button type="submit" class="btr-btn">Update</button>
+            </div>
         </form>
     </div>
 @endsection

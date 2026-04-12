@@ -148,6 +148,13 @@
             paginateBerita();
         })
 
+        // Pre-fill search from URL param (e.g. when coming from the header search bar)
+        var urlParams = new URLSearchParams(window.location.search);
+        var searchParam = urlParams.get('search');
+        if (searchParam) {
+            $('input[name="search"]').val(searchParam);
+        }
+
         $('.btn-search-berita').trigger('click');
 
         $('form').on('keyup keypress', function(e) {

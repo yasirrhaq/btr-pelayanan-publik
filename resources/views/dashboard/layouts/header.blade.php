@@ -1,17 +1,28 @@
-<header class="navbar navbar-dark sticky-top bg-primary flex-md-nowrap p-0 shadow">
-    <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3 fs-6" href="{{url('')}}/">{{config('app.name')}}</a>
-    <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-bs-toggle="collapse"
-        data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="navbar-nav">
-        <div class="nav-item text-nowrap">
-            <form action="{{url('')}}/logout" method="post">
-                @csrf
-                <button type="submit" class="nav-link px-3 bg-primary border-0">Logout <span data-feather="log-out"
-                        class="align-text-bottom"></span>
-                </button>
-            </form>
+@php
+    $monthsId = ['', 'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+    $today = now();
+    $dateStr = $today->day . ' ' . $monthsId[(int) $today->month] . ' ' . $today->year;
+    $user = auth()->user();
+    $initial = $user ? strtoupper(substr($user->name, 0, 1)) : 'A';
+@endphp
+
+<header class="btr-topbar">
+    <div class="btr-topbar-left">
+        <div class="btr-topbar-item">
+            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path stroke-linecap="round" stroke-linejoin="round" d="M16 2v4M8 2v4M3 10h18"/></svg>
+            {{ $dateStr }}
         </div>
+        <div class="btr-topbar-item">
+            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6l4 2"/></svg>
+            <span id="btr-clock">--:--:--</span>
+        </div>
+    </div>
+
+    <div class="btr-topbar-right">
+        <div class="btr-topbar-user">
+            <div class="name">{{ $user->name ?? 'Admin' }}</div>
+            <div class="role">Admin Master</div>
+        </div>
+        <div class="btr-topbar-avatar">{{ $initial }}</div>
     </div>
 </header>

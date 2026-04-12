@@ -1,31 +1,23 @@
 @extends('dashboard.layouts.main')
 
 @section('container')
-    <div class="container">
-        <div class="row my-3">
-            <div class="col-lg-8">
-                <h1 class="mb-3">{{ $infoPegawai->title }}</h1>
+    <h1 class="btr-page-title">Profil - SDM <small>Detail Pegawai</small></h1>
 
-                <a href="{{url('')}}/dashboard/info-pegawai" class="btn btn-success"><span data-feather="arrow-left"></span> Back to Info Pegawai</a>
-                <a href="{{url('')}}/dashboard/info-pegawai/{{ $infoPegawai->id }}/edit" class="btn btn-warning"><span data-feather="edit"></span>
-                    Edit</a>
-                <form action="{{url('')}}/dashboard/info-pegawai/{{ $infoPegawai->id }}" method="post" class="d-inline">
-                    @method('delete')
-                    @csrf
-                    <button class="btn btn-danger" onclick="return confirm('Yakin ingin menghapus data?')"><span
-                            data-feather="x-circle"></span>Delete</button>
-                </form>
-
-                @if ($infoPegawai->path_image)
-                    <div style="max-height:2000px; overflow:hidden">
-                        <img src="{{  asset(  $infoPegawai->path_image) }}" alt="{{ $infoPegawai->title }}"
-                            class="img-fluid mt-3">
-                    </div>
-                @else
-                    <img src="https://source.unsplash.com/1200x400?{{ $infoPegawai->title }}"
-                        alt="{{ $infoPegawai->title }}" class="img-fluid mt-3">
-                @endif
-            </div>
+    <div class="btr-card">
+        <div style="display:flex;gap:10px;margin-bottom:20px;flex-wrap:wrap">
+            <a href="{{ url('dashboard/info-pegawai') }}" class="btr-btn btr-btn-outline">Kembali</a>
+            <a href="{{ url('dashboard/info-pegawai/' . $infoPegawai->id . '/edit') }}" class="btr-btn btr-btn-yellow">Edit</a>
+            <form action="{{ url('dashboard/info-pegawai/' . $infoPegawai->id) }}" method="post" style="display:inline" onsubmit="return confirm('Yakin hapus data?')">
+                @method('delete')
+                @csrf
+                <button type="submit" class="btr-btn" style="background:var(--danger-red)">Hapus</button>
+            </form>
         </div>
+
+        <h2 style="color:var(--text-primary);margin-bottom:18px">{{ $infoPegawai->title }}</h2>
+
+        @if ($infoPegawai->path_image)
+            <img src="{{ asset($infoPegawai->path_image) }}" style="max-width:100%;border-radius:12px">
+        @endif
     </div>
 @endsection

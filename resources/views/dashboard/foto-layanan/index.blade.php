@@ -1,39 +1,46 @@
 @extends('dashboard.layouts.main')
 
 @section('container')
-    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-        <h1 class="h2">Daftar Foto Layanan</h1>
-    </div>
+    <h1 class="btr-page-title">Layanan <small>Foto Layanan</small></h1>
 
-    @if (session()->has('success'))
-        <div class="alert alert-success col-lg-8" role="alert">
-            {{ session('success') }}
-        </div>
-    @endif
-    <div class="table-responsive col-lg-8">
-        <table class="table table-striped table-sm">
-            <thead>
-                <tr>
-                    <th scope="col">No</th>
-                    <th scope="col">Nama Layanan</th>
-                    <th scope="col">Deskripsi</th>
-                    <th scope="col">Path Image</th>
-                    <th scope="col">Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach ($foto_layanan as $items)
+    <div class="btr-card">
+        <div class="btr-table-wrap">
+            <table class="btr-table">
+                <thead>
                     <tr>
-                        <td>{{ $loop->iteration }}</td>
-                        <td>{{ $items->name }}</td>
-                        <td>{{ $items->deskripsi }}</td>
-                        <td>{{ $items->path_image }}</td>
-                        <td>
-                            <a href="{{url('')}}/dashboard/foto-layanan/{{ $items->id }}/edit" class="badge bg-warning"><span data-feather="edit"></span></a>
-                        </td>
+                        <th style="width:60px">No</th>
+                        <th>Nama Layanan</th>
+                        <th>Deskripsi</th>
+                        <th>Gambar</th>
+                        <th style="width:120px">Aksi</th>
                     </tr>
-                @endforeach
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    @forelse ($foto_layanan as $items)
+                        <tr>
+                            <td>{{ $loop->iteration }}</td>
+                            <td style="text-align:left">{{ $items->name }}</td>
+                            <td style="text-align:left">{!! Str::limit(strip_tags($items->deskripsi), 80) !!}</td>
+                            <td>
+                                @if ($items->path_image)
+                                    <img src="{{ asset($items->path_image) }}" class="thumb" alt="">
+                                @else
+                                    <div class="thumb" style="background:#E9ECF3"></div>
+                                @endif
+                            </td>
+                            <td>
+                                <div class="btr-actions">
+                                    <a href="{{ url('dashboard/foto-layanan/' . $items->id . '/edit') }}" class="btr-action edit" title="Edit">
+                                        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path stroke-linecap="round" stroke-linejoin="round" d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr><td colspan="5" style="color:var(--text-muted);padding:28px">Belum ada foto layanan.</td></tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
     </div>
 @endsection

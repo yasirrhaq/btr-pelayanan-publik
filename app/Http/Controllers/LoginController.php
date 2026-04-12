@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Session;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Http;
 
 class LoginController extends Controller
 {
@@ -18,14 +19,28 @@ class LoginController extends Controller
 
     public function authenticate(Request $request)
     {
-        $credentials = $request->validate([
-            'email' => 'required|email:rfc,dns',
-            'password' => 'required'
-        ]);
+        $rules = [
+            'email'    => 'required|email:rfc,dns',
+            'password' => 'required',
+        ];
+        if (config('services.recaptcha.secret_key')) {
+            $rules['g-recaptcha-response'] = ['required', function ($attr, $value, $fail) {
+                $response = Http::asForm()->post('https://www.google.com/recaptcha/api/siteverify', [
+                    'secret'   => config('services.recaptcha.secret_key'),
+                    'response' => $value,
+                    'remoteip' => request()->ip(),
+                ]);
+                if (!($response->json('success'))) {
+                    $fail('Verifikasi CAPTCHA gagal. Silakan coba lagi.');
+                }
+            }];
+        }
+        $credentials = $request->validate($rules);
+        unset($credentials['g-recaptcha-response']);
 
         if (Auth::attempt($credentials) && Auth::user()->is_verified == 1) {
             $request->session()->regenerate();
-            return redirect()->intended('balai/teknikrawa/dashboard');
+            return redirect()->intended('/dashboard');
         } else if (Auth::attempt($credentials) && Auth::user()->is_verified == 0) {
             return redirect()->intended('verify-email');
         }
@@ -58,7 +73,7 @@ class LoginController extends Controller
 
         $request->session()->regenerateToken();
 
-        return redirect('/balai/teknikrawa/');
+        return redirect('/');
     }
 
     public function showVerify()

@@ -1,59 +1,69 @@
 @extends('dashboard.layouts.main')
 
 @section('container')
-    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-        <h1 class="h2">{{ $title }}</h1>
-    </div>
+    <h1 class="btr-page-title">Landing Page <small>{{ $title }}</small></h1>
 
-    @if (session()->has('success'))
-        <div class="alert alert-success col-lg-8" role="alert">
-            {{ session('success') }}
+    <div class="btr-card">
+        <div class="btr-toolbar">
+            <a href="{{ url('dashboard/landing-page/create?type=' . request()->type) }}" class="btr-btn">
+                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
+                Buat Baru
+            </a>
+            <div class="spacer"></div>
+            <div class="btr-search">
+                <input type="text" placeholder="Cari...">
+                <button type="button">
+                    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35"/></svg>
+                </button>
+            </div>
         </div>
-    @endif
-    <div class="table-responsive col-lg-8">
-        <a href="{{ url('') }}/dashboard/landing-page/create?type={{ request()->type }}"
-            class="btn btn-primary mb-3">Buat Baru</a>
-        <table class="table table-striped table-sm">
-            <thead>
-                <tr>
-                    <th scope="col">No</th>
-                    <th scope="col">Type</th>
-                    <th scope="col">Deskripsi</th>
-                    <th scope="col">Status</th>
-                    <th scope="col">Gambar</th>
-                    <th scope="col">Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach ($data as $item)
+
+        <div class="btr-table-wrap">
+            <table class="btr-table">
+                <thead>
                     <tr>
-                        <td>{{ $loop->iteration }}</td>
-                        <td>{{ $item->attr_tipe }}</td>
-                        <td>{!! cutText($item->deskripsi) !!}</td>
-                        <td>{{ $item->status }}</td>
-                        <td>
-                            @if (empty($item->path))
-                                -
-                            @else
-                                <img src="{{ imageExists($item->path) }}" style="max-width:175px;heigt:auto;">
-                            @endif
-                        </td>
-                        <td>
-                            <a href="{{ url('') }}/dashboard/landing-page/{{ $item->id }}/edit?type={{ request()->type }}"
-                                class="badge bg-warning"><span data-feather="edit"></span></a>
-                            <form
-                                action="{{ url('') }}/dashboard/landing-page/{{ $item->id }}?type={{ request()->type }}"
-                                method="post" class="d-inline">
-                                @method('delete')
-                                @csrf
-                                <button class="badge bg-danger border-0"
-                                    onclick="return confirm('Yakin ingin menghapus data?')"><span
-                                        data-feather="x-circle"></span></button>
-                            </form>
-                        </td>
+                        <th style="width:60px">No</th>
+                        <th>Tipe</th>
+                        <th>Deskripsi</th>
+                        <th>Status</th>
+                        <th>Gambar</th>
+                        <th style="width:140px">Aksi</th>
                     </tr>
-                @endforeach
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    @forelse ($data as $item)
+                        <tr>
+                            <td>{{ $loop->iteration }}</td>
+                            <td style="text-align:left">{{ $item->attr_tipe }}</td>
+                            <td style="text-align:left">{!! cutText($item->deskripsi) !!}</td>
+                            <td><span class="btr-status publish">{{ $item->status }}</span></td>
+                            <td>
+                                @if (empty($item->path))
+                                    <div class="thumb" style="background:#E9ECF3"></div>
+                                @else
+                                    <img src="{{ imageExists($item->path) }}" class="thumb" alt="">
+                                @endif
+                            </td>
+                            <td>
+                                <div class="btr-actions">
+                                    <form action="{{ url('dashboard/landing-page/' . $item->id . '?type=' . request()->type) }}" method="post" class="btr-action-form" onsubmit="return confirm('Yakin hapus data?')">
+                                        @csrf
+                                        @method('delete')
+                                        <button class="btr-action delete" type="submit" title="Hapus">
+                                            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6h14z"/></svg>
+                                        </button>
+                                    </form>
+                                    <a href="{{ url('dashboard/landing-page/' . $item->id . '/edit?type=' . request()->type) }}" class="btr-action edit" title="Edit">
+                                        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path stroke-linecap="round" stroke-linejoin="round" d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr><td colspan="6" style="color:var(--text-muted);padding:28px">Belum ada data.</td></tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
     </div>
 @endsection

@@ -48,6 +48,13 @@ use Illuminate\Support\Facades\Artisan;
 
 Route::get('/', [HomeController::class, 'index']);
 
+Route::get('/set-locale/{locale}', function ($locale) {
+    if (in_array($locale, ['id', 'en'])) {
+        session(['locale' => $locale]);
+    }
+    return redirect()->back();
+})->name('locale.set');
+
 Route::get('/berita', [PostController::class, 'index']);
 Route::get('/berita/{post:slug}', [PostController::class, 'show']);
 Route::post('/ajax-search-berita', 'App\Http\Controllers\PostController@ajaxListBerita');

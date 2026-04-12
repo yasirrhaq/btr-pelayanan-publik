@@ -112,6 +112,12 @@
                                             </div>
                                         @enderror
                                 </div>
+                                @if(config('services.recaptcha.site_key'))
+                                <div class="g-recaptcha mb-3" data-sitekey="{{ config('services.recaptcha.site_key') }}"></div>
+                                @error('g-recaptcha-response')
+                                    <div class="alert alert-danger py-1 text-sm">{{ $message }}</div>
+                                @enderror
+                                @endif
                                 <button class="btn btn-primary btn-user btn-block" type="submit">Register</button>
                                 <hr>
                             </form>

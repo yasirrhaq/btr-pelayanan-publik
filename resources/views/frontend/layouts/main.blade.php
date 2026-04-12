@@ -1,80 +1,65 @@
 <!doctype html>
-<html lang="en">
+<html lang="id">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Berita BTR</title>
-    <link rel="icon" href="assets/logo.png" type="image/icon type">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
-	<link rel="stylesheet" type="text/css" href="{{ asset('css/frontend/index.css') }}">
-	<link rel="stylesheet" type="text/css" href="{{ asset('css/frontend/BeitaAwal.css') }}">
-	<link rel="stylesheet" type="text/css" href="{{ asset('css/frontend/navbar.css') }}">
-  </head>
-  <body>
-    <!-- navbar top-->
-    <div class="header-main">
-        <p class="time"></p>
-        <div class="d-flex">
-        <div style="margin-right : 13px;margin-top : 3px;">
-          <a href="https://www.instagram.com/pupr_sda_baltekrawa/" target="blank" class="link-icon">
-          <ion-icon name="logo-instagram" style="width:11px;height :11px;margin-right : 5px;"></ion-icon>
-          </a>
-          <a href="https://www.facebook.com/people/Balai-Teknik-Rawa/100066235135162/" target="blank" class="link-icon">
-          <ion-icon name="logo-facebook" style="width:11px;height :11px;margin-right : 5px;"></ion-icon>
-        </a>
-        <a href="https://www.youtube.com/channel/UCoC8oCFvMLXI0PtEcBp3Plw" target="blank" class="link-icon">
-          <ion-icon name="logo-youtube" style="width:11px;height :11px;margin-right : 5px;"></ion-icon>
-        </a>
-        </div>
-          <div class="dropdown">
-            <a class="dropdown-toggle link-subtitle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-              Indonesia
-            </a>
-            <ul class="dropdown-menu">
-              <li><a class="dropdown-item" href="#">English</a></li>
-            </ul>
-          </div>
-        </div>
-    </div>
-        @include('frontend.partials.navbar')
-        <div class="header-berita">
-        <div class="cover-color">
-        <div class="header-content">
-            <div class="container-fluid">
-                <div class="d-flex justify-content-between content-header-berita">
-                    <h1 class="header-title-berita">
-                      Berita {{ config('app.name') }}
-                    </h1>
-                    <h4>
-                      <span style="color:blue">Beranda</span><span style="color:white;">/ Berita BTR</span>
-                    </h4>
-                </div>
-            </div>
-        </div>
-      </div>
-      </div>
-      <div class="container mt-5 container-berita">
-        	@yield('beritaHeader')
-        <div class="row" style="margin-top: 100px;">
-          	@yield('container')
-			  @include('frontend.beritaTerkini')
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <title>Berita {{ config('app.name', 'Balai Teknik Rawa') }}</title>
+    <link rel="icon" href="{{ asset('assets/logo.png') }}" type="image/png">
 
-        </div>
-        @include('frontend.partials.footer')
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8" crossorigin="anonymous"></script>
-    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
-    <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
-    <script src="js/frontend/nav.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
     <script>
-       const time =  document.querySelector(".time");
-       const d = new Date(Date.now());
-       let month = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober","November", "Desember"];
-       let tanggal = d.getDate();
-       let bulan = d.getMonth();
-       let jam = d.getHours() < 10 ? '0' + d.getHours() : d.getHours();
-       let menit = d.getMinutes() < 10 ? "0" + d.getMinutes() : d.getMinutes();
-       let detik = d.getSeconds() < 10 ? "0" + d.getSeconds() : d.getSeconds();
-       time.textContent = `${tanggal} ${month[bulan]} ${d.getFullYear()} | ${jam}:${menit}:${detik} WITA`
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: { 'btr': '#354776', 'btr-dark': '#2a3a61', 'btr-yellow': '#F5A623' },
+                    fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] }
+                }
+            }
+        }
     </script>
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/frontend/index.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/frontend/BeitaAwal.css') }}">
+
+    <style>
+        [x-cloak] { display: none !important; }
+        .nav-dropdown { display: none; }
+        .nav-item:hover .nav-dropdown { display: block; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+  </head>
+  <body class="font-sans bg-white text-gray-800 antialiased">
+    @include('frontend.partials.headerTailwind')
+    <main>
+        @yield('beritaHeader')
+        @yield('container')
+    </main>
+    @include('frontend.partials.footerTailwind')
+    @include('frontend.partials.floatingKaura')
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        (function () {
+            const months = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+            function tick() {
+                const d = new Date();
+                const el = document.getElementById('topbar-time');
+                if (el) el.textContent = d.getDate() + ' ' + months[d.getMonth()] + ' ' + d.getFullYear() + '  |  ' +
+                    String(d.getHours()).padStart(2,'0') + ':' + String(d.getMinutes()).padStart(2,'0') + ':' + String(d.getSeconds()).padStart(2,'0');
+            }
+            tick();
+            setInterval(tick, 1000);
+            const yr = document.getElementById('copy-year');
+            if (yr) yr.textContent = new Date().getFullYear();
+        })();
+    </script>
+    @stack('js')
 </body>
 </html>
