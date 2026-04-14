@@ -77,7 +77,7 @@
     {{-- ===================================================================
      PENGUMUMAN TICKER
 =================================================================== --}}
-    @if ($terkini->count())
+    @if ($pengumuman->count())
         <div class="bg-white border-b border-gray-200">
             <div class="max-w-7xl mx-auto flex items-stretch h-10">
                 <div
@@ -88,18 +88,18 @@
                 <div class="flex-1 overflow-hidden relative">
                     <div class="ticker-track flex items-center h-full">
                         @for ($d = 0; $d < 2; $d++)
-                            @foreach ($terkini->take(6) as $item)
-                                <a href="{{ url('berita', ['slug' => $item->slug]) }}"
+                            @foreach ($pengumuman as $item)
+                                <a href="{{ route('pengumuman.show', $item) }}"
                                     class="shrink-0 inline-flex items-center gap-1.5 text-sm text-gray-700 hover:text-[#354776] transition-colors mr-10 cursor-pointer">
                                     <span
                                         class="text-[#354776] font-semibold text-xs shrink-0">{{ \Carbon\Carbon::parse($item->created_at)->format('d/m/Y') }}</span>
-                                    <span class="truncate max-w-xs">{{ $item->title }}</span>
+                                    <span class="truncate max-w-xs">{{ $item->judul }}</span>
                                 </a>
                             @endforeach
                         @endfor
                     </div>
                 </div>
-                <a href="{{ url('/berita') }}"
+                <a href="{{ route('pengumuman.index') }}"
                     class="bg-[#354776] hover:bg-[#2a3a61] text-white text-xs font-semibold px-4 flex items-center gap-1 shrink-0 transition-colors cursor-pointer">
                     Lihat Semua <i class="fas fa-angle-right text-xs"></i>
                 </a>

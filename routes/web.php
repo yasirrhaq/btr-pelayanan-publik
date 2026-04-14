@@ -1,10 +1,22 @@
 <?php
 
 use App\Http\Controllers\Admin\GaleriFotoVideo\FotoVideoController;
+use App\Http\Controllers\Admin\HakAksesController;
+use App\Http\Controllers\Admin\Layanan\PermohonanManagementController;
+use App\Http\Controllers\Admin\MasterTimController;
+use App\Http\Controllers\Admin\MasterSurveiController;
+use App\Http\Controllers\Admin\PengumumanController;
+use App\Http\Controllers\Pelanggan\DashboardController as PelangganDashboardController;
+use App\Http\Controllers\Pelanggan\PermohonanController as PelangganPermohonanController;
+use App\Http\Controllers\Pelanggan\PembayaranController as PelangganPembayaranController;
+use App\Http\Controllers\Pelanggan\DokumenController as PelangganDokumenController;
+use App\Http\Controllers\Pelanggan\NotifikasiController as PelangganNotifikasiController;
+use App\Http\Controllers\Pelanggan\SurveiController as PelangganSurveiController;
 use App\Models\Category;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\PublicPengumumanController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\TugasController;
 use App\Http\Controllers\SejarahController;
@@ -48,6 +60,16 @@ use Illuminate\Support\Facades\Artisan;
 
 Route::get('/', [HomeController::class, 'index']);
 
+// Test-only login bypass — available only in local environment, never in production
+if (app()->environment('local')) {
+    Route::get('/test-login/{userId}', function ($userId) {
+        $user = \App\Models\User::findOrFail($userId);
+        auth()->login($user);
+        request()->session()->regenerate();
+        return redirect($user->is_admin ? '/dashboard' : '/pelanggan');
+    })->middleware('web')->name('test.login');
+}
+
 Route::get('/set-locale/{locale}', function ($locale) {
     if (in_array($locale, ['id', 'en'])) {
         session(['locale' => $locale]);
@@ -57,6 +79,8 @@ Route::get('/set-locale/{locale}', function ($locale) {
 
 Route::get('/berita', [PostController::class, 'index']);
 Route::get('/berita/{post:slug}', [PostController::class, 'show']);
+Route::get('/pengumuman', [PublicPengumumanController::class, 'index'])->name('pengumuman.index');
+Route::get('/pengumuman/{pengumuman}', [PublicPengumumanController::class, 'show'])->name('pengumuman.show');
 Route::post('/ajax-search-berita', 'App\Http\Controllers\PostController@ajaxListBerita');
 
 Route::get('/visi-misi', [VisiMisiController::class, 'index']);
@@ -87,13 +111,13 @@ Route::get('/categories', function () {
 });
 
 Route::get('/login', [LoginController::class, 'index'])->middleware('guest')->name('login');
-Route::post('/login', [LoginController::class, 'authenticate'])->middleware('is_verify_email');
+Route::post('/login', [LoginController::class, 'authenticate'])->middleware(['guest', 'throttle:10,1']);
 Route::get('/verify-email', [LoginController::class, 'showVerify'])->middleware('auth');
-Route::post('/verify-email', [LoginController::class, 'resend'])->name('resend.email');
+Route::post('/verify-email', [LoginController::class, 'resend'])->middleware('auth')->name('resend.email');
 Route::post('/logout', [LoginController::class, 'logout']);
 
 Route::get('/register', [RegisterController::class, 'index'])->middleware('guest');
-Route::post('/register', [RegisterController::class, 'store']);
+Route::post('/register', [RegisterController::class, 'store'])->middleware(['guest', 'throttle:5,1']);
 
 Route::get('/profile', function () {
     return view('profile.index');
@@ -144,4 +168,99 @@ Route::group([
     Route::put('/landing-page/{id}', 'App\Http\Controllers\Admin\LandingPage\LandingPageController@update');
     Route::post('/landing-page/create', 'App\Http\Controllers\Admin\LandingPage\LandingPageController@store');
     Route::delete('/landing-page/{id}', 'App\Http\Controllers\Admin\LandingPage\LandingPageController@destroy');
+
+    // Hak Akses (RBAC)
+    Route::get('/hak-akses', [HakAksesController::class, 'index'])->name('admin.hak-akses.index');
+    Route::get('/hak-akses/{user}/edit', [HakAksesController::class, 'edit'])->name('admin.hak-akses.edit');
+    Route::put('/hak-akses/{user}', [HakAksesController::class, 'update'])->name('admin.hak-akses.update');
+
+    // Master Tim
+    Route::resource('/master-tim', MasterTimController::class)->names('admin.master-tim')->parameters(['master-tim' => 'tim']);
+
+    // Master Survei
+    Route::get('/master-survei', [MasterSurveiController::class, 'index'])->name('admin.master-survei.index');
+    Route::post('/master-survei', [MasterSurveiController::class, 'store'])->name('admin.master-survei.store');
+    Route::put('/master-survei/{pertanyaan}', [MasterSurveiController::class, 'update'])->name('admin.master-survei.update');
+    Route::delete('/master-survei/{pertanyaan}', [MasterSurveiController::class, 'destroy'])->name('admin.master-survei.destroy');
+
+    // Pengumuman
+    Route::resource('/pengumuman', PengumumanController::class)->names('admin.pengumuman')->except('show');
+
+    // PPID
+    Route::get('/ppid', function () {
+        return view('dashboard.ppid.index');
+    })->name('admin.ppid.index');
+
+    // Admin Layanan routes
+    Route::prefix('layanan')->name('admin.layanan.')->group(function () {
+        Route::get('/', [PermohonanManagementController::class, 'dashboard'])->name('dashboard');
+        Route::get('/permohonan', [PermohonanManagementController::class, 'index'])->name('permohonan.index');
+        Route::get('/permohonan/{permohonan}', [PermohonanManagementController::class, 'show'])->name('permohonan.show');
+        Route::post('/permohonan/{permohonan}/status', [PermohonanManagementController::class, 'updateStatus'])->name('permohonan.updateStatus');
+        Route::post('/permohonan/{permohonan}/assign-tim', [PermohonanManagementController::class, 'assignTim'])->name('permohonan.assignTim');
+        Route::post('/permohonan/{permohonan}/billing', [PermohonanManagementController::class, 'setBilling'])->name('permohonan.setBilling');
+        Route::post('/permohonan/{permohonan}/verify-payment', [PermohonanManagementController::class, 'verifyPayment'])->name('permohonan.verifyPayment');
+        Route::post('/permohonan/{permohonan}/dokumen-final', [PermohonanManagementController::class, 'uploadDokumenFinal'])->name('permohonan.uploadDokumenFinal');
+        Route::get('/data-pelanggan', [PermohonanManagementController::class, 'dataPelanggan'])->name('dataPelanggan');
+        Route::get('/survei-analytics', [PermohonanManagementController::class, 'surveiAnalytics'])->name('surveiAnalytics');
+    });
+});
+
+/*
+|--------------------------------------------------------------------------
+| Pelanggan Portal Routes
+|--------------------------------------------------------------------------
+*/
+Route::group([
+    'middleware' => ['auth', 'is_verify_email'],
+    'prefix' => 'pelanggan',
+    'as' => 'pelanggan.',
+], function () {
+    Route::get('/', [PelangganDashboardController::class, 'index'])->name('dashboard');
+
+    // Permohonan
+    Route::get('/permohonan', [PelangganPermohonanController::class, 'index'])->name('permohonan.index');
+    Route::get('/permohonan/create', [PelangganPermohonanController::class, 'create'])->name('permohonan.create');
+    Route::post('/permohonan', [PelangganPermohonanController::class, 'store'])->name('permohonan.store');
+    Route::get('/permohonan/{permohonan}', [PelangganPermohonanController::class, 'show'])->name('permohonan.show');
+
+    // Tracking
+    Route::get('/tracking', function () {
+        return view('pelanggan.tracking.index');
+    })->name('tracking');
+
+    // Pembayaran
+    Route::get('/pembayaran', function () {
+        $permohonan = \App\Models\Permohonan::where('user_id', auth()->id())
+            ->has('pembayaran')
+            ->with(['pembayaran', 'jenisLayanan'])
+            ->orderByDesc('created_at')
+            ->paginate(10);
+        return view('pelanggan.pembayaran.index', compact('permohonan'));
+    })->name('pembayaran.index');
+    Route::get('/pembayaran/{permohonan}', [PelangganPembayaranController::class, 'show'])->name('pembayaran.show');
+    Route::post('/pembayaran/{permohonan}/upload', [PelangganPembayaranController::class, 'uploadBukti'])->name('pembayaran.upload');
+
+    // Dokumen
+    Route::get('/dokumen', [PelangganDokumenController::class, 'index'])->name('dokumen.index');
+    Route::get('/dokumen/{dokumenFinal}/download', [PelangganDokumenController::class, 'download'])->name('dokumen.download');
+
+    // Notifikasi
+    Route::get('/notifikasi', [PelangganNotifikasiController::class, 'index'])->name('notifikasi.index');
+    Route::post('/notifikasi/{notifikasi}/read', [PelangganNotifikasiController::class, 'markAsRead'])->name('notifikasi.read');
+    Route::post('/notifikasi/mark-all-read', [PelangganNotifikasiController::class, 'markAllRead'])->name('notifikasi.markAllRead');
+
+    // Survei
+    Route::get('/survei/{permohonan}', [PelangganSurveiController::class, 'create'])->name('survei.create');
+    Route::post('/survei/{permohonan}', [PelangganSurveiController::class, 'store'])->name('survei.store');
+
+    // Profil
+    Route::get('/profil', function () {
+        return view('pelanggan.profil.index');
+    })->name('profil');
+
+    // Bantuan
+    Route::get('/bantuan', function () {
+        return view('pelanggan.bantuan.index');
+    })->name('bantuan');
 });

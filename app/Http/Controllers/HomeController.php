@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\FotoHome;
 use App\Models\GaleriFoto;
 use App\Models\JenisLayanan;
+use App\Models\Pengumuman;
 use App\Models\UserStatusLayanan;
 use Illuminate\Http\Request;
 use App\Models\Post;
@@ -36,6 +37,7 @@ class HomeController extends Controller
         }
 
         return view('frontend.home', [
+            'pengumuman'   => Pengumuman::where('is_active', true)->latest()->take(6)->get(),
             'terkini'      => Post::latest()->get(),
             'foto_home'    => FotoHome::all(),
             'url'          => UrlLayanan::find(3),
