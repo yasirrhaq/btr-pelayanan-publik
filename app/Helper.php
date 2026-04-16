@@ -1,6 +1,21 @@
 <?php
 
 use App\Models\LandingPageTipe;
+use App\Services\TranslationService;
+
+/**
+ * Translate a string from Indonesian to English when the active locale is 'en'.
+ * Returns the original text unchanged when locale is 'id'.
+ * Safe to call from controllers, views, and Blade templates.
+ *
+ * Usage in Blade: {{ t('Selamat datang') }}  or  @t('Selamat datang')
+ */
+if (!function_exists('t')) {
+    function t(string $text): string
+    {
+        return TranslationService::text($text);
+    }
+}
 
 if (!function_exists('cutText')) {
     function cutText(String $string, $limit = 10){
@@ -67,13 +82,19 @@ if (!function_exists('globalTipeLanding')) {
 if (!function_exists('imageExists')) {
     function imageExists($path)
     {
-        if(file_exists($path)){
-            $path = asset($path);
-        }
-        else{
-            $path = 'https://source.unsplash.com/500x400?';
+        $fallback = asset('assets/fotoDumy.jpeg');
+
+        if (empty($path)) {
+            return $fallback;
         }
 
-        return $path;
+        $normalized = ltrim(str_replace('\\', '/', $path), '/');
+        $absolute = public_path($normalized);
+
+        if (file_exists($absolute)) {
+            return asset($normalized);
+        }
+
+        return $fallback;
     }
 }

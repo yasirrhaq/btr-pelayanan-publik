@@ -150,49 +150,49 @@
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
 
                 <a href="{{ url('/advis-teknis') }}"
-                    class="bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-200 p-6 flex flex-col items-center text-center cursor-pointer group">
+                    class="bg-white rounded-2xl shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-200 p-6 flex flex-col items-center text-center cursor-pointer group border border-white/60">
                     <div
-                        class="w-16 h-16 rounded-full bg-[#354776]/10 flex items-center justify-center mb-3 group-hover:bg-[#354776]/20 transition-colors">
+                        class="w-24 h-24 rounded-2xl bg-[#354776] flex items-center justify-center mb-4 shadow-lg shadow-[#354776]/20 group-hover:bg-[#2a3a61] transition-colors p-4">
                         <img src="{{ asset('assets/technical-support.png') }}" alt="Advis Teknis"
-                            class="w-9 h-9 object-contain"
+                            class="w-full h-full object-contain brightness-0 invert"
                             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
-                        <i class="fas fa-drafting-compass text-[#354776] text-2xl hidden"></i>
+                        <i class="fas fa-drafting-compass text-white text-4xl hidden"></i>
                     </div>
                     <span
-                        class="bg-[#354776] text-white text-[10px] font-bold uppercase tracking-widest px-2 py-0.5 rounded mb-2">Layanan</span>
-                    <h3 class="font-bold text-[#354776] text-sm leading-snug">Layanan Advis Teknis</h3>
-                    <p class="text-gray-500 text-xs mt-1.5 leading-relaxed">Konsultasi &amp; rekomendasi teknis bidang rawa
+                        class="bg-[#354776]/10 text-[#354776] text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full mb-2">Layanan</span>
+                    <h3 class="font-bold text-[#354776] text-base leading-snug">Layanan Advis Teknis</h3>
+                    <p class="text-gray-500 text-sm mt-2 leading-relaxed">Konsultasi &amp; rekomendasi teknis bidang rawa
                     </p>
                 </a>
 
                 <a href="{{ url('/pengujian-laboratorium') }}"
-                    class="bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-200 p-6 flex flex-col items-center text-center cursor-pointer group">
+                    class="bg-white rounded-2xl shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-200 p-6 flex flex-col items-center text-center cursor-pointer group border border-white/60">
                     <div
-                        class="w-16 h-16 rounded-full bg-[#354776]/10 flex items-center justify-center mb-3 group-hover:bg-[#354776]/20 transition-colors">
+                        class="w-24 h-24 rounded-2xl bg-[#354776] flex items-center justify-center mb-4 shadow-lg shadow-[#354776]/20 group-hover:bg-[#2a3a61] transition-colors p-4">
                         <img src="{{ asset('assets/icon/laboratory.png') }}" alt="Laboratorium"
-                            class="w-9 h-9 object-contain"
+                            class="w-full h-full object-contain brightness-0 invert"
                             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
-                        <i class="fas fa-flask text-[#354776] text-2xl hidden"></i>
+                        <i class="fas fa-flask text-white text-4xl hidden"></i>
                     </div>
                     <span
-                        class="bg-[#354776] text-white text-[10px] font-bold uppercase tracking-widest px-2 py-0.5 rounded mb-2">Layanan</span>
-                    <h3 class="font-bold text-[#354776] text-sm leading-snug">Pengujian Laboratorium</h3>
-                    <p class="text-gray-500 text-xs mt-1.5 leading-relaxed">Pengujian kualitas tanah, air &amp; bahan</p>
+                        class="bg-[#354776]/10 text-[#354776] text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full mb-2">Layanan</span>
+                    <h3 class="font-bold text-[#354776] text-base leading-snug">Pengujian Laboratorium</h3>
+                    <p class="text-gray-500 text-sm mt-2 leading-relaxed">Pengujian kualitas tanah, air &amp; bahan</p>
                 </a>
 
                 <a href="{{ $url_advis->url ?? '#' }}" {{ isset($url_advis) ? 'target="_blank"' : '' }}
-                    class="bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-200 p-6 flex flex-col items-center text-center cursor-pointer group">
+                    class="bg-white rounded-2xl shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-200 p-6 flex flex-col items-center text-center cursor-pointer group border border-white/60">
                     <div
-                        class="w-16 h-16 rounded-full bg-[#354776]/10 flex items-center justify-center mb-3 group-hover:bg-[#354776]/20 transition-colors">
+                        class="w-24 h-24 rounded-2xl bg-[#354776] flex items-center justify-center mb-4 shadow-lg shadow-[#354776]/20 group-hover:bg-[#2a3a61] transition-colors p-4">
                         <img src="{{ asset('assets/icon/permohonanIcon.png') }}" alt="Data"
-                            class="w-9 h-9 object-contain"
+                            class="w-full h-full object-contain brightness-0 invert"
                             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
-                        <i class="fas fa-database text-[#354776] text-2xl hidden"></i>
+                        <i class="fas fa-database text-white text-4xl hidden"></i>
                     </div>
                     <span
-                        class="bg-[#354776] text-white text-[10px] font-bold uppercase tracking-widest px-2 py-0.5 rounded mb-2">Layanan</span>
-                    <h3 class="font-bold text-[#354776] text-sm leading-snug">Data &amp; Informasi</h3>
-                    <p class="text-gray-500 text-xs mt-1.5 leading-relaxed">Permohonan data &amp; informasi publik rawa</p>
+                        class="bg-[#354776]/10 text-[#354776] text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full mb-2">Layanan</span>
+                    <h3 class="font-bold text-[#354776] text-base leading-snug">Data &amp; Informasi</h3>
+                    <p class="text-gray-500 text-sm mt-2 leading-relaxed">Permohonan data &amp; informasi publik rawa</p>
                 </a>
 
             </div>
@@ -212,22 +212,61 @@
             @php
                 $icons = ['fas fa-drafting-compass', 'fas fa-flask', 'fas fa-database'];
                 $defaultNames = ['Advis Teknis', 'Laboratorium', 'Data & Informasi'];
+                $barColors = ['bg-amber-400', 'bg-[#354776]', 'bg-emerald-500'];
+                $statsLayanan = collect($statsLayanan)->take(3)->values();
             @endphp
             <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
                 @foreach ($statsLayanan as $i => $stat)
+                    @php
+                        $total = max(1, (int) ($stat['all'] ?? 0));
+                        $bars = [
+                            ['label' => 'Baru', 'value' => (int) ($stat['baru'] ?? 0), 'color' => 'bg-amber-400'],
+                            ['label' => 'Proses', 'value' => (int) ($stat['proses'] ?? 0), 'color' => 'bg-[#354776]'],
+                            ['label' => 'Selesai', 'value' => (int) ($stat['selesai'] ?? 0), 'color' => 'bg-emerald-500'],
+                        ];
+                    @endphp
                     <div class="bg-white rounded-xl overflow-hidden shadow border border-gray-100">
-                        <div class="bg-[#354776] px-4 py-3 flex items-center gap-2">
-                            <i class="{{ $icons[$i] ?? 'fas fa-clipboard-list' }} text-amber-400 text-sm"></i>
-                            <h3 class="text-white font-semibold text-sm truncate">
-                                {{ $stat['name'] ?: $defaultNames[$i] ?? 'Layanan' }}</h3>
+                        <div class="bg-[#354776] px-4 py-3 flex items-center justify-between gap-3">
+                            <div class="flex items-center gap-2 min-w-0">
+                                <i class="{{ $icons[$i] ?? 'fas fa-clipboard-list' }} text-amber-400 text-sm"></i>
+                                <h3 class="text-white font-semibold text-sm truncate">
+                                    {{ $stat['name'] ?: $defaultNames[$i] ?? 'Layanan' }}
+                                </h3>
+                            </div>
+                            <div class="text-right shrink-0">
+                                <div class="text-white text-2xl font-extrabold leading-none">{{ $stat['all'] }}</div>
+                                <div class="text-white/60 text-[9px] mt-1 uppercase tracking-wide">Total</div>
+                            </div>
                         </div>
-                        <div class="p-4 grid grid-cols-4 gap-2">
-                            @foreach ([['Semua', $stat['all']], ['Baru', $stat['baru']], ['Proses', $stat['proses']], ['Selesai', $stat['selesai']]] as [$lbl, $val])
-                                <div class="bg-[#354776] rounded-lg py-3 flex flex-col items-center">
-                                    <span
-                                        class="text-white text-xl font-extrabold leading-none">{{ $val }}</span>
-                                    <span
-                                        class="text-white/60 text-[9px] mt-1 uppercase tracking-wide">{{ $lbl }}</span>
+
+                        <div class="p-4 space-y-4">
+                            @foreach ($bars as $bar)
+                                @php
+                                    $steps = $stat['all'] > 0 ? (int) ceil(($bar['value'] / $total) * 12) : 0;
+                                    $widthClass = match ($steps) {
+                                        12 => 'w-full',
+                                        11 => 'w-11/12',
+                                        10 => 'w-10/12',
+                                        9 => 'w-9/12',
+                                        8 => 'w-8/12',
+                                        7 => 'w-7/12',
+                                        6 => 'w-6/12',
+                                        5 => 'w-5/12',
+                                        4 => 'w-4/12',
+                                        3 => 'w-3/12',
+                                        2 => 'w-2/12',
+                                        1 => 'w-1/12',
+                                        default => 'w-0',
+                                    };
+                                @endphp
+                                <div>
+                                    <div class="flex items-center justify-between mb-1.5 text-sm">
+                                        <span class="font-medium text-slate-600">{{ $bar['label'] }}</span>
+                                        <span class="font-bold text-[#354776]">{{ $bar['value'] }}</span>
+                                    </div>
+                                    <div class="h-3 rounded-full bg-slate-100 overflow-hidden">
+                                        <div class="h-full rounded-full {{ $bar['color'] }} {{ $widthClass }} transition-all duration-500"></div>
+                                    </div>
                                 </div>
                             @endforeach
                         </div>
@@ -247,46 +286,31 @@
                 <h2 class="text-xl md:text-2xl font-bold text-[#354776]">Informasi Permohonan Laboratorium</h2>
                 <div class="w-16 h-1 bg-amber-400 mx-auto mt-2 rounded-full"></div>
             </div>
-            @php $lab = $statsLayanan[1] ?? ['all'=>0,'baru'=>0,'proses'=>0,'selesai'=>0]; @endphp
+            @php
+                $lab = $statsLayanan[1] ?? ['all' => 0, 'baru' => 0, 'proses' => 0, 'selesai' => 0];
+                $labCards = [
+                    ['name' => 'Lab Air', 'icon' => 'fas fa-tint'],
+                    ['name' => 'Lab Tanah', 'icon' => 'fas fa-mountain'],
+                    ['name' => 'Topografi', 'icon' => 'fas fa-map-marked-alt'],
+                ];
+            @endphp
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
-                {{-- Lab All --}}
-                <div class="bg-gray-50 rounded-xl overflow-hidden shadow border border-gray-100">
-                    <div class="bg-[#354776] px-4 py-2.5 flex items-center gap-2">
-                        <i class="fas fa-vials text-amber-400 text-sm"></i>
-                        <h3 class="text-white font-semibold text-sm">Lab All</h3>
+                @foreach ($labCards as $card)
+                    <div class="bg-gray-50 rounded-xl overflow-hidden shadow border border-gray-100">
+                        <div class="bg-[#354776] px-4 py-2.5 flex items-center gap-2">
+                            <i class="{{ $card['icon'] }} text-amber-400 text-sm"></i>
+                            <h3 class="text-white font-semibold text-sm">{{ $card['name'] }}</h3>
+                        </div>
+                        <div class="p-4 grid grid-cols-3 gap-2">
+                            @foreach ([['Baru', $lab['baru']], ['Proses', $lab['proses']], ['Selesai', $lab['selesai']]] as [$lbl, $val])
+                                <div class="bg-[#354776] rounded-lg py-2.5 flex flex-col items-center">
+                                    <span class="text-white text-lg font-extrabold leading-none">{{ $val }}</span>
+                                    <span class="text-white/60 text-[9px] mt-0.5 uppercase">{{ $lbl }}</span>
+                                </div>
+                            @endforeach
+                        </div>
                     </div>
-                    <div class="p-4 grid grid-cols-4 gap-2">
-                        @foreach ([['All', $lab['all']], ['Baru', $lab['baru']], ['Proses', $lab['proses']], ['Selesai', $lab['selesai']]] as [$lbl, $val])
-                            <div class="bg-[#354776] rounded-lg py-2.5 flex flex-col items-center">
-                                <span class="text-white text-lg font-extrabold leading-none">{{ $val }}</span>
-                                <span class="text-white/60 text-[9px] mt-0.5 uppercase">{{ $lbl }}</span>
-                            </div>
-                        @endforeach
-                    </div>
-                </div>
-                {{-- Lab Tersisa --}}
-                <div class="bg-gray-50 rounded-xl overflow-hidden shadow border border-gray-100">
-                    <div class="bg-[#354776] px-4 py-2.5 flex items-center gap-2">
-                        <i class="fas fa-clipboard-check text-amber-400 text-sm"></i>
-                        <h3 class="text-white font-semibold text-sm">Lab Tersisa</h3>
-                    </div>
-                    <div class="p-4 flex flex-col items-center justify-center" style="min-height:88px;">
-                        <span
-                            class="text-[#354776] text-5xl font-extrabold">{{ max(0, $lab['all'] - $lab['selesai']) }}</span>
-                        <span class="text-gray-500 text-xs mt-1">permohonan tersisa</span>
-                    </div>
-                </div>
-                {{-- Transportasi --}}
-                <div class="bg-gray-50 rounded-xl overflow-hidden shadow border border-gray-100">
-                    <div class="bg-[#354776] px-4 py-2.5 flex items-center gap-2">
-                        <i class="fas fa-truck text-amber-400 text-sm"></i>
-                        <h3 class="text-white font-semibold text-sm">Transportasi</h3>
-                    </div>
-                    <div class="p-4 flex flex-col items-center justify-center" style="min-height:88px;">
-                        <span class="text-[#354776] text-5xl font-extrabold">{{ $lab['proses'] }}</span>
-                        <span class="text-gray-500 text-xs mt-1">dalam proses</span>
-                    </div>
-                </div>
+                @endforeach
             </div>
         </div>
     </section>
@@ -487,7 +511,7 @@
                                 title="{{ $situs->title }}">
                                 <img src="{{ imageExists($situs->path_image) }}" alt="{{ $situs->title }}"
                                     class="h-10 w-auto max-w-[80px] object-contain"
-                                    onerror="this.src='{{ asset('assets/logoFooter.png') }}'">
+                                    >
                             </a>
                         @endforeach
                     </div>

@@ -64,6 +64,7 @@
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
 
+    @yield('customCss')
     @yield('head')
 </head>
 <body class="font-sans bg-white text-gray-800 antialiased">
@@ -94,6 +95,8 @@
             if (yr) yr.textContent = new Date().getFullYear();
         })();
     </script>
+
+    <script src="{{ url(asset('js/vendor/jquery-1.12.4.min.js')) }}"></script>
 
     {{-- Legacy Bootstrap bundle for components that need it --}}
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js"></script>

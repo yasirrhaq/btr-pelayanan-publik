@@ -1,65 +1,40 @@
-@extends('frontend.layouts.mainNew')
-
-@section('customCss')
-<link rel="stylesheet" href="{{ url('css/responsive/pengujian.css')}}">
-<link rel="stylesheet" href="{{ url('css/responsive/index.css')}}">
-<link rel="stylesheet" href="{{ url('css/responsive/navbar.css')}}">
-<link rel="stylesheet" href="{{ url('css/advis.css')}}">
-@endsection
+@extends('frontend.layouts.mainTailwind')
 
 @section('container')
-    
-    <main>
-        <div class="about-area">
-            <div class="container">
-                   <div class="row">
-                        <div class="col-lg-12">
-                            <div class="about-right mb-90">
-                                <!-- <div class="about-img">
-                                    <img src="{{ asset('img/post/about_heor.jpg') }}" alt="">
-                                </div> -->
-                                <div class="mb-30 pt-30 text-center">
-                                    <h3 class="title-tugas">{{ $url->name }}
-                                    </h3>
-                                    <div class="d-flex justify-content-center">
-                                        <div class="divider-title-tugas"></div>
-                                    </div>
-                                </div>
-                                <div class="about-prea">
-                                </div>
-                            </div>
-                        </div>
-                   </div>
-                   <div class="whole-wrap">
-                        <div class="container box_1170">
-                            <div class="section-top-border">
-                                <div class="row">
-                                    <div class="col-md-5">
-                                        <div class="card">
-                                            <h5 class="card-header">Tentang {{ $url->name }}</h5>
-                                            <div class="card-body">
-                                                <p class="card-text text-justify">{!! str_replace(['<div>','</div>'],' ', $url->deskripsi) !!}</p>
-                                                <a href="@if(auth()->user()) {{ $url->url }} @else /login @endif" class="btn btn-block mb-3">Daftar</a>
-                                            </div>
-                                        </div>
-                                        <!-- <div class="card">
-                                            <h5 class="card-header">Dokumen Pendukung</h5>
-                                            <div class="card-body">
-                                                <div class="col-12 advis-table cards-unduhan mb-5" style="display: flexbox;justify-content: space-between;" >
-                                                    <p class="card-text-dokumen">Format Surat Pendukung Permohonan Advis Teknis</p>
-                                                    <a href="#" class="btn btn-block mb-3">Unduh</a>
-                                                </div>
-                                            </div>
-                                        </div> -->
-                                    </div>
-                                    <div class="col-md-7">
-                                        <img src="{{ imageExists($url->path_image) }}" alt="" class="img-fluid">
-                                    </div>
-                                </div>
-                            </div>
+    @php
+        $ctaUrl = auth()->check() ? $url->url : url('/login');
+    @endphp
+
+    <section class="bg-slate-50 px-4 py-12 md:py-16">
+        <div class="mx-auto max-w-6xl">
+            <div class="text-center">
+                <span class="inline-flex items-center rounded-full bg-amber-100 px-3 py-1 text-xs font-semibold uppercase tracking-[0.24em] text-[#354776]">
+                    Layanan Teknis
+                </span>
+                <h1 class="mt-5 text-3xl font-bold tracking-tight text-[#354776] md:text-5xl">{{ $url->name }}</h1>
+                <div class="mx-auto mt-4 h-1.5 w-24 rounded-full bg-amber-400"></div>
+            </div>
+
+            <div class="mt-10 overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm">
+                <div class="grid gap-0 lg:grid-cols-[0.9fr_1.1fr]">
+                    <div class="bg-slate-100 p-4 md:p-6">
+                        <div class="overflow-hidden rounded-2xl ring-1 ring-slate-200">
+                            <img src="{{ imageExists($url->path_image ?: 'assets/advis-gambar.png') }}" alt="{{ $url->name }}" class="h-full min-h-[280px] w-full object-cover">
                         </div>
                     </div>
+                    <div class="px-6 py-8 md:px-8 md:py-10">
+                        <h2 class="text-2xl font-semibold text-[#354776]">Tentang {{ $url->name }}</h2>
+                        <div class="mt-5 text-sm leading-7 text-slate-600 md:text-base">
+                            {!! str_replace(['<div>', '</div>'], ' ', $url->deskripsi) !!}
+                        </div>
+                        <div class="mt-8">
+                            <a href="{{ $ctaUrl }}" class="inline-flex items-center rounded-xl bg-[#354776] px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-[#2a3a61]">
+                                @auth Daftar Layanan @else Login untuk Mendaftar @endauth
+                            </a>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-    </main>
-   @endsection
+    </section>
+@endsection

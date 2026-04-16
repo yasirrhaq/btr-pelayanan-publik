@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\URL;
 
@@ -33,5 +34,10 @@ class AppServiceProvider extends ServiceProvider
 
         Paginator::useBootstrap();
         Schema::defaultStringLength(191);
+
+        // @t('text') directive — translates when locale is 'en', no-op in 'id'
+        Blade::directive('t', function (string $expression): string {
+            return "<?php echo t({$expression}); ?>";
+        });
     }
 }

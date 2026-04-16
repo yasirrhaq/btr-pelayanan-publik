@@ -1,169 +1,104 @@
-@extends('frontend.layouts.mainNew')
+@extends('frontend.layouts.mainTailwind')
 
-@section('customCss')
-    <link rel="stylesheet" href="{{ url('css/frontend/berita.css')}}">
-@endsection
 @section('container')
-    <section class="whats-news-area pt-50 pb-20">
-        <div class="container">
-            <div class="row justify-content-center mb-3">
-                <div class="col-md-6">
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-lg-8">
-                    <div class="row">
-                        <div class="col-12">
-                            <div class="tab-content" id="nav-tabContent">
-                                <div class="tab-pane fade show active" id="nav-home" role="tabpanel"
-                                    aria-labelledby="nav-home-tab">
-                                    <div class="whats-news-caption">
-                                        <div class="row content-berita">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-                <div class="col-lg-4">
-                    <div class="blog_right_sidebar">
-                        <aside class="single_sidebar_widget popular_post_widget">
-                            <h3 class="widget_title">Berita Terkini</h3>
-                            <form class="frm-search-berita">
-
-                                <div class="input-group mb-3">
-
-                                    <select class="form-control" name="categori_id" style="width: 100% !important;">
-                                        <option value="" selected>Semua</option>
-                                        @foreach ($categori as $item)
-                                            <option value="{{ $item->id }}"> {{ $item->name }} </option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                <div class="input-group mb-3">
-                                    <input type="text" class="form-control" placeholder="Search.." name="search">
-                                    <button type="button" class="btn-search-berita"> <i class="fas fa-search"></i></button>
-                                </div>
-                            </form>
-                            <hr>
-                            @foreach ($terkini as $post)
-                                <div class="media post_item">
-                                    @if ($post->image)
-                                        <img src="{{ asset($post->image) }}" alt="post"
-                                            style="max-height: 80px; max-width: 80px;">
-                                    @else
-                                        <img src="https://source.unsplash.com/500x400?{{ $post->category->name }}"
-                                            alt="post" style="max-height: 80px; max-width: 80px;">
-                                    @endif
-                                    <div class="media-body">
-                                        <a href="{{ url('berita', ['slug' => $post->slug]) }}">
-                                            <h3>{{ $post->title }}</h3>
-                                        </a>
-                                        <p>{{ $post->created_at->diffForHumans() }}</p>
-                                    </div>
-                                </div>
-                            @endforeach
-                        </aside>
-                    </div>
-                </div>
-
-            </div>
+    <section class="bg-slate-50 px-4 pt-10 pb-6 md:pt-14 md:pb-8">
+        <div class="mx-auto max-w-6xl">
+            <span class="inline-flex items-center rounded-full bg-amber-100 px-3 py-1 text-xs font-semibold uppercase tracking-[0.24em] text-[#354776]">
+                Berita Balai
+            </span>
+            <h1 class="mt-5 max-w-3xl text-3xl font-bold tracking-tight text-[#354776] md:text-5xl">
+                Kabar terbaru layanan, kegiatan, dan pengembangan Balai Teknik Rawa
+            </h1>
+            <div class="mt-4 h-1.5 w-24 rounded-full bg-amber-400"></div>
+            <p class="mt-5 max-w-2xl text-sm leading-7 text-slate-600 md:text-base">
+                Informasi terbaru mengenai kegiatan lapangan, layanan teknis, laboratorium, dan penguatan data bidang rawa.
+            </p>
         </div>
     </section>
 
-    <div class="d-flex justify-content-center mb-2 btn-paginate">
-    </div>
-
-@endsection
-
-@push('js')
-    <link rel="stylesheet" href="https://pagination.js.org/dist/2.1.5/pagination.css">
-
-    <script src="{{ asset('js/pagination.js') }}"></script>
-    <script>
-        function template(data){
-            var html = `Tidak ada berita`;
-            if(data.length > 0){
-                html = '';
-                $.each(data, function (key, value) {
-                    var gambar='';
-                    if(value.image === null){
-                        gambar = "img/logo pupr.png"
-                    }else{
-                        gambar=value.image
-                    }
-                    html += `
-                        <div class="col-lg-6 col-md-6">
-                            <div class="single-what-news mb-100">
-                                <div class="what-img ratio ratio-16x9">
-                                    <img class="beritaThumb" <img src="{{ asset('') }}/${gambar}" alt="">
+    <section class="bg-slate-50 px-4 pb-12 md:pb-16">
+        <div class="mx-auto grid max-w-6xl gap-8 lg:grid-cols-[minmax(0,1fr)_320px]">
+            <div>
+                <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
+                    @forelse ($posts as $post)
+                        <a href="{{ url('berita', ['slug' => $post->slug]) }}" class="group block overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm transition-shadow hover:shadow-md">
+                            <div class="aspect-[16/8] overflow-hidden bg-slate-100">
+                                <img src="{{ imageExists($post->image ?: 'assets/beritaterkini1.png') }}" alt="{{ $post->title }}" class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.03]">
+                            </div>
+                            <div class="flex min-h-[250px] flex-col px-5 py-5">
+                                <div class="flex flex-wrap items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-500">
+                                    <span>{{ optional($post->created_at)->format('d M Y') }}</span>
+                                    <span class="rounded-full bg-[#FEF3C7] px-2.5 py-1 text-[#354776]">{{ $post->category->name ?? 'Berita' }}</span>
                                 </div>
-                                <div class="what-cap">
-                                    <span class="color1">
-                                        ${value?.category?.name}
+                                <h3 class="mt-3 line-clamp-3 min-h-[5.5rem] text-lg font-semibold leading-8 text-[#354776] transition-colors group-hover:text-[#2a3a61]">
+                                    {{ $post->title }}
+                                </h3>
+                                <p class="mt-3 line-clamp-3 min-h-[5.5rem] text-sm leading-7 text-slate-600">
+                                    {{ $post->excerpt ?: $post->attr_body_limit }}
+                                </p>
+                                <div class="mt-auto pt-5">
+                                    <span class="inline-flex items-center rounded-xl bg-slate-100 px-4 py-2 text-sm font-semibold text-[#354776] transition-colors group-hover:bg-[#354776] group-hover:text-white">
+                                        Baca selengkapnya
                                     </span>
-                                    <h4>
-                                        <a href="${BASE_URL}/berita/${value?.slug}">
-                                            ${value?.title}
-                                        </a>
-                                    </h4>
                                 </div>
                             </div>
+                        </a>
+                    @empty
+                        <div class="rounded-3xl border border-dashed border-slate-300 bg-white px-6 py-12 text-center text-slate-500 md:col-span-2">
+                            Belum ada berita.
                         </div>
-                    `
-                });
-            }
+                    @endforelse
+                </div>
 
-            return html;
-        }
+                <div class="mt-10 flex justify-center">
+                    {{ $posts->onEachSide(1)->links() }}
+                </div>
+            </div>
 
-        function paginateBerita(){
-            $.ajax({
-                type: "POST",
-                url: `${BASE_URL}/ajax-search-berita`,
-                data: $('.frm-search-berita').serialize(),
-                dataType: "json",
-                success: function (response) {
-                    $('.btn-paginate').pagination({
-                        dataSource : (response),
-                        locator: 'data',
-                        totalNumber: response.total_page,
-                        pageSize: response.show_paage,
-                        callback: function(data, pagination) {
-                            var html = template(data);
-                            $('.content-berita').html(html);
-                        }
-                    })
-                },
-                error: function(){
-                    alert('Terjadi Kesalahan Server');
-                }
-            });
-        }
+            <aside class="space-y-6">
+                <div class="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
+                    <h2 class="text-xl font-semibold text-[#354776]">Cari Berita</h2>
 
-        $(document).on('click', '.btn-search-berita', function(){
-            $('.content-berita').html('Sedang Memuat Data ...');
-            paginateBerita();
-        })
+                    <form method="GET" action="{{ url('/berita') }}" class="mt-5 space-y-4">
+                        <div>
+                            <label class="mb-2 block text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">Kategori</label>
+                            <select class="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-700 outline-none transition focus:border-[#354776]" name="categori_id">
+                                <option value="">Semua</option>
+                                @foreach ($categori as $item)
+                                    <option value="{{ $item->id }}" {{ (string) request('categori_id') === (string) $item->id ? 'selected' : '' }}>
+                                        {{ $item->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
 
-        // Pre-fill search from URL param (e.g. when coming from the header search bar)
-        var urlParams = new URLSearchParams(window.location.search);
-        var searchParam = urlParams.get('search');
-        if (searchParam) {
-            $('input[name="search"]').val(searchParam);
-        }
+                        <div>
+                            <label class="mb-2 block text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">Pencarian</label>
+                            <div class="flex overflow-hidden rounded-xl border border-slate-200 bg-white focus-within:border-[#354776]">
+                                <input type="text" class="w-full px-4 py-3 text-sm text-slate-700 outline-none" placeholder="Cari berita..." name="search" value="{{ request('search') }}">
+                                <button type="submit" class="inline-flex items-center justify-center bg-[#354776] px-4 text-white transition-colors hover:bg-[#2a3a61]">
+                                    <i class="fas fa-search"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
 
-        $('.btn-search-berita').trigger('click');
-
-        $('form').on('keyup keypress', function(e) {
-            var keyCode = e.keyCode || e.which;
-            if (keyCode === 13) {
-                e.preventDefault();
-                $('.btn-search-berita').trigger('click');
-                return false;
-            }
-        });
-    </script>
-@endpush
+                <div class="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
+                    <h2 class="text-xl font-semibold text-[#354776]">Berita Terkini</h2>
+                    <div class="mt-5 space-y-4">
+                        @foreach ($terkini as $latest)
+                            <a href="{{ url('berita', ['slug' => $latest->slug]) }}" class="group flex items-start gap-3 rounded-2xl p-2 transition-colors hover:bg-slate-50">
+                                <img src="{{ imageExists($latest->image ?: 'assets/beritaterkini1.png') }}" alt="{{ $latest->title }}" class="h-16 w-16 rounded-xl object-cover">
+                                <div>
+                                    <h3 class="line-clamp-2 text-sm font-semibold text-slate-700 transition-colors group-hover:text-[#354776]">{{ $latest->title }}</h3>
+                                    <p class="mt-1 text-xs text-slate-500">{{ $latest->created_at->diffForHumans() }}</p>
+                                </div>
+                            </a>
+                        @endforeach
+                    </div>
+                </div>
+            </aside>
+        </div>
+    </section>
+@endsection

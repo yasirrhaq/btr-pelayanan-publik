@@ -46,17 +46,26 @@
 
         {{-- Publikasi --}}
         <li class="btr-nav-item">
-            <button class="btr-nav-parent {{ $group(['dashboard/foto-home*','dashboard/posts*','dashboard/categories*','dashboard/galeri*','dashboard/karya-ilmiah*']) }}">
+            <button class="btr-nav-parent {{ $group(['dashboard/foto-home*','dashboard/posts*','dashboard/categories*','dashboard/galeri*','dashboard/karya-ilmiah*','dashboard/pengumuman*']) }}">
                 <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2M9 5a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2M9 5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2"/></svg>
                 Publikasi
                 <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
             </button>
-            <ul class="btr-nav-children {{ $group(['dashboard/foto-home*','dashboard/posts*','dashboard/categories*','dashboard/galeri*','dashboard/karya-ilmiah*']) }}">
+            <ul class="btr-nav-children {{ $group(['dashboard/foto-home*','dashboard/posts*','dashboard/categories*','dashboard/galeri*','dashboard/karya-ilmiah*','dashboard/pengumuman*']) }}">
                 <li><a class="btr-nav-link {{ $is('dashboard/foto-home*') }}" href="{{ url('dashboard/foto-home') }}">Banner</a></li>
                 <li><a class="btr-nav-link {{ $is('dashboard/posts*') || request()->is('dashboard/categories*') ? 'active' : '' }}" href="{{ url('dashboard/posts') }}">Berita</a></li>
                 <li><a class="btr-nav-link {{ $is('dashboard/galeri*') }}" href="{{ url('dashboard/galeri/foto-video') }}">Galeri</a></li>
-                <li><a class="btr-nav-link {{ $is('dashboard/karya-ilmiah*') }}" href="{{ url('dashboard/karya-ilmiah') }}">Karya Ilmiah</a></li>
+                <li><a class="btr-nav-link {{ $is('dashboard/pengumuman*') }}" href="{{ route('admin.pengumuman.index') }}">Pengumuman</a></li>
+                <li><a class="btr-nav-link {{ $is('dashboard/karya-ilmiah*') }}" href="{{ url('dashboard/karya-ilmiah') }}">Renstra</a></li>
             </ul>
+        </li>
+
+        {{-- PPID --}}
+        <li class="btr-nav-item">
+            <a class="btr-nav-link {{ $is('dashboard/ppid*') }}" href="{{ url('dashboard/ppid') }}">
+                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 0 0 6 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0 1 6 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 0 1 6-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0 0 18 18a8.967 8.967 0 0 0-6 2.292m0-14.25v14.25"/></svg>
+                PPID
+            </a>
         </li>
 
         {{-- Tautan --}}
@@ -69,14 +78,16 @@
 
         {{-- Pengaturan --}}
         <li class="btr-nav-item">
-            <button class="btr-nav-parent {{ $group(['dashboard/footer-setting*','dashboard/settings*','dashboard/landing-page*']) }}">
+            <button class="btr-nav-parent {{ $group(['dashboard/footer-setting*','dashboard/settings*','dashboard/landing-page*','dashboard/hak-akses*','dashboard/master-tim*','dashboard/master-survei*']) }}">
                 <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
                 Pengaturan
                 <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
             </button>
-            <ul class="btr-nav-children {{ $group(['dashboard/footer-setting*','dashboard/settings*','dashboard/landing-page*']) }}">
-                <li><a class="btr-nav-link {{ $is('dashboard/settings*') }}" href="{{ url('dashboard/settings') }}">Hak Akses</a></li>
-                <li><a class="btr-nav-link {{ $is('dashboard/footer-setting*') }}" href="{{ url('dashboard/footer-setting') }}">Sistem</a></li>
+            <ul class="btr-nav-children {{ $group(['dashboard/footer-setting*','dashboard/settings*','dashboard/landing-page*','dashboard/hak-akses*','dashboard/master-tim*','dashboard/master-survei*']) }}">
+                <li><a class="btr-nav-link {{ $is('dashboard/hak-akses*') }}" href="{{ route('admin.hak-akses.index') }}">Hak Akses</a></li>
+                <li><a class="btr-nav-link {{ $is('dashboard/master-tim*') }}" href="{{ route('admin.master-tim.index') }}">Master Tim</a></li>
+                <li><a class="btr-nav-link {{ $is('dashboard/master-survei*') }}" href="{{ route('admin.master-survei.index') }}">Master Survei</a></li>
+                <li><a class="btr-nav-link {{ $is('dashboard/footer-setting*') || request()->is('dashboard/settings*') ? 'active' : '' }}" href="{{ url('dashboard/footer-setting') }}">Sistem</a></li>
             </ul>
         </li>
     </ul>

@@ -1,115 +1,48 @@
-@extends('frontend.layouts.mainNew')
-@section('customCss')
-    <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous"> -->
-    <link rel="stylesheet" href="{{ url('css/frontend/berita.css')}}">
-@endsection
+@extends('frontend.layouts.mainTailwind')
+
 @section('container')
-    <!-- <div class="container">
-        <div class="row justify-content-center mb-5">
-            <div class="col-md-8">
-                <h1 class="mb-3">{{ $post->title }}</h1>
-
-                {{-- <h5>By: {{ $post['author'] }}</h5> --}}
-
-                <p>By. Yasir Haq in <a href="{{url('')}}/berita?category={{ $post->category->slug }}" class="text-decoration-none">
-                        {{ $post->category->name }}</a></p>
-                {{-- <img src="{{ $post['image'] }}" alt="{{ $post['image'] }}" width="200"> --}}
-
-                @if ($post->image)
-                    <img src="{{  asset(  $post->image) }}" alt="{{ $post->category->name }}" class="img-fluid">
-                @else
-                    <img src="https://source.unsplash.com/1200x400?{{ $post->category->name }}" class="card-img-top"
-                        alt="{{ $post->category->name }}" class="img-fluid">
-                @endif
-
-
-                {{-- <p>{{ $post->body }}</p> --}}
-                {{-- ini kalo mau pakai ada tag htmlnya --}}
-
-                <article class="my-3 fs-5">
-                    {!! $post->body !!}
+    <section class="bg-slate-50 px-4 py-10 md:py-14">
+        <div class="mx-auto max-w-6xl">
+            <div class="grid gap-8 lg:grid-cols-[minmax(0,1fr)_320px]">
+                <article class="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm">
+                    <div class="aspect-[16/8] overflow-hidden bg-slate-100">
+                        <img src="{{ imageExists($post->image ?: 'assets/beritautama.png') }}" alt="{{ $post->title }}" class="h-full w-full object-cover">
+                    </div>
+                    <div class="px-6 py-8 md:px-10 md:py-10">
+                        <div class="flex flex-wrap items-center gap-3 text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">
+                            <span>{{ optional($post->created_at)->format('d M Y') }}</span>
+                            <span>&bull;</span>
+                            <span>{{ $post->category->name ?? 'Berita' }}</span>
+                        </div>
+                        <h1 class="mt-4 text-3xl font-bold tracking-tight text-[#354776] md:text-5xl">{{ $post->title }}</h1>
+                        <div class="mt-8 space-y-5 text-sm leading-8 text-slate-600 md:text-base [&_p]:text-justify [&_img]:rounded-2xl [&_img]:max-w-full">
+                            {!! $post->body !!}
+                        </div>
+                        <div class="mt-8">
+                            <a href="{{ url('/berita') }}" class="inline-flex items-center rounded-xl bg-slate-100 px-4 py-2.5 text-sm font-semibold text-[#354776] transition-colors hover:bg-slate-200">
+                                Kembali ke Berita
+                            </a>
+                        </div>
+                    </div>
                 </article>
 
-                <a href="{{url('')}}/berita" class="text-decoration-none">Back to berita</a>
-            </div>
-        </div>
-    </div> -->
-    <!-- yang bisa -->
-    <!-- <main>
-        <div class="container mt-5 container-berita">
-                <div class="row">
-                    <div class="col-9 d-flex justify-content-center">
-                        <div class="card" style="width: 80%;box-shadow: 0px 0px 2px rgb(0,0,0, 0.3),0px 0px 2px rgb(0,0,0,0.3),0px 0px 2px rgb(0,0,0,0.3);">
-							@if ($post->image)
-								<div class="ratio ratio-16x9">
-									<img src="{{  asset( $post->image) }}" class="card-img-top" alt="...">
-								</div>
-								@else
-								<div class="ratio ratio-16x9">
-									<img src="https://source.unsplash.com/random/?{{ $post->category->name }}" class="card-img-top" alt="...">
-								</div>
-								@endif
-                            <div class="card-body">
-                              <h5 class="card-title mb-5">{{ $post->title }}</h5>
-                              <article class="card-text mb-3">
-                                {!! $post->body !!}
-                               </article>
-                        	</div>
-							<a href="{{url('')}}/berita" class="text-decoration-none mb-2" style="color:black">Back to berita</a>
-                      </div>
+                <aside class="space-y-4">
+                    <div class="rounded-3xl border border-slate-200 bg-white px-5 py-5 shadow-sm">
+                        <h2 class="text-lg font-semibold text-[#354776]">Berita Terkini</h2>
+                        <div class="mt-4 space-y-4">
+                            @foreach ($terkini->take(4) as $latest)
+                                <a href="{{ url('berita', ['slug' => $latest->slug]) }}" class="flex items-start gap-3 rounded-2xl p-2 transition-colors hover:bg-slate-50">
+                                    <img src="{{ imageExists($latest->image ?: 'assets/beritaterkini2.png') }}" alt="{{ $latest->title }}" class="h-16 w-16 rounded-xl object-cover">
+                                    <div>
+                                        <h3 class="line-clamp-2 text-sm font-semibold text-slate-700">{{ $latest->title }}</h3>
+                                        <p class="mt-1 text-xs text-slate-500">{{ optional($latest->created_at)->diffForHumans() }}</p>
+                                    </div>
+                                </a>
+                            @endforeach
+                        </div>
                     </div>
-                </div>
-            </div>
-        </div>
-    </main> -->
-    <section class="whats-news-area pt-50 pb-20">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-8">
-                        <div class="card" style="width: 80%;box-shadow: 0px 0px 2px rgb(0,0,0, 0.3),0px 0px 2px rgb(0,0,0,0.3),0px 0px 2px rgb(0,0,0,0.3);">
-                            @if ($post->image)
-                                <div class="">
-                                    <img src="{{   asset( $post->image)  }}" class="img-fluid w-100 h-30">
-                                </div>
-								@else
-                                <div class="">
-                                    <img src="https://source.unsplash.com/random/?{{ $post->category->name }}" class="img-fluid w-100 h-30">
-                                </div>
-								@endif
-                            <div class="card-body">
-                              <h5 class="card-title mb-5">{{ $post->title }}</h5>
-                              <article class="card-text mb-3">
-                                {!! $post->body !!}
-                               </article>
-                        	</div>
-							<a href="{{url('')}}/berita" class="text-decoration-none mb-2 ml-3" style="color:black">Back to berita</a>
-                      </div>
-                </div>
-                <div class="col-lg-4">
-                    <div class="blog_right_sidebar">
-                        <aside class="single_sidebar_widget popular_post_widget">
-                                    <h3 class="widget_title">Berita Terkini</h3>
-                                    @foreach ($terkini->take(2) as $post)
-                                        <div class="media post_item">
-                                            @if($post->image)
-                                                <img src="{{  asset( $post->image) }}" alt="post" style="max-height: 80px; max-width: 80px;">
-                                            @else
-                                                <img src="https://source.unsplash.com/500x400?{{ $post->category->name }}" alt="post" style="max-height: 80px; max-width: 80px;">
-                                            @endif
-                                            <div class="media-body">
-                                                <a href="{{ url('berita', ['slug' => $post->slug]) }}">
-                                                    <h3>{{ $post->title }}</h3>
-                                                </a>
-                                                <p>{{ $post->created_at->diffForHumans() }}</p>
-                                            </div>
-                                        </div>
-                                    @endforeach
-                        </aside>
-                    </div>
-                </div>
+                </aside>
             </div>
         </div>
     </section>
-</br>
-</br>
 @endsection

@@ -30,6 +30,13 @@ test.describe('Public Pages', () => {
     await expect(page.locator('body')).toContainText('Jadwal Pemeliharaan Sistem Layanan Online');
   });
 
+  test('Pengumuman public attachment opens in modal', async ({ page }) => {
+    await page.goto('/pengumuman/1');
+    expect(await hasAppError(page)).toBe(false);
+    await page.getByRole('button', { name: 'Buka Lampiran' }).click();
+    await expect(page.locator('text=Buka File')).toBeVisible();
+  });
+
   test('Visi Misi page loads', async ({ page }) => {
     await page.goto('/visi-misi');
     expect(await hasAppError(page)).toBe(false);

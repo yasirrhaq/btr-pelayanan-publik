@@ -3,6 +3,8 @@
 namespace App\Exceptions;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Session\TokenMismatchException;
+use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -36,6 +38,32 @@ class Handler extends ExceptionHandler
         'password_confirmation',
     ];
 
+    public function render($request, Throwable $e)
+    {
+        if ($this->isPageExpiredException($e) && !$request->expectsJson()) {
+            if ($request->hasSession()) {
+                $request->session()->regenerateToken();
+            }
+
+            $redirectTo = '/';
+
+            if ($request->is('login')) {
+                $redirectTo = route('login', [], false);
+            } elseif ($request->is('register')) {
+                $redirectTo = '/register';
+            } elseif ($request->is('forgot-password')) {
+                $redirectTo = route('password.request', [], false);
+            }
+
+            return redirect()
+                ->to($redirectTo)
+                ->withInput($request->except(['password', 'password_confirmation', 'captcha']))
+                ->with('authExpired', 'Sesi formulir telah kedaluwarsa. Silakan coba lagi.');
+        }
+
+        return parent::render($request, $e);
+    }
+
     /**
      * Register the exception handling callbacks for the application.
      *
@@ -46,5 +74,11 @@ class Handler extends ExceptionHandler
         $this->reportable(function (Throwable $e) {
             //
         });
+    }
+
+    protected function isPageExpiredException(Throwable $e): bool
+    {
+        return $e instanceof TokenMismatchException
+            || ($e instanceof HttpExceptionInterface && $e->getStatusCode() === 419);
     }
 }

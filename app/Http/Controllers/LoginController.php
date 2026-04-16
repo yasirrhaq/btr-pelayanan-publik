@@ -2,11 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\Session;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Http;
 
 class LoginController extends Controller
 {
@@ -23,24 +21,24 @@ class LoginController extends Controller
             'email'    => 'required|email:rfc,dns',
             'password' => 'required',
         ];
-        if (config('services.recaptcha.secret_key')) {
-            $rules['g-recaptcha-response'] = ['required', function ($attr, $value, $fail) {
-                $response = Http::asForm()->post('https://www.google.com/recaptcha/api/siteverify', [
-                    'secret'   => config('services.recaptcha.secret_key'),
-                    'response' => $value,
-                    'remoteip' => request()->ip(),
-                ]);
-                if (!($response->json('success'))) {
-                    $fail('Verifikasi CAPTCHA gagal. Silakan coba lagi.');
-                }
-            }];
+
+        if (!config('captcha.disable', false)) {
+            $rules['captcha'] = 'required|captcha';
         }
-        $credentials = $request->validate($rules);
-        unset($credentials['g-recaptcha-response']);
+
+        $validatedData = $request->validate($rules, [
+            'captcha.required' => 'Kode captcha wajib diisi.',
+            'captcha.captcha'  => 'Kode captcha salah. Silakan coba lagi.',
+        ]);
+
+        $credentials = [
+            'email'    => $validatedData['email'],
+            'password' => $validatedData['password'],
+        ];
 
         if (Auth::attempt($credentials) && Auth::user()->is_verified == 1) {
             $request->session()->regenerate();
-            return redirect()->intended('/dashboard');
+            return redirect()->intended(Auth::user()->is_admin ? '/dashboard' : '/pelanggan');
         } else if (Auth::attempt($credentials) && Auth::user()->is_verified == 0) {
             return redirect()->intended('verify-email');
         }

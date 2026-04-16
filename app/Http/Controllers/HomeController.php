@@ -25,8 +25,8 @@ class HomeController extends Controller
             $statsLayanan[] = [
                 'name'    => $jenis->name,
                 'all'     => (clone $base)->count(),
-                'baru'    => (clone $base)->whereHas('status', fn($q) => $q->where('name', 'Baru'))->count(),
-                'proses'  => (clone $base)->whereHas('status', fn($q) => $q->where('name', 'Proses'))->count(),
+                'baru'    => (clone $base)->whereHas('status', fn($q) => $q->whereIn('name', ['Baru', 'Disetujui']))->count(),
+                'proses'  => (clone $base)->whereHas('status', fn($q) => $q->whereIn('name', ['Proses', 'Diproses']))->count(),
                 'selesai' => (clone $base)->whereHas('status', fn($q) => $q->where('name', 'Selesai'))->count(),
             ];
         }

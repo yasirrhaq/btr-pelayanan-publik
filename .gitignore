@@ -18,7 +18,8 @@ yarn-error.log
 composer.lock
 /public/uploads/*
 .claude
-.docs
+# .docs
+.code-review-graph
 .graphify_*
 /graphify-out
 .env.docker
@@ -27,5 +28,6 @@ composer.lock
 .windsurfrules
 AGENTS.md
 .cursor*
-design
+# design
 GEMINI.md
+nul

@@ -1,4 +1,4 @@
-@extends('frontend.layouts.mainNew')
+@extends('frontend.layouts.mainTailwind')
 
 @section('customCss')
 <link rel="stylesheet" href="{{ url('css/responsive/karya.css')}}">

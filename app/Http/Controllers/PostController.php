@@ -13,11 +13,27 @@ class PostController extends Controller
     public function index()
     {
         $category = Category::all();
+        $posts = Post::query()
+            ->when(request('search'), function ($query, $search) {
+                $query->where(function ($inner) use ($search) {
+                    $inner->where('title', 'like', "%{$search}%")
+                        ->orWhere('body', 'like', "%{$search}%")
+                        ->orWhere('excerpt', 'like', "%{$search}%");
+                });
+            })
+            ->when(request('categori_id'), function ($query, $categoryId) {
+                $query->where('category_id', $categoryId);
+            })
+            ->latest()
+            ->paginate(4)
+            ->appends(request()->query());
+
         return view('berita.index', [
             "title" => "Daftar Berita",
             "active" => 'posts',
             'categori' => $category,
-            "terkini" => Post::latest()->take(2)->get()
+            'posts' => $posts,
+            "terkini" => Post::latest()->take(4)->get()
         ]);
     }
 

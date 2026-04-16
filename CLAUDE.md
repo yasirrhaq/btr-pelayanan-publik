@@ -6,6 +6,27 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 **BTR Pelayanan Publik** — A public services web application for Balai Teknik Rawa (a technical rawa/swamp engineering office). Built with Laravel 8, PHP ^7.2, and Vite. The UI language is Indonesian.
 
+## Token Efficiency Defaults
+
+- Keep responses concise by default using `caveman`-style brevity in `full` mode: short, direct, technically accurate, and readable.
+- Prefer `lean-ctx` for reads, shell output, search, and tree inspection to reduce context usage.
+- Prefer `symdex-code-search` for code discovery before broad file scanning.
+- Expand explanations only when the task is risky, ambiguous, or the user asks for more detail.
+- Avoid filler, repetition, and restating obvious command output.
+
+## Workflow Defaults
+
+Primary workflow reference: `.docs/WORKFLOW.md`.
+
+- Plan first for any non-trivial task; re-plan quickly if execution diverges.
+- Use subagents/tools aggressively for research, exploration, and parallel analysis to keep main context clean.
+- Verify before marking work done: run relevant tests, compare behavior, inspect logs when needed.
+- Prefer elegant, minimal-impact fixes over patchy quick wins.
+- Handle bug fixing autonomously when enough context is available.
+- Track work in `tasks/todo.md`, capture review notes there, and record recurring corrections in `tasks/lessons.md`.
+- Write completed feature sessions to `.docs/sessions`.
+- Prefer current external docs through Context7 when latest documentation matters.
+
 ## Common Commands
 
 ```bash

@@ -37,6 +37,7 @@ class Kernel extends HttpKernel
             \App\Http\Middleware\VerifyCsrfToken::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
             \App\Http\Middleware\SetLocale::class,
+            \App\Http\Middleware\TranslateResponse::class,
         ],
 
         'api' => [
@@ -65,6 +66,8 @@ class Kernel extends HttpKernel
         'signed' => \App\Http\Middleware\ValidateSignature::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
-        'is_verify_email' => \App\Http\Middleware\IsVerifyEmail::class
+        'is_verify_email' => \App\Http\Middleware\IsVerifyEmail::class,
+        'role' => \App\Http\Middleware\CheckRole::class,
+        'permission' => \Spatie\Permission\Middlewares\PermissionMiddleware::class,
     ];
 }

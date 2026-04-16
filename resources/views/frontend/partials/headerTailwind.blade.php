@@ -3,11 +3,11 @@
     $hdr_url_advis = $hdr_urls->firstWhere('id', 3);
 @endphp
 
-<div class="sticky top-0 z-50 shadow-sm" x-data="{ mobileOpen: false, langOpen: false }">
+<div class="sticky top-0 z-50 border-b border-slate-200/80 bg-white/95 shadow-sm backdrop-blur" x-data="{ mobileOpen: false, langOpen: false }">
 
     {{-- Row 1: Dark Navy [#354776] top bar --}}
-    <div class="bg-[#354776] border-b border-gray-200 hidden md:block py-1.5">
-        <div class="max-w-screen-xl mx-auto px-4 flex items-center justify-between">
+    <div class="bg-[#354776] hidden md:block py-1.5">
+        <div class="max-w-6xl mx-auto px-4 md:px-6 flex items-center justify-between">
 
             <span id="topbar-time" class="text-[11px] text-gray-300 font-medium"></span>
 
@@ -95,11 +95,11 @@
     </div>
 
     {{-- Row 2: Grey bar --}}
-    <div class="bg-gray-100 border-b border-gray-300">
-        <div class="max-w-screen-xl mx-auto px-4">
-            <div class="flex items-center justify-between" style="min-height:64px">
+    <div class="bg-gray-100/95">
+        <div class="max-w-6xl mx-auto px-4 md:px-6">
+            <div class="flex items-center justify-between gap-6" style="min-height:72px">
 
-                <a href="{{ url('/home') }}" class="flex items-center gap-3 py-2 flex-shrink-0">
+                <a href="{{ url('/home') }}" class="flex items-center gap-3 py-3 flex-shrink-0">
                     <img src="{{ imageExists(config('app.logo')) }}" alt="Logo BTR" class="h-12 w-auto">
                     <div class="leading-tight">
                         <div class="font-bold text-[14px] tracking-wide text-[#354776]">BALAI TEKNIK RAWA</div>
@@ -112,13 +112,13 @@
                 <div class="hidden md:flex items-center">
 
                     <a href="{{ url('/home') }}"
-                        class="px-3 py-5 text-[13px] font-medium text-gray-700 hover:text-[#354776] hover:bg-gray-200 transition-colors whitespace-nowrap">
+                        class="px-3 py-6 text-[13px] font-medium text-gray-700 hover:text-[#354776] hover:bg-gray-200/80 transition-colors whitespace-nowrap">
                         Beranda
                     </a>
 
                     <div class="nav-item relative">
                         <button
-                            class="px-3 py-5 text-[13px] font-medium text-gray-700 hover:text-[#354776] hover:bg-gray-200 transition-colors flex items-center gap-1 whitespace-nowrap cursor-pointer">
+                            class="px-3 py-6 text-[13px] font-medium text-gray-700 hover:text-[#354776] hover:bg-gray-200/80 transition-colors flex items-center gap-1 whitespace-nowrap cursor-pointer">
                             Profil <i class="fas fa-caret-down text-[10px] text-gray-400"></i>
                         </button>
                         <ul class="nav-dropdown absolute left-0 top-full bg-white text-gray-800 shadow-xl min-w-[200px] z-50 border-t-2 border-[#354776] rounded-b-md">
@@ -133,7 +133,7 @@
 
                     <div class="nav-item relative">
                         <button
-                            class="px-3 py-5 text-[13px] font-medium text-gray-700 hover:text-[#354776] hover:bg-gray-200 transition-colors flex items-center gap-1 whitespace-nowrap cursor-pointer">
+                            class="px-3 py-6 text-[13px] font-medium text-gray-700 hover:text-[#354776] hover:bg-gray-200/80 transition-colors flex items-center gap-1 whitespace-nowrap cursor-pointer">
                             Layanan <i class="fas fa-caret-down text-[10px] text-gray-400"></i>
                         </button>
                         <ul class="nav-dropdown absolute left-0 top-full bg-white text-gray-800 shadow-xl min-w-[210px] z-50 border-t-2 border-[#354776] rounded-b-md">
@@ -145,7 +145,7 @@
 
                     <div class="nav-item relative">
                         <button
-                            class="px-3 py-5 text-[13px] font-medium text-gray-700 hover:text-[#354776] hover:bg-gray-200 transition-colors flex items-center gap-1 whitespace-nowrap cursor-pointer">
+                            class="px-3 py-6 text-[13px] font-medium text-gray-700 hover:text-[#354776] hover:bg-gray-200/80 transition-colors flex items-center gap-1 whitespace-nowrap cursor-pointer">
                             Publikasi <i class="fas fa-caret-down text-[10px] text-gray-400"></i>
                         </button>
                         <ul class="nav-dropdown absolute left-0 top-full bg-white text-gray-800 shadow-xl min-w-[210px] z-50 border-t-2 border-[#354776] rounded-b-md">
@@ -159,7 +159,7 @@
 
                     <div class="nav-item relative">
                         <button
-                            class="px-3 py-5 text-[13px] font-medium text-gray-700 hover:text-[#354776] hover:bg-gray-200 transition-colors flex items-center gap-1 whitespace-nowrap cursor-pointer">
+                            class="px-3 py-6 text-[13px] font-medium text-gray-700 hover:text-[#354776] hover:bg-gray-200/80 transition-colors flex items-center gap-1 whitespace-nowrap cursor-pointer">
                             Saran dan Pengaduan <i class="fas fa-caret-down text-[10px] text-gray-400"></i>
                         </button>
                         <ul class="nav-dropdown absolute right-0 top-full bg-white text-gray-800 shadow-xl min-w-[230px] z-50 border-t-2 border-[#354776] rounded-b-md">

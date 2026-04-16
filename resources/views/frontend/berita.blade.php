@@ -1,41 +1,79 @@
-@extends('frontend.layouts.main')
+@extends('frontend.layouts.mainTailwind')
 
 @section('container')
-    <section class="bg-gray-50 border-b border-gray-200 py-10 px-4">
-        <div class="max-w-6xl mx-auto">
-            <h1 class="text-2xl md:text-3xl font-bold text-[#354776]">Berita {{ config('app.name') }}</h1>
-            <div class="w-16 h-1 bg-amber-400 mt-2 rounded-full"></div>
+    @php
+        $featuredPost = $posts->first();
+        $secondaryPosts = $posts->slice(1);
+    @endphp
+
+    <section class="bg-slate-50 px-4 pt-10 pb-6 md:pt-14 md:pb-8">
+        <div class="mx-auto max-w-6xl">
+            <span class="inline-flex items-center rounded-full bg-amber-100 px-3 py-1 text-xs font-semibold uppercase tracking-[0.24em] text-[#354776]">
+                Berita Balai
+            </span>
+            <h1 class="mt-5 max-w-3xl text-3xl font-bold tracking-tight text-[#354776] md:text-5xl">Kabar terbaru layanan, kegiatan, dan pengembangan Balai Teknik Rawa</h1>
+            <div class="mt-4 h-1.5 w-24 rounded-full bg-amber-400"></div>
+            <p class="mt-5 max-w-2xl text-sm leading-7 text-slate-600 md:text-base">
+                Informasi terbaru mengenai kegiatan lapangan, layanan teknis, laboratorium, dan penguatan data bidang rawa.
+            </p>
         </div>
     </section>
 
-    <section class="py-10 px-4">
-        <div class="max-w-6xl mx-auto">
-            @if ($posts->count())
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    @foreach ($posts as $post)
-                        <div class="bg-white rounded-xl border border-gray-200 overflow-hidden hover:shadow-lg transition-shadow flex flex-col">
-                            <div class="aspect-video overflow-hidden bg-gray-100">
-                                @if ($post->image)
-                                    <img src="{{ asset($post->image) }}" class="w-full h-full object-cover" alt="">
-                                @else
-                                    <img src="https://source.unsplash.com/random/?{{ $post->category->name }}" class="w-full h-full object-cover" alt="">
-                                @endif
+    <section class="bg-slate-50 px-4 pb-10 md:pb-14">
+        <div class="mx-auto max-w-6xl">
+            @if ($featuredPost)
+                <a href="{{ url('berita', ['slug' => $featuredPost->slug]) }}" class="group block overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm transition-shadow hover:shadow-md lg:grid lg:grid-cols-[1.15fr_0.85fr]">
+                    <div class="order-2 px-6 py-8 md:px-8 md:py-10 lg:order-1">
+                        <div class="flex flex-wrap items-center gap-3 text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
+                            <span class="rounded-full bg-amber-100 px-3 py-1 text-[#354776]">Sorotan</span>
+                            <span>{{ optional($featuredPost->created_at)->format('d M Y') }}</span>
+                            <span>{{ $featuredPost->category->name ?? 'Berita' }}</span>
+                        </div>
+                        <h2 class="mt-4 text-2xl font-bold tracking-tight text-[#354776] transition-colors group-hover:text-[#2a3a61] md:text-4xl">{{ $featuredPost->title }}</h2>
+                        <p class="mt-4 max-w-2xl text-sm leading-7 text-slate-600 md:text-base">{{ $featuredPost->excerpt }}</p>
+                        <div class="mt-6 inline-flex items-center text-sm font-semibold text-[#354776] group-hover:text-[#2a3a61]">
+                            Baca Berita
+                        </div>
+                    </div>
+                    <div class="order-1 bg-slate-100 lg:order-2">
+                        <img src="{{ imageExists($featuredPost->image ?: 'assets/beritautama.png') }}" alt="{{ $featuredPost->title }}" class="h-full min-h-[260px] w-full object-cover transition-transform duration-300 group-hover:scale-[1.02]">
+                    </div>
+                </a>
+            @endif
+
+            @if ($secondaryPosts->count())
+                <div class="mt-10 grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
+                    @foreach ($secondaryPosts as $post)
+                        <a href="{{ url('berita', ['slug' => $post->slug]) }}" class="group block overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm transition-shadow hover:shadow-md">
+                            <div class="aspect-[16/10] overflow-hidden bg-slate-100">
+                                <img src="{{ imageExists($post->image ?: 'assets/beritaterkini1.png') }}" alt="{{ $post->title }}" class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.03]">
                             </div>
-                            <div class="p-4 flex-1 flex flex-col">
-                                <h5 class="font-bold text-[#354776] text-base mb-2 line-clamp-2">{{ $post->title }}</h5>
-                                <p class="text-gray-600 text-sm flex-1">{{ $post->excerpt }}</p>
-                                <div class="flex items-center justify-between mt-4 pt-3 border-t border-gray-100">
-                                    <small class="text-gray-400 text-xs">{{ $post->updated_at }}</small>
-                                    <a href="{{ url('berita', ['slug' => $post->slug]) }}" class="text-xs font-semibold bg-amber-400 hover:bg-amber-300 text-[#354776] px-3 py-1.5 rounded transition-colors">Baca</a>
+                            <div class="px-5 py-5">
+                                <div class="flex flex-wrap items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-500">
+                                    <span>{{ optional($post->created_at)->format('d M Y') }}</span>
+                                    <span>&bull;</span>
+                                    <span>{{ $post->category->name ?? 'Berita' }}</span>
+                                </div>
+                                <h3 class="mt-3 line-clamp-2 text-lg font-semibold text-[#354776] transition-colors group-hover:text-[#2a3a61]">{{ $post->title }}</h3>
+                                <p class="mt-3 line-clamp-3 text-sm leading-7 text-slate-600">{{ $post->excerpt }}</p>
+                                <div class="mt-5 inline-flex items-center text-sm font-semibold text-[#354776] group-hover:text-[#2a3a61]">
+                                    Baca selengkapnya
                                 </div>
                             </div>
-                        </div>
+                        </a>
                     @endforeach
                 </div>
-                <div class="flex justify-center mt-8">{{ $posts->links() }}</div>
-            @else
-                <p class="text-center text-gray-500">Belum ada berita.</p>
             @endif
+
+            @if (!$posts->count())
+                <div class="rounded-3xl border border-dashed border-slate-300 bg-white px-6 py-12 text-center text-slate-500">
+                    Belum ada berita.
+                </div>
+            @endif
+
+            <div class="mt-10 flex justify-center">
+                {{ $posts->links() }}
+            </div>
         </div>
     </section>
 @endsection

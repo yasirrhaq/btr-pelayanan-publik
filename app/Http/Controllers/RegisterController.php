@@ -8,7 +8,6 @@ use App\Mail\SignupEmail;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
 
 class RegisterController extends Controller
@@ -35,20 +34,16 @@ class RegisterController extends Controller
             'alamat'                => 'required|max:255',
             'instansi'              => 'required|max:255',
         ];
-        if (config('services.recaptcha.secret_key')) {
-            $rules['g-recaptcha-response'] = ['required', function ($attr, $value, $fail) {
-                $response = Http::asForm()->post('https://www.google.com/recaptcha/api/siteverify', [
-                    'secret'   => config('services.recaptcha.secret_key'),
-                    'response' => $value,
-                    'remoteip' => request()->ip(),
-                ]);
-                if (!($response->json('success'))) {
-                    $fail('Verifikasi CAPTCHA gagal. Silakan coba lagi.');
-                }
-            }];
+
+        if (!config('captcha.disable', false)) {
+            $rules['captcha'] = 'required|captcha';
         }
-        $validatedData = $request->validate($rules);
-        unset($validatedData['g-recaptcha-response']);
+
+        $validatedData = $request->validate($rules, [
+            'captcha.required' => 'Kode captcha wajib diisi.',
+            'captcha.captcha'  => 'Kode captcha salah. Silakan coba lagi.',
+        ]);
+        unset($validatedData['captcha']);
         
         if ($request->file('foto_profile')) {
 

@@ -11,4 +11,14 @@ class JenisLayanan extends Model
 
     protected $table = 'jenis_layanan';
     protected $guarded = ['id'];
+
+    public function getNamaAttribute(): ?string
+    {
+        return $this->attributes['name'] ?? null;
+    }
+
+    public function permohonan()
+    {
+        return $this->hasMany(Permohonan::class);
+    }
 }

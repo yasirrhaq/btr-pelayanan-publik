@@ -1,51 +1,35 @@
-@extends('frontend.layouts.mainNew')
+@extends('frontend.layouts.mainTailwind')
 
-@section('customCss')
-    <link rel="stylesheet" href="{{ url('css/frontend/fasilitas.css') }}">
-@endsection
 @section('container')
-    <main>
-        <div class="about-area">
-            <div class="container">
-                <div class="row">
-                    <div class="col-lg-12">
-                        <div class="about-right mb-90">
-                            <!-- <div class="about-img">
-                                            <img src="{{ asset('img/post/about_heor.jpg') }}" alt="">
-                                        </div> -->
-                            <div class="mb-30 pt-30 text-center">
-                                <h3 class="title-tugas">Fasilitas Kami
-                                </h3>
-                                <div class="d-flex justify-content-center">
-                                    <div class="divider-title-tugas"></div>
-                                </div>
-                            </div>
-                            <div class="about-prea">
-                            </div>
+    <section class="bg-slate-50 px-4 py-12 md:py-16">
+        <div class="mx-auto max-w-6xl">
+            <div class="text-center">
+                <span class="inline-flex items-center rounded-full bg-amber-100 px-3 py-1 text-xs font-semibold uppercase tracking-[0.24em] text-[#354776]">
+                    Sarana Balai
+                </span>
+                <h1 class="mt-5 text-3xl font-bold tracking-tight text-[#354776] md:text-5xl">Fasilitas Kami</h1>
+                <div class="mx-auto mt-4 h-1.5 w-24 rounded-full bg-amber-400"></div>
+                <p class="mx-auto mt-6 max-w-3xl text-sm leading-7 text-slate-600 md:text-base">
+                    Fasilitas pendukung layanan teknis Balai Teknik Rawa untuk kegiatan pengujian, koordinasi, dokumentasi, dan pengembangan pengetahuan.
+                </p>
+            </div>
+
+            <div class="mt-10 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+                @foreach ($fasilitasBalai as $item)
+                    <article class="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm transition-shadow hover:shadow-md">
+                        <div class="aspect-[4/3] overflow-hidden bg-slate-100">
+                            <img src="{{ imageExists($item->path_image ?: 'assets/fotoDumy.jpeg') }}" alt="{{ $item->title }}" class="h-full w-full object-cover">
                         </div>
-                    </div>
-                </div>
-                @foreach ($fasilitasBalai->chunk(3) as $fasilitas)
-                    <div class="card-deck mt-5">
-                        @foreach ($fasilitas as $item)
-                            <div class="card">
-                                <img class="card-img-top" src="{{  asset(  $item->path_image) }}"
-                                    alt="Card image cap" height="277px" style="object-fit: cover">
-                                <div class="card-body">
-                                    <h5 class="card-title text-center">
-                                        {{ $item->title }}
-                                    </h5>
-                                    <!-- <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This card has even longer content than the first to show that equal height action.</p> -->
-                                    <!-- <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p> -->
-                                </div>
-                            </div>
-                        @endforeach
-                    </div>
+                        <div class="px-5 py-5">
+                            <h2 class="text-lg font-semibold text-[#354776]">{{ $item->title }}</h2>
+                        </div>
+                    </article>
                 @endforeach
             </div>
+
+            <div class="mt-8 flex justify-center">
+                {{ $fasilitasBalai->links() }}
+            </div>
         </div>
-        <div class="d-flex justify-content-center mb-2 mt-2">
-            {{ $fasilitasBalai->links() }}
-        </div>
-    </main>
+    </section>
 @endsection

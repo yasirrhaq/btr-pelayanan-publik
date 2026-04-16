@@ -1,44 +1,28 @@
-@extends('frontend.layouts.mainNew')
+@extends('frontend.layouts.mainTailwind')
 
 @section('container')
+    <section class="bg-slate-50 px-4 py-12 md:py-16">
+        <div class="mx-auto max-w-6xl">
+            <div class="text-center">
+                <span class="inline-flex items-center rounded-full bg-amber-100 px-3 py-1 text-xs font-semibold uppercase tracking-[0.24em] text-[#354776]">
+                    Sumber Daya Manusia
+                </span>
+                <h1 class="mt-5 text-3xl font-bold tracking-tight text-[#354776] md:text-5xl">Informasi Pegawai</h1>
+                <p class="mt-2 text-sm font-medium text-slate-500 md:text-base">{{ config('app.name') }}</p>
+                <div class="mx-auto mt-4 h-1.5 w-24 rounded-full bg-amber-400"></div>
+            </div>
 
-    <main>
-        <div class="about-area">
-            <div class="container">
-                   <div class="row">
-                        <div class="col-lg-12">
-                            <div class="about-right mb-90">
-                                <!-- <div class="about-img">
-                                    <img src="{{ asset('img/post/about_heor.jpg') }}" alt="">
-                                </div> -->
-                                <div class="mb-30 pt-30 text-center">
-                                    <h3 class="title-tugas">Informasi Pegawai <br/>
-                                        {{ config('app.name') }}
-                                    </h3>
-                                    <div class="d-flex justify-content-center">
-                                        <div class="divider-title-tugas"></div>
-                                    </div>
-                                </div>
-                                <div class="about-prea">
-                                </div>
-                            </div>
-                        </div>
-                   </div>
-                   <div class="row">
-                        <div class="col-lg-12">
-                            <div class="about-right mb-90">
-                                <div class="about-img mt-10">
-                                    @foreach($infoPegawai as $info)
-                                    <img src="{{  asset( $info->path_image) }}" alt="">
-                                    @endforeach
-                                </div>
-                            </div>
-                        </div>
-                   </div>
+            <div class="mt-10 grid gap-8">
+                @foreach ($infoPegawai as $info)
+                    <div class="overflow-hidden rounded-3xl bg-white p-4 shadow-sm ring-1 ring-slate-200 md:p-6">
+                        <img src="{{ imageExists($info->path_image ?: 'assets/info-pegawai.jpg') }}" alt="{{ $info->title ?: 'Informasi Pegawai' }}" class="w-full rounded-2xl object-contain">
+                    </div>
+                @endforeach
+            </div>
+
+            <div class="mt-8 flex justify-center">
+                {{ $infoPegawai->links() }}
             </div>
         </div>
-        <div class="d-flex justify-content-center mb-4">
-            {{ $infoPegawai->links() }}
-        </div>
-    </main>
-   @endsection
+    </section>
+@endsection

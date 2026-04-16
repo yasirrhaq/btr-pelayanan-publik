@@ -20,7 +20,7 @@
                         <tr>
                             <td>{{ $loop->iteration }}</td>
                             <td style="text-align:left">{{ $items->name }}</td>
-                            <td style="text-align:left">{!! Str::limit(strip_tags($items->deskripsi), 80) !!}</td>
+                            <td style="text-align:left">{!! \Illuminate\Support\Str::limit(strip_tags($items->deskripsi), 80) !!}</td>
                             <td>
                                 @if ($items->path_image)
                                     <img src="{{ asset($items->path_image) }}" class="thumb" alt="">
