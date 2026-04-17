@@ -1,5 +1,9 @@
 # Public Page Image Fallback Design
 
+> Superseded in part on 2026-04-17.
+> `info-pegawai` is no longer planned as a temporary image-overview page.
+> Current implementation uses structured employee records, card layout, optional standalone photos, and initials fallback when no photo exists.
+
 **Goal:** Stabilize the public-facing profile and service pages after the layout unification by combining better spacing, safer image fallbacks, and seeded dummy images.
 
 **Approved Direction:** Hybrid fix. We will improve both content data and presentation. Empty image paths in seeded content will be replaced with local dummy assets, and the affected Blade views will stop assuming every record has a valid image.
@@ -17,12 +21,12 @@
 - Increase breathing room with larger section padding, centered headings, constrained readable text width, and card-based image presentation
 - Replace brittle direct `asset($item->path_image)` rendering with safe fallback logic
 - Prefer local assets over remote placeholders so the pages render consistently offline and in tests
-- Keep `info-pegawai.jpg` as the current temporary real image until the page becomes fully dynamic later
+- Keep `info-pegawai.jpg` only as historical source/reference asset; the public employee page is now fully data-driven
 
 **Fallback Asset Strategy:**
 - Informational landing pages: `assets/balaiRawa.png`
 - Structure image: `assets/struktur.png`
-- Employee overview: `assets/info-pegawai.jpg`
+- Employee reference sheets: `assets/info-pegawai.jpg` and `assets/info-pegawai-non-pns.jpg`
 - Facilities and gallery-like cards: `assets/fotoDumy.jpeg`
 - Service pages: `assets/advis-gambar.png`
 

@@ -63,16 +63,50 @@ class KontenWebSeeder extends Seeder
         })->update(['path_image' => 'assets/balaiRawa.png']);
 
         // --- Info Pegawai ---
-        if (InfoPegawai::count() === 0) {
-            InfoPegawai::create([
-                'title'      => 'Data Pegawai Balai Teknik Rawa',
-                'path_image' => 'assets/info-pegawai.jpg',
-                'created_by' => 'admin',
-            ]);
+        $pegawai = [
+            ['title' => 'Riza Fahlefi, S.T., M.T.', 'jenis_kepegawaian' => 'PNS', 'pangkat_golongan' => 'Pembina; IV/a', 'jabatan' => 'Kepala Balai Teknik Rawa', 'instansi' => 'Balai Teknik Rawa', 'email' => 'rezakrui69@pu.go.id', 'path_image' => 'assets/RIZA.png', 'created_by' => 'admin'],
+            ['title' => 'Yudi Lasmana, S.T., MPSDA.', 'jenis_kepegawaian' => 'PNS', 'pangkat_golongan' => 'Pembina; IV/a', 'jabatan' => 'Kepala Sub Bagian Umum dan Tata Usaha', 'instansi' => 'Balai Teknik Rawa', 'email' => 'yudilasmana@pu.go.id', 'path_image' => 'assets/YUDI.png', 'created_by' => 'admin'],
+            ['title' => 'Wahyu Candraqarina, S.T., M.T.', 'jenis_kepegawaian' => 'PNS', 'pangkat_golongan' => 'Penata Tk.I; III/d', 'jabatan' => 'Subkoordinator Pengembangan dan Penerapan', 'instansi' => 'Balai Teknik Rawa', 'email' => 'wahyu.candraqarina@pu.go.id', 'path_image' => '', 'created_by' => 'admin'],
+            ['title' => 'Arif Dhiaksa, S.T., M.T.', 'jenis_kepegawaian' => 'PNS', 'pangkat_golongan' => 'Penata Muda Tk.I; III/b', 'jabatan' => 'Subkoordinator Layanan Teknis', 'instansi' => 'Balai Teknik Rawa', 'email' => 'arif.dhiaksa@pu.go.id', 'path_image' => '', 'created_by' => 'admin'],
+            ['title' => 'Maruddin Fernandus Marpaung, S.T.', 'jenis_kepegawaian' => 'PNS', 'pangkat_golongan' => 'Penata Tk.I; III/d', 'jabatan' => 'Pelaksana-Analis Pengelolaan Sumber Daya Air', 'instansi' => 'Balai Teknik Rawa', 'email' => 'maruddin.marpaung@pu.go.id', 'path_image' => '', 'created_by' => 'admin'],
+            ['title' => 'Arry Widya Purnamasari, S.E., M.T.', 'jenis_kepegawaian' => 'PNS', 'pangkat_golongan' => 'Penata Tk.I; III/d', 'jabatan' => 'Pelaksana-Analis Sumber Daya Manusia Aparatur', 'instansi' => 'Balai Teknik Rawa', 'email' => 'arry.purnamsari@pu.go.id', 'path_image' => '', 'created_by' => 'admin'],
+            ['title' => 'Muhammad Gifariyono, S.T., M.T.', 'jenis_kepegawaian' => 'PNS', 'pangkat_golongan' => 'Penata; III/c', 'jabatan' => 'Pelaksana-Analis Pengelolaan Sumber Daya Air', 'instansi' => 'Balai Teknik Rawa', 'email' => 'muhammad.gifariyono@pu.go.id', 'path_image' => '', 'created_by' => 'admin'],
+            ['title' => 'Ganggaya Sotyadarpita, S.Si., M.Sc.', 'jenis_kepegawaian' => 'PNS', 'pangkat_golongan' => 'Penata Muda Tk.I; III/b', 'jabatan' => 'JF. Perekayasa Ahli Pertama', 'instansi' => 'Balai Teknik Rawa', 'email' => 'ganggaya@pu.go.id', 'path_image' => '', 'created_by' => 'admin'],
+            ['title' => 'Anggara Cahyo Wibowo, S.T., M.T.', 'jenis_kepegawaian' => 'PNS', 'pangkat_golongan' => 'Penata Muda Tk.I; III/b', 'jabatan' => 'JF. Teknik Pengairan Ahli Pertama', 'instansi' => 'Balai Teknik Rawa', 'email' => 'anggaraamd@pu.go.id', 'path_image' => '', 'created_by' => 'admin'],
+            ['title' => 'Dewi Setiarini, S.T.', 'jenis_kepegawaian' => 'PNS', 'pangkat_golongan' => 'Penata Muda Tk.I; III/b', 'jabatan' => 'JF. Perekayasa Ahli Pertama', 'instansi' => 'Balai Teknik Rawa', 'email' => 'dewi.setiarini@pu.go.id', 'path_image' => '', 'created_by' => 'admin'],
+            ['title' => 'Ahmadful Ariehlewy, S.T.', 'jenis_kepegawaian' => 'PNS', 'pangkat_golongan' => 'Penata Muda; III/a', 'jabatan' => 'JF. Teknik Pengairan Ahli Pertama', 'instansi' => 'Balai Teknik Rawa', 'email' => 'ahmadful.ariehlewy@pu.go.id', 'path_image' => '', 'created_by' => 'admin'],
+            ['title' => 'Yoga Okta Wardana, S.T.', 'jenis_kepegawaian' => 'PNS', 'pangkat_golongan' => 'Penata Muda; III/a', 'jabatan' => 'JF. Teknik Pengairan Ahli Pertama', 'instansi' => 'Balai Teknik Rawa', 'email' => 'yoga.wardana@pu.go.id', 'path_image' => '', 'created_by' => 'admin'],
+            ['title' => 'Badruddin, A.Md.', 'jenis_kepegawaian' => 'PNS', 'pangkat_golongan' => 'Pengatur; II/c', 'jabatan' => 'Teknik Pengairan Terampil', 'instansi' => 'Balai Teknik Rawa', 'email' => 'badruddin@pu.go.id', 'path_image' => '', 'created_by' => 'admin'],
+            ['title' => 'Khifzan Zikrie, S.E.', 'jenis_kepegawaian' => 'Non PNS', 'pangkat_golongan' => null, 'jabatan' => 'Pengelola Barang Milik Negara', 'instansi' => 'Balai Teknik Rawa', 'email' => 'khifzan.zikrie@pu.go.id', 'path_image' => '', 'created_by' => 'admin'],
+            ['title' => 'Khairun Nada, S.Sos.', 'jenis_kepegawaian' => 'Non PNS', 'pangkat_golongan' => null, 'jabatan' => 'Penyusun Bahan Informasi dan Publikasi', 'instansi' => 'Balai Teknik Rawa', 'email' => 'khairun.nada@pu.go.id', 'path_image' => '', 'created_by' => 'admin'],
+            ['title' => 'Maylinda Adriani, S.T.', 'jenis_kepegawaian' => 'Non PNS', 'pangkat_golongan' => null, 'jabatan' => 'Pengelola Sumber Daya Air', 'instansi' => 'Balai Teknik Rawa', 'email' => 'maylinda.adriani@pu.go.id', 'path_image' => '', 'created_by' => 'admin'],
+            ['title' => 'Muhammad Noor Amrullah', 'jenis_kepegawaian' => 'Non PNS', 'pangkat_golongan' => null, 'jabatan' => 'Pengadministrasi Keuangan', 'instansi' => 'Balai Teknik Rawa', 'email' => 'muh.nooramrullah@pu.go.id', 'path_image' => '', 'created_by' => 'admin'],
+            ['title' => 'Mahrita, S.S.T', 'jenis_kepegawaian' => 'Non PNS', 'pangkat_golongan' => null, 'jabatan' => 'Sekretaris', 'instansi' => 'Balai Teknik Rawa', 'email' => 'mahrita@pu.go.id', 'path_image' => '', 'created_by' => 'admin'],
+            ['title' => 'Muhammad Noor Ariza, A.Md.', 'jenis_kepegawaian' => 'Non PNS', 'pangkat_golongan' => null, 'jabatan' => 'Teknisi Pengelolaan SDA', 'instansi' => 'Balai Teknik Rawa', 'email' => 'muh.noorariza@pu.go.id', 'path_image' => '', 'created_by' => 'admin'],
+            ['title' => 'Aulia Widya Sri, S.E.', 'jenis_kepegawaian' => 'Non PNS', 'pangkat_golongan' => null, 'jabatan' => 'Pengelola Kepegawaian', 'instansi' => 'Balai Teknik Rawa', 'email' => 'aulia.widya@pu.go.id', 'path_image' => '', 'created_by' => 'admin'],
+            ['title' => 'Indah Hapsari, A.Md.', 'jenis_kepegawaian' => 'Non PNS', 'pangkat_golongan' => null, 'jabatan' => 'Teknisi Pengelolaan SDA', 'instansi' => 'Balai Teknik Rawa', 'email' => 'indah.hapsari@pu.go.id', 'path_image' => '', 'created_by' => 'admin'],
+            ['title' => 'Khalida Puteri Khairidha, S.Kom.', 'jenis_kepegawaian' => 'Non PNS', 'pangkat_golongan' => null, 'jabatan' => 'Pengelola Data', 'instansi' => 'Balai Teknik Rawa', 'email' => 'khalida.khairidha@pu.go.id', 'path_image' => '', 'created_by' => 'admin'],
+            ['title' => 'Noor Farida, A.Md.', 'jenis_kepegawaian' => 'Non PNS', 'pangkat_golongan' => null, 'jabatan' => 'Teknisi Pengelolaan SDA', 'instansi' => 'Balai Teknik Rawa', 'email' => 'noor.farida@pu.go.id', 'path_image' => '', 'created_by' => 'admin'],
+            ['title' => 'Al Harisnor, S.T.', 'jenis_kepegawaian' => 'Non PNS', 'pangkat_golongan' => null, 'jabatan' => 'Pengelola Sumber Daya Air', 'instansi' => 'Balai Teknik Rawa', 'email' => 'al.harisnor@pu.go.id', 'path_image' => '', 'created_by' => 'admin'],
+            ['title' => 'Riska Aprilyani Sitompul, S.T.', 'jenis_kepegawaian' => 'Non PNS', 'pangkat_golongan' => null, 'jabatan' => 'Pengelola Data', 'instansi' => 'Balai Teknik Rawa', 'email' => 'riska.sitompul@pu.go.id', 'path_image' => '', 'created_by' => 'admin'],
+            ['title' => 'Novita Andiyani, A.Md.', 'jenis_kepegawaian' => 'Non PNS', 'pangkat_golongan' => null, 'jabatan' => 'Pengadministrasi Keuangan', 'instansi' => 'Balai Teknik Rawa', 'email' => 'novita.andiyani@pu.go.id', 'path_image' => '', 'created_by' => 'admin'],
+            ['title' => 'Suriani', 'jenis_kepegawaian' => 'Non PNS', 'pangkat_golongan' => null, 'jabatan' => 'Pengemudi', 'instansi' => 'Balai Teknik Rawa', 'email' => null, 'path_image' => '', 'created_by' => 'admin'],
+            ['title' => 'Mukhlis', 'jenis_kepegawaian' => 'Non PNS', 'pangkat_golongan' => null, 'jabatan' => 'Pengemudi', 'instansi' => 'Balai Teknik Rawa', 'email' => null, 'path_image' => '', 'created_by' => 'admin'],
+        ];
+
+        InfoPegawai::where('title', 'Data Pegawai Balai Teknik Rawa')
+            ->whereNull('email')
+            ->whereNull('jabatan')
+            ->delete();
+
+        foreach ($pegawai as $index => $item) {
+            $item['urutan'] = $index + 1;
+            $lookup = $item['email']
+                ? ['email' => $item['email']]
+                : ['title' => $item['title'], 'jabatan' => $item['jabatan']];
+
+            InfoPegawai::updateOrCreate($lookup, $item);
         }
-        InfoPegawai::where(function ($query) {
-            $query->whereNull('path_image')->orWhere('path_image', '');
-        })->update(['path_image' => 'assets/info-pegawai.jpg']);
 
         // --- Struktur Organisasi ---
         if (StrukturOrganisasi::count() === 0) {

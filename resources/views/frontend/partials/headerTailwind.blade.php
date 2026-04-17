@@ -1,9 +1,201 @@
 @php
     $hdr_urls = \App\Models\UrlLayanan::all();
     $hdr_url_advis = $hdr_urls->firstWhere('id', 3);
+    $profilMenu = [
+        ['label' => 'Visi dan Misi', 'href' => url('/visi-misi')],
+        ['label' => 'Sejarah', 'href' => url('/sejarah')],
+        ['label' => 'Tugas dan Fungsi', 'href' => url('/tugas')],
+        ['label' => 'Maskot Balai Teknik Rawa', 'href' => '#'],
+        ['label' => 'Struktur Organisasi', 'href' => url('/struktur-organisasi')],
+        ['label' => 'Informasi Pegawai', 'href' => url('/info-pegawai')],
+        ['label' => 'Fasilitas Balai', 'href' => url('/fasilitas-balai')],
+    ];
+
+    $layananMenu = [
+        [
+            'label' => 'Informasi Pelayanan',
+            'children' => [
+                ['label' => 'Maklumat Pelayanan', 'href' => '#'],
+                ['label' => 'Standar Pelayanan', 'href' => '#'],
+            ],
+        ],
+        [
+            'label' => 'Layanan',
+            'children' => [
+                ['label' => 'Layanan Advis Teknis', 'href' => url('/advis-teknis')],
+                ['label' => 'Layanan Pengujian Laboratorium', 'href' => url('/pengujian-laboratorium')],
+                ['label' => 'Layanan Data dan Informasi', 'href' => $hdr_url_advis->url ?? '#'],
+                ['label' => 'Layanan Lainnya', 'href' => '#'],
+            ],
+        ],
+        [
+            'label' => 'Tracking Layanan',
+            'href' => auth()->check() ? url('/pelanggan/tracking') : url('/login'),
+        ],
+    ];
+
+    $publikasiMenu = [
+        [
+            'label' => 'PPID',
+            'children' => [
+                ['label' => 'E-PPID', 'href' => 'https://eppid.pu.go.id/', 'external' => true],
+                ['label' => 'Kebijakan PPID', 'href' => url('/ppid#kebijakan-ppid')],
+                ['label' => 'Informasi Berkala', 'href' => url('/ppid#informasi-berkala')],
+                ['label' => 'Informasi Serta Merta', 'href' => url('/ppid#informasi-serta-merta')],
+                ['label' => 'Informasi Setiap Saat', 'href' => url('/ppid#informasi-setiap-saat')],
+            ],
+        ],
+        [
+            'label' => 'Publikasi',
+            'children' => [
+                ['label' => 'E-Perpustakaan', 'href' => 'https://pustaka.pu.go.id/perpustakaan/balai-rawa', 'external' => true],
+                ['label' => 'SANDRA', 'href' => '#'],
+                ['label' => 'Rencana Strategis', 'href' => '#'],
+                ['label' => 'JDIH PU', 'href' => '#'],
+                ['label' => 'Pengumuman', 'href' => route('pengumuman.index')],
+                ['label' => 'Berita', 'href' => url('/berita')],
+            ],
+        ],
+        [
+            'label' => 'Galeri',
+            'children' => [
+                ['label' => 'Foto', 'href' => url('/foto')],
+                ['label' => 'Video', 'href' => url('/video')],
+                ['label' => 'Dokumen', 'href' => route('dokumen.index')],
+            ],
+        ],
+    ];
+
+    $pengaduanMenu = [
+        ['label' => 'Layanan Pengaduan Masyarakat', 'href' => 'https://www.lapor.go.id/', 'external' => true],
+        ['label' => 'Pelaporan Gratifikasi', 'href' => 'https://gol.itjen.pu.go.id/', 'external' => true],
+        ['label' => 'WBS Kemen PU', 'href' => 'https://wispu.pu.go.id/', 'external' => true],
+    ];
 @endphp
 
 <div class="sticky top-0 z-50 border-b border-slate-200/80 bg-white/95 shadow-sm backdrop-blur" x-data="{ mobileOpen: false, langOpen: false }">
+    <style>
+        .nav-item:hover .nav-dropdown {
+            display: block;
+        }
+
+        .nav-dropdown {
+            display: none;
+            min-width: 260px;
+        }
+
+        .nav-dropdown-panel {
+            padding: 10px;
+            background: #fff;
+            border-top: 2px solid #354776;
+            border-radius: 0 0 18px 18px;
+            box-shadow: 0 20px 45px rgba(15, 23, 42, 0.14);
+            overflow: hidden;
+        }
+
+        .nav-submenu-item {
+            position: relative;
+        }
+
+        .nav-submenu-link {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 14px;
+            min-width: 220px;
+            padding: 11px 14px;
+            font-size: 13px;
+            color: #334155;
+            text-decoration: none;
+            border-radius: 10px;
+            transition: background-color .15s ease, color .15s ease, transform .15s ease;
+        }
+
+        .nav-submenu-link:hover {
+            background: #f8fafc;
+            color: #354776;
+        }
+
+        .nav-submenu-label {
+            font-weight: 600;
+        }
+
+        .nav-submenu-arrow {
+            color: #94a3b8;
+            font-size: 11px;
+        }
+
+        .nav-flyout-title {
+            padding: 4px 12px 10px;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: #354776;
+        }
+
+        .nav-flyout-link {
+            display: block;
+            padding: 10px 12px;
+            border-radius: 10px;
+            color: #334155;
+            font-size: 13px;
+            text-decoration: none;
+            transition: background-color .15s ease, color .15s ease;
+        }
+
+        .nav-flyout-link:hover {
+            background: #f8fafc;
+            color: #354776;
+        }
+
+        .nav-dropdown--stacked .nav-dropdown-panel {
+            position: relative;
+            min-width: 240px;
+            display: inline-flex;
+            align-items: stretch;
+            padding: 10px;
+        }
+
+        .nav-dropdown--stacked .nav-submenu-list {
+            min-width: 240px;
+        }
+
+        .nav-dropdown--stacked .nav-submenu-item {
+            position: static;
+        }
+
+        .nav-dropdown--stacked .nav-submenu-item:hover > .nav-submenu-link,
+        .nav-dropdown--stacked .nav-submenu-link.is-active {
+            background: #f8fafc;
+            color: #354776;
+        }
+
+        .nav-dropdown--stacked .nav-flyout {
+            display: none;
+            width: 0;
+            overflow: hidden;
+            margin-left: 0;
+            padding: 0;
+            background: linear-gradient(180deg, #f8fafc 0%, #ffffff 100%);
+            border-left: 1px solid #e2e8f0;
+            border-radius: 0 0 18px 0;
+            transition: width .18s ease, margin-left .18s ease, padding .18s ease;
+        }
+
+        .nav-dropdown--stacked .nav-flyout.is-active {
+            display: block;
+            width: 300px;
+            margin-left: 12px;
+            padding: 14px 12px;
+        }
+
+        @media (max-width: 1279px) {
+            .nav-dropdown--stacked .nav-flyout.is-active {
+                width: 260px;
+            }
+        }
+    </style>
 
     {{-- Row 1: Dark Navy [#354776] top bar --}}
     <div class="bg-[#354776] hidden md:block py-1.5">
@@ -121,39 +313,81 @@
                             class="px-3 py-6 text-[13px] font-medium text-gray-700 hover:text-[#354776] hover:bg-gray-200/80 transition-colors flex items-center gap-1 whitespace-nowrap cursor-pointer">
                             Profil <i class="fas fa-caret-down text-[10px] text-gray-400"></i>
                         </button>
-                        <ul class="nav-dropdown absolute left-0 top-full bg-white text-gray-800 shadow-xl min-w-[200px] z-50 border-t-2 border-[#354776] rounded-b-md">
-                            <li><a href="{{ url('/visi-misi') }}" class="block px-4 py-2.5 text-sm hover:bg-gray-50 border-b border-gray-100">Visi dan Misi</a></li>
-                            <li><a href="{{ url('/sejarah') }}" class="block px-4 py-2.5 text-sm hover:bg-gray-50 border-b border-gray-100">Sejarah</a></li>
-                            <li><a href="{{ url('/tugas') }}" class="block px-4 py-2.5 text-sm hover:bg-gray-50 border-b border-gray-100">Tugas dan Fungsi</a></li>
-                            <li><a href="{{ url('/struktur-organisasi') }}" class="block px-4 py-2.5 text-sm hover:bg-gray-50 border-b border-gray-100">Struktur Organisasi</a></li>
-                            <li><a href="{{ url('/info-pegawai') }}" class="block px-4 py-2.5 text-sm hover:bg-gray-50 border-b border-gray-100">Informasi Pegawai</a></li>
-                            <li><a href="{{ url('/fasilitas-balai') }}" class="block px-4 py-2.5 text-sm hover:bg-gray-50">Fasilitas Balai</a></li>
-                        </ul>
+                        <div class="nav-dropdown absolute left-0 top-full z-50">
+                            <div class="nav-dropdown-panel">
+                                @foreach ($profilMenu as $link)
+                                    <a href="{{ $link['href'] }}" class="nav-submenu-link">
+                                        <span class="nav-submenu-label">{{ $link['label'] }}</span>
+                                    </a>
+                                @endforeach
+                            </div>
+                        </div>
                     </div>
 
-                    <div class="nav-item relative">
+                    <div class="nav-item relative" x-data="{ active: null }" @mouseleave="active = null">
                         <button
                             class="px-3 py-6 text-[13px] font-medium text-gray-700 hover:text-[#354776] hover:bg-gray-200/80 transition-colors flex items-center gap-1 whitespace-nowrap cursor-pointer">
                             Layanan <i class="fas fa-caret-down text-[10px] text-gray-400"></i>
                         </button>
-                        <ul class="nav-dropdown absolute left-0 top-full bg-white text-gray-800 shadow-xl min-w-[210px] z-50 border-t-2 border-[#354776] rounded-b-md">
-                            <li><a href="{{ url('/advis-teknis') }}" class="block px-4 py-2.5 text-sm hover:bg-gray-50 border-b border-gray-100">Advis Teknis</a></li>
-                            <li><a href="{{ url('/pengujian-laboratorium') }}" class="block px-4 py-2.5 text-sm hover:bg-gray-50 border-b border-gray-100">Pengujian Laboratorium</a></li>
-                            <li><a href="{{ $hdr_url_advis->url ?? '#' }}" target="_blank" class="block px-4 py-2.5 text-sm hover:bg-gray-50">Permohonan Data</a></li>
-                        </ul>
+                        <div class="nav-dropdown nav-dropdown--stacked absolute left-0 top-full z-50">
+                            <div class="nav-dropdown-panel">
+                                <div class="nav-submenu-list">
+                                    @foreach ($layananMenu as $index => $item)
+                                        <div class="nav-submenu-item" @mouseenter="active = {{ !empty($item['children']) ? $index : 'null' }}">
+                                            <a href="{{ $item['href'] ?? '#' }}" @if(empty($item['children']) && !empty($item['external'])) target="_blank" rel="noopener noreferrer" @endif class="nav-submenu-link" :class="{ 'is-active': active === {{ $index }} }">
+                                                <span class="nav-submenu-label">{{ $item['label'] }}</span>
+                                                @if (!empty($item['children']))
+                                                    <i class="fas fa-chevron-right nav-submenu-arrow"></i>
+                                                @endif
+                                            </a>
+                                        </div>
+                                    @endforeach
+                                </div>
+                                @foreach ($layananMenu as $index => $item)
+                                    @if (!empty($item['children']))
+                                        <div class="nav-flyout" x-show="active === {{ $index }}" x-cloak :class="{ 'is-active': active === {{ $index }} }">
+                                            <div class="nav-flyout-title">{{ $item['label'] }}</div>
+                                            @foreach ($item['children'] as $child)
+                                                <a href="{{ $child['href'] }}" @if(!empty($child['external'])) target="_blank" rel="noopener noreferrer" @endif class="nav-flyout-link">{{ $child['label'] }}</a>
+                                            @endforeach
+                                        </div>
+                                    @endif
+                                @endforeach
+                            </div>
+                        </div>
                     </div>
 
-                    <div class="nav-item relative">
+                    <div class="nav-item relative" x-data="{ active: null }" @mouseleave="active = null">
                         <button
                             class="px-3 py-6 text-[13px] font-medium text-gray-700 hover:text-[#354776] hover:bg-gray-200/80 transition-colors flex items-center gap-1 whitespace-nowrap cursor-pointer">
                             Publikasi <i class="fas fa-caret-down text-[10px] text-gray-400"></i>
                         </button>
-                        <ul class="nav-dropdown absolute left-0 top-full bg-white text-gray-800 shadow-xl min-w-[210px] z-50 border-t-2 border-[#354776] rounded-b-md">
-                            <li><a href="{{ url('/berita') }}" class="block px-4 py-2.5 text-sm hover:bg-gray-50 border-b border-gray-100">Berita {{ config('app.name') }}</a></li>
-                            <li><a href="{{ url('/foto') }}" class="block px-4 py-2.5 text-sm hover:bg-gray-50 border-b border-gray-100">Galeri Foto</a></li>
-                            <li><a href="{{ url('/video') }}" class="block px-4 py-2.5 text-sm hover:bg-gray-50 border-b border-gray-100">Galeri Video</a></li>
-                            <li><a href="https://pustaka.pu.go.id/perpustakaan/balai-rawa" target="_blank" class="block px-4 py-2.5 text-sm hover:bg-gray-50">e-Perpustakaan</a></li>
-                        </ul>
+                        <div class="nav-dropdown nav-dropdown--stacked absolute left-0 top-full z-50">
+                            <div class="nav-dropdown-panel">
+                                <div class="nav-submenu-list">
+                                    @foreach ($publikasiMenu as $index => $item)
+                                        <div class="nav-submenu-item" @mouseenter="active = {{ !empty($item['children']) ? $index : 'null' }}">
+                                            <a href="{{ $item['href'] ?? '#' }}" @if(empty($item['children']) && !empty($item['external'])) target="_blank" rel="noopener noreferrer" @endif class="nav-submenu-link" :class="{ 'is-active': active === {{ $index }} }">
+                                                <span class="nav-submenu-label">{{ $item['label'] }}</span>
+                                                @if (!empty($item['children']))
+                                                    <i class="fas fa-chevron-right nav-submenu-arrow"></i>
+                                                @endif
+                                            </a>
+                                        </div>
+                                    @endforeach
+                                </div>
+                                @foreach ($publikasiMenu as $index => $item)
+                                    @if (!empty($item['children']))
+                                        <div class="nav-flyout" x-show="active === {{ $index }}" x-cloak :class="{ 'is-active': active === {{ $index }} }">
+                                            <div class="nav-flyout-title">{{ $item['label'] }}</div>
+                                            @foreach ($item['children'] as $child)
+                                                <a href="{{ $child['href'] }}" @if(!empty($child['external'])) target="_blank" rel="noopener noreferrer" @endif class="nav-flyout-link">{{ $child['label'] }}</a>
+                                            @endforeach
+                                        </div>
+                                    @endif
+                                @endforeach
+                            </div>
+                        </div>
                     </div>
 
                     <div class="nav-item relative">
@@ -161,13 +395,15 @@
                             class="px-3 py-6 text-[13px] font-medium text-gray-700 hover:text-[#354776] hover:bg-gray-200/80 transition-colors flex items-center gap-1 whitespace-nowrap cursor-pointer">
                             Saran dan Pengaduan <i class="fas fa-caret-down text-[10px] text-gray-400"></i>
                         </button>
-                        <ul class="nav-dropdown absolute right-0 top-full bg-white text-gray-800 shadow-xl min-w-[230px] z-50 border-t-2 border-[#354776] rounded-b-md">
-                            <li><a href="https://eppid.pu.go.id/" target="_blank" class="block px-4 py-2.5 text-sm hover:bg-gray-50 border-b border-gray-100">e-PPID</a></li>
-                            <li><a href="https://wispu.pu.go.id/" target="_blank" class="block px-4 py-2.5 text-sm hover:bg-gray-50 border-b border-gray-100">Whistleblowing System</a></li>
-                            <li><a href="https://www.lapor.go.id/" target="_blank" class="block px-4 py-2.5 text-sm hover:bg-gray-50 border-b border-gray-100">Pengaduan Masyarakat</a></li>
-                            <li><a href="https://gol.itjen.pu.go.id/" target="_blank" class="block px-4 py-2.5 text-sm hover:bg-gray-50 border-b border-gray-100">Gratifikasi</a></li>
-                            <li><a href="{{ $hdr_urls->filter(fn($u) => str_contains($u->url ?? '', 'survey'))->first()->url ?? '#' }}" target="_blank" class="block px-4 py-2.5 text-sm hover:bg-gray-50">Survey Kepuasan</a></li>
-                        </ul>
+                        <div class="nav-dropdown absolute right-0 top-full z-50">
+                            <div class="nav-dropdown-panel">
+                                @foreach ($pengaduanMenu as $link)
+                                    <a href="{{ $link['href'] }}" @if(!empty($link['external'])) target="_blank" rel="noopener noreferrer" @endif class="nav-submenu-link">
+                                        <span class="nav-submenu-label">{{ $link['label'] }}</span>
+                                    </a>
+                                @endforeach
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -182,11 +418,32 @@
             <div x-show="mobileOpen" x-cloak x-transition
                 class="md:hidden pb-3 border-t border-gray-200 space-y-0.5 pt-1">
                 <a href="{{ url('/home') }}" class="block px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-200 hover:text-[#354776] rounded font-medium">Beranda</a>
-                <a href="{{ url('/visi-misi') }}" class="block px-4 py-2 text-sm text-gray-500 hover:bg-gray-200 rounded pl-7">↳ Visi &amp; Misi</a>
-                <a href="{{ url('/advis-teknis') }}" class="block px-4 py-2 text-sm text-gray-500 hover:bg-gray-200 rounded pl-7">↳ Advis Teknis</a>
-                <a href="{{ url('/pengujian-laboratorium') }}" class="block px-4 py-2 text-sm text-gray-500 hover:bg-gray-200 rounded pl-7">↳ Pengujian Lab</a>
-                <a href="{{ url('/berita') }}" class="block px-4 py-2 text-sm text-gray-500 hover:bg-gray-200 rounded pl-7">↳ Berita</a>
-                <a href="https://www.lapor.go.id/" class="block px-4 py-2 text-sm text-gray-500 hover:bg-gray-200 rounded pl-7" target="_blank">↳ Pengaduan</a>
+                <div class="px-4 pt-2 text-[11px] font-bold uppercase tracking-[0.08em] text-[#354776]">Profil</div>
+                @foreach ($profilMenu as $link)
+                    <a href="{{ $link['href'] }}" class="block px-4 py-2 text-sm text-gray-500 hover:bg-gray-200 rounded pl-7">↳ {{ $link['label'] }}</a>
+                @endforeach
+                <div class="px-4 pt-2 text-[11px] font-bold uppercase tracking-[0.08em] text-[#354776]">Layanan</div>
+                @foreach ($layananMenu as $item)
+                    <div class="px-4 py-1 text-xs font-semibold text-gray-400 pl-7">{{ $item['label'] }}</div>
+                    @if (!empty($item['children']))
+                        @foreach ($item['children'] as $link)
+                            <a href="{{ $link['href'] }}" @if(!empty($link['external'])) target="_blank" rel="noopener noreferrer" @endif class="block px-4 py-2 text-sm text-gray-500 hover:bg-gray-200 rounded pl-10">↳ {{ $link['label'] }}</a>
+                        @endforeach
+                    @else
+                        <a href="{{ $item['href'] }}" class="block px-4 py-2 text-sm text-gray-500 hover:bg-gray-200 rounded pl-10">↳ {{ $item['label'] }}</a>
+                    @endif
+                @endforeach
+                <div class="px-4 pt-2 text-[11px] font-bold uppercase tracking-[0.08em] text-[#354776]">Publikasi</div>
+                @foreach ($publikasiMenu as $item)
+                    <div class="px-4 py-1 text-xs font-semibold text-gray-400 pl-7">{{ $item['label'] }}</div>
+                    @foreach ($item['children'] as $link)
+                        <a href="{{ $link['href'] }}" @if(!empty($link['external'])) target="_blank" rel="noopener noreferrer" @endif class="block px-4 py-2 text-sm text-gray-500 hover:bg-gray-200 rounded pl-10">↳ {{ $link['label'] }}</a>
+                    @endforeach
+                @endforeach
+                <div class="px-4 pt-2 text-[11px] font-bold uppercase tracking-[0.08em] text-[#354776]">Saran dan Pengaduan</div>
+                @foreach ($pengaduanMenu as $link)
+                    <a href="{{ $link['href'] }}" @if(!empty($link['external'])) target="_blank" rel="noopener noreferrer" @endif class="block px-4 py-2 text-sm text-gray-500 hover:bg-gray-200 rounded pl-7">↳ {{ $link['label'] }}</a>
+                @endforeach
                 <form action="{{ url('/berita') }}" method="GET" class="px-4 pt-1">
                     <div class="flex border border-gray-300 rounded overflow-hidden">
                         <input type="text" name="search" placeholder="Cari..." class="flex-1 px-3 py-1.5 text-sm bg-white focus:outline-none">

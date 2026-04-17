@@ -27,7 +27,7 @@
 | Tanya Kaura (chatbot/floating button) | :white_check_mark: | Floating widget |
 | Tautan Media Sosial | :white_check_mark: | UrlLayanan model |
 | Layanan Informasi PPID | :construction: | Admin PPID page exists, public pages need landing page content |
-| Renstra / Dokumen Strategis | :construction: | Karya ilmiah repurposed for Renstra in sidebar |
+| Renstra / Dokumen Strategis | :white_check_mark: | Public `/dokumen` page now aggregates pengumuman lampiran, galeri dokumen, and berita-linked files where available |
 | Multilingual (ID/EN auto-translate) | :white_check_mark: | SetLocale + TranslateResponse middleware |
 
 ---
@@ -60,7 +60,7 @@
 |---------|--------|-------|
 | Dashboard Admin Master | :white_check_mark: | Basic dashboard view |
 | Manajemen Profil (Identitas, Sejarah, Visi Misi) | :white_check_mark: | `/dashboard/profil-singkat` rebuilt into tabbed flow for Tentang Kami, Sejarah, Visi & Misi, Tugas & Fungsi, Maskot using Jodit and shared public data sources |
-| Manajemen SDM (Info Pegawai) | :white_check_mark: | Full CRUD |
+| Manajemen SDM (Info Pegawai) | :white_check_mark: | Full CRUD + structured employee fields + urutan sorting + photo remove support + seeded roster |
 | Manajemen Fasilitas | :white_check_mark: | Full CRUD |
 | Manajemen Struktur Organisasi | :white_check_mark: | Full CRUD |
 | Manajemen Banner / Foto Home | :white_check_mark: | Edit + update |
@@ -72,7 +72,7 @@
 | Manajemen Renstra | :white_check_mark: | Repurposed Karya Ilmiah as Renstra in sidebar |
 | Kop Surat & Identitas Web | :construction: | FooterSetting exists, no letterhead |
 | Manajemen Akun (RBAC) | :white_check_mark: | HakAksesController — list users, filter by role, assign/sync roles per user |
-| Sidebar Navigation (matches design) | :white_check_mark: | Updated with PPID, Pengumuman, Hak Akses, Master Tim, Master Survei |
+| Sidebar Navigation (matches design) | :white_check_mark: | Updated with PPID, Pengumuman, Hak Akses, Master Tim, Master Survei, grouped Layanan, split profile submenu, real BTR logo |
 | Master Tim | :white_check_mark: | MasterTimController — full CRUD with dynamic anggota form |
 | Master Format Nomor | :construction: | Model + service exist, no admin config page (uses seeder) |
 | Master Survei (9 unsur) | :white_check_mark: | MasterSurveiController — inline add/edit/toggle/delete |
@@ -83,7 +83,7 @@
 
 | Feature | Status | Notes |
 |---------|--------|-------|
-| Layout + Sidebar (matches design) | :white_check_mark: | pelanggan/layouts/ — main, sidebar, header + pelanggan.css |
+| Layout + Sidebar (matches design) | :white_check_mark: | pelanggan shell now follows the newer admin visual language while keeping pelanggan-specific navigation and routes |
 | Dashboard Pelanggan (ringkasan status) | :white_check_mark: | Welcome card, 4 stat cards, active table, survey invitation |
 | E-Service Wizard (4 langkah) | :white_check_mark: | permohonan/create.blade.php — JS wizard, service cards, data confirm, detail+upload |
 | - Langkah 1: Pilih Layanan | :white_check_mark: | Radio card grid with icons |
@@ -178,20 +178,27 @@
 ### Modified
 - `app/Http/Controllers/Admin/Layanan/PermohonanManagementController.php` — Added uploadDokumenFinal, dataPelanggan, surveiAnalytics
 - `app/Http/Controllers/PostController.php` — Server-side berita list filtering + pagination (4 per page)
-- `resources/views/dashboard/layouts/sidebar.blade.php` — Added PPID, Pengumuman, Master Tim, Master Survei, Hak Akses
+- `resources/views/dashboard/layouts/sidebar.blade.php` — Added PPID, Pengumuman, Master Tim, Master Survei, Hak Akses, grouped Layanan, split Profil submenu, correct BTR logo icon
 - `resources/views/berita/index.blade.php` — Rebuilt berita listing page on unified public shell
 - `resources/views/frontend/beritaDetail.blade.php` — Rebuilt berita detail page
 - `resources/views/frontend/sejarah.blade.php` — Dedicated split layout with image
 - `resources/views/frontend/visimisi.blade.php` — Text-only polished layout
 - `resources/views/frontend/tugas.blade.php` — Text-only polished layout
 - `resources/views/frontend/struktur.blade.php` — Simplified image-first layout
-- `resources/views/frontend/info-pegawai.blade.php` — Simplified image-first layout
+- `resources/views/frontend/info-pegawai.blade.php` — Structured employee card layout with initials fallback and `urutan`-based ordering
 - `resources/views/frontend/fasilitas-balai.blade.php` — Responsive card layout with fallback images
 - `resources/views/frontend/advis-teknis.blade.php` — Responsive service layout with fallback image
 - `resources/views/frontend/pengujian-laboratorium.blade.php` — Responsive service layout with fallback image
 - `resources/views/frontend/layouts/landing-page-content.blade.php` — Modernized shared profile content layout
+- `resources/views/frontend/partials/headerTailwind.blade.php` — Grouped public menu with hover flyouts for subsubmenu
+- `resources/views/frontend/dokumen.blade.php` — Public document center with preview/download cards
+- `app/Http/Controllers/PublicDokumenController.php` — Aggregates public document sources
 - `resources/views/frontend/partials/footerTailwind.blade.php` — Explicit footer text colors
 - `routes/web.php` — Added all pelanggan + admin layanan + admin web routes
+- `resources/views/pelanggan/layouts/main.blade.php` — Updated pelanggan shell interactions
+- `resources/views/pelanggan/layouts/sidebar.blade.php` — Updated pelanggan sidebar logo + logout style
+- `resources/views/pelanggan/layouts/header.blade.php` — Added pelanggan profile dropdown
+- `public/css/pelanggan.css` — Aligned pelanggan shell styling with current admin design language
 - `database/seeders/KontenWebSeeder.php` — Added local image defaults + seeded 5 berita posts
 - `app/Helper.php` — Local fallback image resolution for public assets
 

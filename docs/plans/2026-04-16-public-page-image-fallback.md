@@ -1,5 +1,8 @@
 # Public Page Image Fallback Implementation Plan
 
+> Superseded in part on 2026-04-17.
+> `info-pegawai` moved beyond fallback-image rendering and now uses structured employee data, explicit `urutan` ordering, and initials fallback for rows without standalone photos.
+
 > **For Claude:** REQUIRED SUB-SKILL: Use superpowers:executing-plans to implement this plan task-by-task.
 
 **Goal:** Make unified public pages resilient and visually roomy by seeding local dummy images and refactoring the affected Blade pages to use safe fallbacks and improved spacing.
@@ -51,6 +54,7 @@
 1. Replace direct raw image output with fallback-aware cards/figure blocks.
 2. Add roomier vertical rhythm and clearer section headings.
 3. Keep pagination intact.
+4. Note: `info-pegawai` was later expanded into structured employee cards and is no longer an image-only page.
 
 ### Task 5: Refactor service pages
 

@@ -36,24 +36,29 @@
     </div>
 
     <script>
-        // Sidebar mobile toggle
         var sidebarToggle = document.getElementById('btr-sidebar-toggle');
-        var sidebar = document.querySelector('.btr-sidebar');
         var overlay = document.getElementById('btr-overlay');
         if (sidebarToggle) {
             sidebarToggle.addEventListener('click', function() {
-                sidebar.classList.toggle('open');
-                overlay.classList.toggle('open');
+                document.body.classList.toggle('btr-sidebar-open');
+                if (overlay) overlay.classList.toggle('open');
             });
         }
         if (overlay) {
             overlay.addEventListener('click', function() {
-                sidebar.classList.remove('open');
+                document.body.classList.remove('btr-sidebar-open');
                 overlay.classList.remove('open');
             });
         }
 
-        // Live clock
+        document.addEventListener('click', function(event) {
+            document.querySelectorAll('.btr-topbar-profile-menu[open]').forEach(function(menu) {
+                if (!menu.contains(event.target)) {
+                    menu.removeAttribute('open');
+                }
+            });
+        });
+
         function btrTickClock() {
             var el = document.getElementById('btr-clock');
             if (!el) return;

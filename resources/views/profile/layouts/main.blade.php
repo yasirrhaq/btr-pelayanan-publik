@@ -1,50 +1,176 @@
 <!doctype html>
-<html lang="en">
+<html lang="id">
 
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>PUPR | Profil</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <title>{{ config('app.name') }} | Profil Pelanggan</title>
 
-    <!-- Custom styles for this template -->
-    <link href="{{url('')}}/css/dashboard.css" rel="stylesheet">
-
-    {{-- Trix Editor --}}
-    <link rel="stylesheet" type="text/css" href="{{url('')}}/css/trix.css">
-    <script type="text/javascript" src="/js/trix.js"></script>
-
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="{{ url(env('APP_URL')) }}/css/pelanggan.css" rel="stylesheet">
     <style>
-        trix-toolbar [data-trix-button-group="file-tools"]{
-            display:none
+        .btr-profile-shell .btr-page-title {
+            margin-bottom: 18px;
+        }
+        .btr-profile-card {
+            background: #fff;
+            border-radius: 24px;
+            box-shadow: var(--shadow-card);
+            padding: 32px 28px 34px;
+        }
+        .btr-profile-grid {
+            display: grid;
+            grid-template-columns: 150px 20px minmax(0, 1fr);
+            gap: 18px 18px;
+            align-items: center;
+        }
+        .btr-profile-label {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-body);
+        }
+        .btr-profile-sep {
+            text-align: center;
+            font-weight: 600;
+            color: #94A3B8;
+        }
+        .btr-profile-value {
+            font-size: 14px;
+            color: #111827;
+            min-width: 0;
+        }
+        .btr-profile-pill {
+            display: inline-flex;
+            align-items: center;
+            min-height: 40px;
+            padding: 8px 14px;
+            border-radius: 14px;
+            background: #F8FAFC;
+            border: 1px solid #EEF2F7;
+            width: min(100%, 540px);
+            line-height: 1.5;
+            word-break: break-word;
+        }
+        .btr-profile-actions {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 34px;
+        }
+        .btr-profile-actions .btr-btn {
+            min-width: 132px;
+            justify-content: center;
+        }
+        .btr-profile-password-mask {
+            letter-spacing: 0.18em;
+            font-weight: 600;
+        }
+        .btr-form-shell {
+            max-width: 760px;
+        }
+        .btr-form-card {
+            background: #fff;
+            border-radius: 24px;
+            box-shadow: var(--shadow-card);
+            padding: 28px;
+        }
+        .btr-form-heading {
+            margin: 0 0 24px;
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+        .btr-form-grid {
+            display: grid;
+            gap: 18px;
+        }
+        .btr-form-error {
+            margin-top: 8px;
+            font-size: 12px;
+            color: var(--danger-red);
+        }
+        @media (max-width: 900px) {
+            .btr-profile-grid {
+                grid-template-columns: 1fr;
+                gap: 8px;
+            }
+            .btr-profile-sep {
+                display: none;
+            }
+            .btr-profile-label {
+                font-size: 13px;
+                color: var(--text-muted);
+            }
+            .btr-profile-value {
+                margin-bottom: 8px;
+            }
+            .btr-profile-pill {
+                width: 100%;
+            }
+            .btr-profile-card,
+            .btr-form-card {
+                padding: 22px 18px;
+            }
         }
     </style>
+    @stack('head')
 </head>
 
-<body>
-
+<body class="btr-pelanggan btr-profile-shell">
     @include('profile.layouts.header')
 
-    <div class="container-fluid">
-        <div class="row">
-            @include('profile.layouts.sidebar')
+    <div class="btr-shell">
+        @include('profile.layouts.sidebar')
 
-            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+        <div class="btr-main">
+            <main class="btr-content">
+                @if (session()->has('success'))
+                    <div class="btr-alert btr-alert-success">{{ session('success') }}</div>
+                @endif
+                @if ($errors->any())
+                    <div class="btr-alert btr-alert-error">{{ $errors->first() }}</div>
+                @endif
+
                 @yield('container')
             </main>
         </div>
     </div>
 
+    <script>
+        var sidebarToggle = document.getElementById('btr-sidebar-toggle');
+        var overlay = document.getElementById('btr-overlay');
+        if (sidebarToggle) {
+            sidebarToggle.addEventListener('click', function() {
+                document.body.classList.toggle('btr-sidebar-open');
+                if (overlay) overlay.classList.toggle('open');
+            });
+        }
+        if (overlay) {
+            overlay.addEventListener('click', function() {
+                document.body.classList.remove('btr-sidebar-open');
+                overlay.classList.remove('open');
+            });
+        }
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous">
-    </script>
+        document.addEventListener('click', function(event) {
+            document.querySelectorAll('.btr-topbar-profile-menu[open]').forEach(function(menu) {
+                if (!menu.contains(event.target)) {
+                    menu.removeAttribute('open');
+                }
+            });
+        });
 
-    <script src="https://cdn.jsdelivr.net/npm/feather-icons@4.28.0/dist/feather.min.js"
-        integrity="sha384-uO3SXW5IuS1ZpFPKugNNWqTZRRglnUJK6UAZ/gxOX80nxEkN9NcGZTftn6RzhGWE" crossorigin="anonymous">
+        function btrTickClock() {
+            var el = document.getElementById('btr-clock');
+            if (!el) return;
+            var d = new Date();
+            var pad = function(n) { return n < 10 ? '0' + n : n; };
+            el.textContent = pad(d.getHours()) + ':' + pad(d.getMinutes()) + ':' + pad(d.getSeconds());
+        }
+        setInterval(btrTickClock, 1000);
+        btrTickClock();
     </script>
-    <script src="/js/dashboard.js"></script>
+    @stack('js')
 </body>
 
 </html>

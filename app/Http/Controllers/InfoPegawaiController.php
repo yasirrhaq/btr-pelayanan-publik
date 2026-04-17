@@ -11,7 +11,10 @@ class InfoPegawaiController extends Controller
     {
         return view('frontend.info-pegawai', [
             "title" => "Informasi Pegawai",
-            "infoPegawai" => InfoPegawai::Paginate(1)
+            "infoPegawai" => InfoPegawai::query()
+                ->orderBy('urutan')
+                ->orderBy('title')
+                ->paginate(12)
         ]);
     }
 }

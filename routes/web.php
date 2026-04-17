@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\MasterSurveiController;
 use App\Http\Controllers\Admin\PengumumanController;
 use App\Http\Controllers\Admin\PpidController;
 use App\Http\Controllers\Pelanggan\DashboardController as PelangganDashboardController;
+use App\Http\Controllers\Pelanggan\ProfilController as PelangganProfilController;
 use App\Http\Controllers\Pelanggan\PermohonanController as PelangganPermohonanController;
 use App\Http\Controllers\Pelanggan\PembayaranController as PelangganPembayaranController;
 use App\Http\Controllers\Pelanggan\DokumenController as PelangganDokumenController;
@@ -18,6 +19,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\PublicPengumumanController;
+use App\Http\Controllers\PublicDokumenController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\TugasController;
 use App\Http\Controllers\SejarahController;
@@ -81,6 +83,7 @@ Route::get('/berita', [PostController::class, 'index']);
 Route::get('/berita/{post:slug}', [PostController::class, 'show']);
 Route::get('/pengumuman', [PublicPengumumanController::class, 'index'])->name('pengumuman.index');
 Route::get('/pengumuman/{pengumuman}', [PublicPengumumanController::class, 'show'])->name('pengumuman.show');
+Route::get('/dokumen', [PublicDokumenController::class, 'index'])->name('dokumen.index');
 Route::post('/ajax-search-berita', 'App\Http\Controllers\PostController@ajaxListBerita');
 
 Route::get('/visi-misi', [VisiMisiController::class, 'index']);
@@ -118,12 +121,15 @@ Route::get('/register', [RegisterController::class, 'index'])->middleware('guest
 Route::post('/register', [RegisterController::class, 'store'])->middleware(['guest', 'throttle:5,1']);
 
 Route::get('/profile', function () {
-    return view('profile.index');
+    return redirect('/pelanggan/profil');
 })->middleware(['auth', 'is_verify_email']);
 
-Route::get('/profile/status-layanan', [UserStatusLayananController::class, 'index'])->middleware(['auth', 'is_verify_email']);
-Route::get('/profile/password', [ChangePasswordController::class, 'index'])->middleware('auth');
-Route::post('/profile/password', [ChangePasswordController::class, 'store'])->name('change.password');
+Route::get('/profile/password', function () {
+    return redirect('/pelanggan/profil/password');
+})->middleware('auth');
+Route::post('/profile/password', function () {
+    return redirect('/pelanggan/profil/password');
+})->middleware('auth');
 
 Route::get('/verify', [RegisterController::class, 'verifyAccount'])->name('user.verify');
 
@@ -262,9 +268,11 @@ Route::group([
     Route::post('/survei/{permohonan}', [PelangganSurveiController::class, 'store'])->name('survei.store');
 
     // Profil
-    Route::get('/profil', function () {
-        return view('pelanggan.profil.index');
-    })->name('profil');
+    Route::get('/profil', [PelangganProfilController::class, 'index'])->name('profil');
+    Route::get('/profil/edit', [PelangganProfilController::class, 'edit'])->name('profil.edit');
+    Route::put('/profil', [PelangganProfilController::class, 'update'])->name('profil.update');
+    Route::get('/profil/password', [ChangePasswordController::class, 'index'])->name('profil.password');
+    Route::post('/profil/password', [ChangePasswordController::class, 'store'])->name('profil.password.update');
 
     // Bantuan
     Route::get('/bantuan', function () {

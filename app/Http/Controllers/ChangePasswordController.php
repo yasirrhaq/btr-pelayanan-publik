@@ -11,6 +11,10 @@ class ChangePasswordController extends Controller
 {
     public function index()
     {
+        if (request()->is('pelanggan/*')) {
+            return view('pelanggan.profil.password');
+        }
+
         return view('profile.password.index');
     }
 
@@ -24,6 +28,10 @@ class ChangePasswordController extends Controller
 
         User::find(auth()->user()->id)->update(['password' => Hash::make($request->new_password)]);
 
-        return redirect('/profile/password')->with('success', 'Password berhasil diganti!');
+        $redirectPath = request()->is('pelanggan/*')
+            ? '/pelanggan/profil/password'
+            : '/profile/password';
+
+        return redirect($redirectPath)->with('success', 'Password berhasil diganti!');
     }
 }

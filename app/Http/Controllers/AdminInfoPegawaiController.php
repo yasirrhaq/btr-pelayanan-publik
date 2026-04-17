@@ -4,12 +4,40 @@ namespace App\Http\Controllers;
 
 use App\Models\InfoPegawai;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 
 class AdminInfoPegawaiController extends Controller
 {
     protected $redirect_path = '/dashboard/info-pegawai';
     protected $path_file_save = 'info-pegawai';
+
+    protected function deleteImage(?string $path): void
+    {
+        if (!$path) {
+            return;
+        }
+
+        $absolute = public_path(ltrim(str_replace('\\', '/', $path), '/'));
+
+        if (is_file($absolute)) {
+            @unlink($absolute);
+        }
+    }
+
+    protected function rules(): array
+    {
+        return [
+            'title' => 'required|max:255',
+            'urutan' => 'nullable|integer|min:1',
+            'nip' => 'nullable|max:100',
+            'jenis_kepegawaian' => 'nullable|max:100',
+            'pangkat_golongan' => 'nullable|max:150',
+            'jabatan' => 'nullable|max:255',
+            'instansi' => 'nullable|max:255',
+            'email' => 'nullable|email|max:255',
+            'path_image' => 'nullable|image|file|max:1024',
+            'remove_image' => 'nullable|boolean',
+        ];
+    }
     /**
      * Display a listing of the resource.
      *
@@ -17,7 +45,25 @@ class AdminInfoPegawaiController extends Controller
      */
     public function index()
     {
-        $infoPegawai = InfoPegawai::all();
+        $query = InfoPegawai::query();
+
+        if ($search = request('search')) {
+            $query->where(function ($builder) use ($search) {
+                $builder
+                    ->where('title', 'like', '%' . $search . '%')
+                    ->orWhere('jabatan', 'like', '%' . $search . '%')
+                    ->orWhere('pangkat_golongan', 'like', '%' . $search . '%')
+                    ->orWhere('jenis_kepegawaian', 'like', '%' . $search . '%')
+                    ->orWhere('email', 'like', '%' . $search . '%');
+            });
+        }
+
+        $infoPegawai = $query
+            ->orderBy('urutan')
+            ->orderBy('title')
+            ->paginate(10)
+            ->withQueryString();
+
         return view('dashboard.info-pegawai.index', compact('infoPegawai'));
     }
 
@@ -39,15 +85,15 @@ class AdminInfoPegawaiController extends Controller
      */
     public function store(Request $request)
     {
-        $validatedData = $request->validate([
-            'title' => 'required|max:255',
-            'path_image' => 'image|file|max:1024',
-        ]);
+        $validatedData = $request->validate($this->rules());
 
+        if (empty($validatedData['urutan'])) {
+            unset($validatedData['urutan']);
+        }
 
         if ($request->file('path_image')) {
 
-            $slug      = slugCustom($request->nama);
+            $slug      = slugCustom($request->title);
             $file      = $request->file() ?? [];
             $path      = 'uploads/'.$this->path_file_save.'/';
             $config_file = [
@@ -103,19 +149,22 @@ class AdminInfoPegawaiController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $rules = [
-            'title' => 'required|max:255',
-            'path_image' => 'image|file|max:1024',
-        ];
-        
-        $validatedData = $request->validate($rules);
+        $validatedData = $request->validate($this->rules());
         $info_pegawai = InfoPegawai::where('id', $id)->first();
-        if ($request->file('path_image')) {
-            if (!empty($info_pegawai->path_image)) {
-                unlink($info_pegawai->path_image);
-            }
 
-            $slug      = slugCustom($request->nama);
+        if (empty($validatedData['urutan'])) {
+            unset($validatedData['urutan']);
+        }
+
+        if ((int) ($validatedData['remove_image'] ?? 0) === 1 && !$request->file('path_image')) {
+            $this->deleteImage($info_pegawai->path_image);
+            $validatedData['path_image'] = '';
+        }
+
+        if ($request->file('path_image')) {
+            $this->deleteImage($info_pegawai->path_image);
+
+            $slug      = slugCustom($request->title);
             $file      = $request->file() ?? [];
             $path      = 'uploads/'.$this->path_file_save.'/';
             $config_file = [
@@ -129,6 +178,8 @@ class AdminInfoPegawaiController extends Controller
             $validatedData['path_image'] = (new \App\Http\Controllers\Functions\ImageUpload())->imageUpload('file', $config_file)['path_image'];
         }
 
+        unset($validatedData['remove_image']);
+        $validatedData['updated_by'] = auth()->id();
 
         $info_pegawai = $info_pegawai
             ->update($validatedData);
@@ -144,9 +195,7 @@ class AdminInfoPegawaiController extends Controller
     public function destroy($id)
     {
         $infoPegawai = InfoPegawai::find($id);
-        if ($infoPegawai->image) {
-            Storage::delete($infoPegawai->image);
-        }
+        $this->deleteImage($infoPegawai->path_image);
         $infoPegawai->delete();
         return redirect($this->redirect_path)->with('success', 'Info pegawai berhasil dihapus!');
     }

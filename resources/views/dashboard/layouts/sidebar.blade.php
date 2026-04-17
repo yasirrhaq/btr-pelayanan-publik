@@ -12,8 +12,10 @@
 
 <aside class="btr-sidebar">
     <a href="{{ url('dashboard') }}" class="btr-logo">
-        <span class="btr-logo-mark">B</span>
-        BALAI TEKNIK RAWA
+        <span class="btr-logo-mark">
+            <img src="{{ imageExists('assets/logo.png') }}" alt="Balai Teknik Rawa">
+        </span>
+        <span class="btr-logo-text">BALAI TEKNIK RAWA</span>
     </a>
 
     <ul class="btr-nav">
@@ -35,7 +37,8 @@
                 </button>
                 <ul class="btr-nav-children {{ $group(['dashboard/profil-singkat*','dashboard/info-pegawai*','dashboard/struktur-organisasi*','dashboard/fasilitas-balai*']) }}">
                     <li><a class="btr-nav-link {{ $is('dashboard/profil-singkat*') }}" href="{{ url('dashboard/profil-singkat') }}">Identitas</a></li>
-                    <li><a class="btr-nav-link {{ $is('dashboard/info-pegawai*') || request()->is('dashboard/struktur-organisasi*') ? 'active' : '' }}" href="{{ url('dashboard/info-pegawai') }}">SDM</a></li>
+                    <li><a class="btr-nav-link {{ $is('dashboard/info-pegawai*') }}" href="{{ url('dashboard/info-pegawai') }}">Informasi Pegawai</a></li>
+                    <li><a class="btr-nav-link {{ $is('dashboard/struktur-organisasi*') }}" href="{{ url('dashboard/struktur-organisasi') }}">Struktur Organisasi</a></li>
                     <li><a class="btr-nav-link {{ $is('dashboard/fasilitas-balai*') }}" href="{{ url('dashboard/fasilitas-balai') }}">Fasilitas</a></li>
                 </ul>
             </li>
@@ -44,10 +47,16 @@
         {{-- Layanan --}}
         @unless($isEditor)
             <li class="btr-nav-item">
-                <a class="btr-nav-link {{ $is('dashboard/url-layanan*') || request()->is('dashboard/status-layanan*') || request()->is('dashboard/foto-layanan*') ? 'active' : '' }}" href="{{ url('dashboard/url-layanan') }}">
+                <button class="btr-nav-parent {{ $group(['dashboard/url-layanan*','dashboard/status-layanan*','dashboard/foto-layanan*']) }}">
                     <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2M9 5a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2M9 5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2"/></svg>
                     Layanan
-                </a>
+                    <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+                </button>
+                <ul class="btr-nav-children {{ $group(['dashboard/url-layanan*','dashboard/status-layanan*','dashboard/foto-layanan*']) }}">
+                    <li><a class="btr-nav-link {{ $is('dashboard/url-layanan*') }}" href="{{ url('dashboard/url-layanan') }}">Informasi Pelayanan</a></li>
+                    <li><a class="btr-nav-link {{ $is('dashboard/foto-layanan*') }}" href="{{ url('dashboard/foto-layanan') }}">Layanan</a></li>
+                    <li><a class="btr-nav-link {{ $is('dashboard/status-layanan*') }}" href="{{ url('dashboard/status-layanan') }}">Tracking Layanan</a></li>
+                </ul>
             </li>
         @endunless
 
@@ -100,7 +109,7 @@
         <form action="{{ url('') }}/logout" method="post">
             @csrf
             <button type="submit" class="btr-logout-btn">
-                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H9m4 4v1a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v1"/></svg>
+                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v9"/><path stroke-linecap="round" stroke-linejoin="round" d="M8.5 5.5a8 8 0 1 0 7 0"/></svg>
                 Logout
             </button>
         </form>

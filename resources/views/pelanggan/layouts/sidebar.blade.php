@@ -6,8 +6,10 @@
 
 <aside class="btr-sidebar">
     <a href="{{ route('pelanggan.dashboard') }}" class="btr-logo">
-        <span class="btr-logo-mark">B</span>
-        BALAI TEKNIK RAWA
+        <span class="btr-logo-mark">
+            <img src="{{ imageExists('assets/logo.png') }}" alt="Balai Teknik Rawa">
+        </span>
+        <span class="btr-logo-text">BALAI TEKNIK RAWA</span>
     </a>
 
     <ul class="btr-nav">
@@ -68,8 +70,8 @@
     <div class="btr-logout">
         <form action="{{ url('') }}/logout" method="post">
             @csrf
-            <button type="submit">
-                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H9m4 4v1a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v1"/></svg>
+            <button type="submit" class="btr-logout-btn">
+                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v9"/><path stroke-linecap="round" stroke-linejoin="round" d="M8.5 5.5a8 8 0 1 0 7 0"/></svg>
                 Logout
             </button>
         </form>

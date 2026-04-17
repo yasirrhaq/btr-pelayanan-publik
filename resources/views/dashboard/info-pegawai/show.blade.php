@@ -14,10 +14,23 @@
             </form>
         </div>
 
-        <h2 style="color:var(--text-primary);margin-bottom:18px">{{ $infoPegawai->title }}</h2>
-
-        @if ($infoPegawai->path_image)
-            <img src="{{ asset($infoPegawai->path_image) }}" style="max-width:100%;border-radius:12px">
-        @endif
+        <div style="display:grid;gap:24px;grid-template-columns:minmax(0,280px) minmax(0,1fr);align-items:start;">
+            <div>
+                @if ($infoPegawai->path_image)
+                    <img src="{{ asset($infoPegawai->path_image) }}" style="width:100%;max-width:280px;border-radius:18px;border:1px solid var(--border-soft);object-fit:cover;">
+                @endif
+            </div>
+            <div>
+                <h2 style="color:var(--text-primary);margin-bottom:18px">{{ $infoPegawai->title }}</h2>
+                <div style="display:grid;gap:12px;">
+                    <div><strong>NIP:</strong> {{ $infoPegawai->nip ?: '-' }}</div>
+                    <div><strong>Jenis Kepegawaian:</strong> {{ $infoPegawai->jenis_kepegawaian ?: '-' }}</div>
+                    <div><strong>Pangkat / Golongan:</strong> {{ $infoPegawai->pangkat_golongan ?: '-' }}</div>
+                    <div><strong>Jabatan:</strong> {{ $infoPegawai->jabatan ?: '-' }}</div>
+                    <div><strong>Instansi:</strong> {{ $infoPegawai->instansi ?: '-' }}</div>
+                    <div><strong>Email:</strong> {{ $infoPegawai->email ?: '-' }}</div>
+                </div>
+            </div>
+        </div>
     </div>
 @endsection

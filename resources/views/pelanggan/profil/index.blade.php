@@ -1,64 +1,120 @@
 @extends('pelanggan.layouts.main')
 
 @section('container')
+    @php
+        $user = auth()->user();
+        $rows = [
+            ['label' => 'Nama Pelanggan', 'value' => $user->name ?: '-'],
+            ['label' => 'Kategori Instansi', 'value' => optional($user->kategoriInstansi)->name ?: '-'],
+            ['label' => 'Nama Instansi', 'value' => $user->instansi ?: '-'],
+            ['label' => 'Alamat', 'value' => $user->alamat ?: '-'],
+            ['label' => 'No. Telp (wa)', 'value' => $user->no_hp ?: '-'],
+            ['label' => 'Email', 'value' => $user->email ?: '-'],
+        ];
+    @endphp
+
+    <style>
+        .btr-profile-card {
+            background: #fff;
+            border-radius: 24px;
+            box-shadow: var(--shadow-card);
+            padding: 32px 28px 34px;
+        }
+        .btr-profile-grid {
+            display: grid;
+            grid-template-columns: 150px 20px minmax(0, 1fr);
+            gap: 18px 18px;
+            align-items: center;
+        }
+        .btr-profile-label {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-body);
+        }
+        .btr-profile-sep {
+            text-align: center;
+            font-weight: 600;
+            color: #94A3B8;
+        }
+        .btr-profile-value {
+            font-size: 14px;
+            color: #111827;
+            min-width: 0;
+        }
+        .btr-profile-pill {
+            display: inline-flex;
+            align-items: center;
+            min-height: 40px;
+            padding: 8px 14px;
+            border-radius: 14px;
+            background: #F8FAFC;
+            border: 1px solid #EEF2F7;
+            width: min(100%, 540px);
+            line-height: 1.5;
+            word-break: break-word;
+        }
+        .btr-profile-actions {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 34px;
+        }
+        .btr-profile-actions .btr-btn {
+            min-width: 132px;
+            justify-content: center;
+        }
+        .btr-profile-password-mask {
+            letter-spacing: 0.18em;
+            font-weight: 600;
+        }
+        @media (max-width: 900px) {
+            .btr-profile-grid {
+                grid-template-columns: 1fr;
+                gap: 8px;
+            }
+            .btr-profile-sep {
+                display: none;
+            }
+            .btr-profile-label {
+                font-size: 13px;
+                color: var(--text-muted);
+            }
+            .btr-profile-value {
+                margin-bottom: 8px;
+            }
+            .btr-profile-pill {
+                width: 100%;
+            }
+            .btr-profile-card {
+                padding: 22px 18px;
+            }
+        }
+    </style>
+
     <h1 class="btr-page-title">Profil Pelanggan</h1>
 
-    @php $user = auth()->user(); @endphp
+    <div class="btr-profile-card">
+        <div class="btr-profile-grid">
+            @foreach ($rows as $row)
+                <div class="btr-profile-label">{{ $row['label'] }}</div>
+                <div class="btr-profile-sep">:</div>
+                <div class="btr-profile-value">
+                    @if (in_array($row['label'], ['No. Telp (wa)', 'Email']))
+                        <span class="btr-profile-pill">{{ $row['value'] }}</span>
+                    @else
+                        {{ $row['value'] }}
+                    @endif
+                </div>
+            @endforeach
 
-    <div class="btr-card">
-        <div style="display:flex; align-items:center; gap:20px; margin-bottom:24px;">
-            <div class="btr-topbar-avatar" style="width:72px; height:72px; font-size:28px;">
-                {{ strtoupper(substr($user->name, 0, 1)) }}
-            </div>
-            <div>
-                <h2 style="font-size:18px; font-weight:600; color:var(--text-primary); margin:0 0 4px;">{{ $user->name }}</h2>
-                <p style="font-size:13px; color:var(--text-muted); margin:0;">{{ $user->email }}</p>
+            <div class="btr-profile-label">Password</div>
+            <div class="btr-profile-sep">:</div>
+            <div class="btr-profile-value">
+                <span class="btr-profile-pill btr-profile-password-mask">******</span>
             </div>
         </div>
 
-        <div class="btr-table-wrap">
-            <table class="btr-table">
-                <tbody>
-                    <tr>
-                        <td style="text-align:left; font-weight:500; color:var(--text-muted); width:200px;">Nama Lengkap</td>
-                        <td style="text-align:left;">{{ $user->name }}</td>
-                    </tr>
-                    <tr>
-                        <td style="text-align:left; font-weight:500; color:var(--text-muted);">Email</td>
-                        <td style="text-align:left;">{{ $user->email }}</td>
-                    </tr>
-                    <tr>
-                        <td style="text-align:left; font-weight:500; color:var(--text-muted);">No. HP / WA</td>
-                        <td style="text-align:left;">{{ $user->no_hp ?? '-' }}</td>
-                    </tr>
-                    <tr>
-                        <td style="text-align:left; font-weight:500; color:var(--text-muted);">Kategori Instansi</td>
-                        <td style="text-align:left;">{{ $user->kategoriInstansi->nama ?? '-' }}</td>
-                    </tr>
-                    <tr>
-                        <td style="text-align:left; font-weight:500; color:var(--text-muted);">Nama Instansi</td>
-                        <td style="text-align:left;">{{ $user->instansi ?? '-' }}</td>
-                    </tr>
-                    <tr>
-                        <td style="text-align:left; font-weight:500; color:var(--text-muted);">Alamat</td>
-                        <td style="text-align:left;">{{ $user->alamat ?? '-' }}</td>
-                    </tr>
-                    <tr>
-                        <td style="text-align:left; font-weight:500; color:var(--text-muted);">Status Akun</td>
-                        <td style="text-align:left;">
-                            @if($user->is_verified)
-                                <span class="btr-status-badge selesai">Terverifikasi</span>
-                            @else
-                                <span class="btr-status-badge pembayaran">Belum Terverifikasi</span>
-                            @endif
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-
-        <div class="btr-form-actions" style="margin-top:20px;">
-            <a href="{{ url('profile/password') }}" class="btr-btn btr-btn-outline btr-btn-sm">Ubah Password</a>
+        <div class="btr-profile-actions">
+            <a href="{{ route('pelanggan.profil.edit') }}" class="btr-btn">Edit</a>
         </div>
     </div>
 @endsection

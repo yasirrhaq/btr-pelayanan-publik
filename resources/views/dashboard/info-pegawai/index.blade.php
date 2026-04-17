@@ -3,6 +3,71 @@
 @section('container')
     <h1 class="btr-page-title">Profil - SDM (Sumber Daya Manusia)</h1>
 
+    @push('head')
+        <style>
+            .info-pegawai-table thead th {
+                font-size: 12px;
+                letter-spacing: 0.02em;
+                white-space: nowrap;
+            }
+
+            .info-pegawai-table .col-no,
+            .info-pegawai-table .col-foto,
+            .info-pegawai-table .col-status,
+            .info-pegawai-table .col-aksi {
+                text-align: center;
+            }
+
+            .info-pegawai-table .col-nama,
+            .info-pegawai-table .col-jabatan,
+            .info-pegawai-table .col-golongan {
+                text-align: left;
+            }
+
+            .info-pegawai-table tbody td.col-nama {
+                min-width: 280px;
+                font-weight: 600;
+                color: var(--text-primary);
+            }
+
+            .info-pegawai-table tbody td.col-jabatan {
+                min-width: 340px;
+            }
+
+            .info-pegawai-table tbody td.col-golongan {
+                min-width: 170px;
+                white-space: nowrap;
+            }
+
+            .info-pegawai-table .thumb {
+                width: 56px;
+                height: 56px;
+                border-radius: 14px;
+                object-fit: cover;
+            }
+
+            .info-pegawai-actions {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                gap: 8px;
+            }
+
+            .info-pegawai-actions .btr-action-form {
+                display: inline-flex;
+                order: 1;
+            }
+
+            .info-pegawai-actions .btr-action.edit {
+                order: 2;
+            }
+
+            .info-pegawai-actions .btr-action.view {
+                order: 3;
+            }
+        </style>
+    @endpush
+
     <div class="btr-tabs">
         <a href="{{ url('dashboard/struktur-organisasi') }}" class="btr-tab">Struktur Organisasi</a>
         <a href="{{ url('dashboard/info-pegawai') }}" class="btr-tab active">Pegawai</a>
@@ -12,47 +77,47 @@
         <div class="btr-toolbar">
             <a href="{{ url('dashboard/info-pegawai/create') }}" class="btr-btn">
                 <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
-                Pegawai
+                Tambah Pegawai
             </a>
             <div class="spacer"></div>
-            <div class="btr-search">
-                <input type="text" placeholder="Cari pegawai...">
-                <button type="button">
+            <form method="get" action="{{ url('dashboard/info-pegawai') }}" class="btr-search">
+                <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari nama, jabatan, golongan...">
+                <button type="submit">
                     <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35"/></svg>
                 </button>
-            </div>
+            </form>
         </div>
 
         <div class="btr-table-wrap">
-            <table class="btr-table">
+            <table class="btr-table info-pegawai-table">
                 <thead>
                     <tr>
-                        <th style="width:60px">No</th>
-                        <th>Foto</th>
-                        <th>Nama Pegawai</th>
-                        <th>Jabatan</th>
-                        <th>Golongan</th>
-                        <th>Status</th>
-                        <th style="width:140px">Aksi</th>
+                        <th class="col-no" style="width:72px">No</th>
+                        <th class="col-foto" style="width:92px">Foto</th>
+                        <th class="col-nama">Nama Pegawai</th>
+                        <th class="col-jabatan">Jabatan</th>
+                        <th class="col-golongan">Golongan</th>
+                        <th class="col-status" style="width:120px">Status</th>
+                        <th class="col-aksi" style="width:140px">Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
                     @forelse ($infoPegawai as $items)
                         <tr>
-                            <td>{{ $loop->iteration }}</td>
-                            <td>
+                            <td class="col-no">{{ $infoPegawai->firstItem() + $loop->index }}</td>
+                            <td class="col-foto">
                                 @if ($items->path_image)
                                     <img src="{{ asset($items->path_image) }}" class="thumb" alt="">
                                 @else
                                     <div class="thumb" style="background:#E9ECF3"></div>
                                 @endif
                             </td>
-                            <td style="text-align:left">{{ $items->title }}</td>
-                            <td>-</td>
-                            <td>-</td>
-                            <td><span class="btr-status publish">PNS</span></td>
-                            <td>
-                                <div class="btr-actions">
+                            <td class="col-nama">{{ $items->title }}</td>
+                            <td class="col-jabatan">{{ $items->jabatan ?: '-' }}</td>
+                            <td class="col-golongan">{{ $items->pangkat_golongan ?: '-' }}</td>
+                            <td class="col-status"><span class="btr-status publish">{{ $items->jenis_kepegawaian ?: 'PNS' }}</span></td>
+                            <td class="col-aksi">
+                                <div class="btr-actions info-pegawai-actions">
                                     <form action="{{ url('dashboard/info-pegawai/' . $items->id) }}" method="post" class="btr-action-form" onsubmit="return confirm('Yakin hapus data?')">
                                         @csrf
                                         @method('delete')
@@ -74,6 +139,10 @@
                     @endforelse
                 </tbody>
             </table>
+        </div>
+
+        <div class="btr-pagination-wrap">
+            {{ $infoPegawai->onEachSide(1)->links('pagination::bootstrap-4') }}
         </div>
     </div>
 @endsection
