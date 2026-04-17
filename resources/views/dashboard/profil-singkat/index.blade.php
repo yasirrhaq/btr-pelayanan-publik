@@ -36,13 +36,12 @@
 
     <h1 class="btr-page-title">Profil <small>Identitas</small></h1>
 
-    <div class="btr-card" style="overflow:hidden;">
-        <div style="display:flex;gap:0;flex-wrap:wrap;border-bottom:1px solid var(--border-soft);margin:-28px -28px 24px;padding:0 20px;background:#F8FAFC;">
+    <div class="btr-wizard">
+        <div class="btr-tabs">
             @foreach ($tabs as $key => $tab)
                 <button type="button"
                     data-profil-tab-button="{{ $key }}"
-                    class="{{ $activeTab === $key ? 'bg-white text-[#1E3A6B]' : 'bg-[#FCD34D] text-[#1E3A6B]' }}"
-                    style="border:none;padding:16px 20px;font-weight:600;cursor:pointer;border-right:1px solid rgba(30,58,107,.08);">
+                    class="btr-tab {{ $activeTab === $key ? 'active' : '' }}">
                     {{ $tab['label'] }}
                 </button>
             @endforeach
@@ -52,20 +51,20 @@
             $singlePanels = [
                 'tentang-kami' => $urlEntries['tentang-kami'],
                 'sejarah' => $landingEntries['sejarah'],
-                'maskot' => $urlEntries['maskot'],
+                'maskot' => $landingEntries['maskot'],
             ];
         @endphp
 
         @foreach ($singlePanels as $key => $entry)
             @php
-                $imagePath = $key === 'sejarah' ? $entry->path : $entry->path_image;
+                $scope = in_array($key, ['sejarah', 'maskot'], true) ? 'landing' : 'url';
+                $imagePath = $scope === 'landing' ? $entry->path : $entry->path_image;
                 $previewDisplay = $imagePath ? 'display:block;' : 'display:none;';
                 $panelDisplay = $activeTab === $key ? '' : 'display:none;';
-                $scope = $key === 'sejarah' ? 'landing' : 'url';
                 $label = $tabs[$key]['label'];
             @endphp
 
-            <div data-profil-panel="{{ $key }}" style="{{ $panelDisplay }}">
+            <div data-profil-panel="{{ $key }}" class="btr-tab-panel" style="{{ $panelDisplay }}">
                 <form method="post" action="{{ url('dashboard/profil-singkat/' . $entry->id) }}" enctype="multipart/form-data">
                     @method('put')
                     @csrf
@@ -113,32 +112,32 @@
             </div>
         @endforeach
 
-        <div data-profil-panel="visi-misi" style="{{ $activeTab === 'visi-misi' ? '' : 'display:none;' }}">
+        <div data-profil-panel="visi-misi" class="btr-tab-panel" style="{{ $activeTab === 'visi-misi' ? '' : 'display:none;' }}">
             <div class="btr-table-wrap">
                 <table class="btr-table">
                     <thead>
                         <tr>
-                            <th style="width:120px">Bagian</th>
-                            <th style="width:140px">Gambar</th>
-                            <th>Deskripsi</th>
-                            <th style="width:110px">Status</th>
-                            <th style="width:120px">Aksi</th>
+                            <th class="col-bagian col-left" style="width:120px">Bagian</th>
+                            <th class="col-gambar col-center" style="width:140px">Gambar</th>
+                            <th class="col-deskripsi col-left">Deskripsi</th>
+                            <th class="col-status" style="width:110px">Status</th>
+                            <th class="col-aksi" style="width:120px">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach (['visi' => $landingEntries['visi'], 'misi' => $landingEntries['misi']] as $item)
                             <tr>
-                                <td style="text-align:left;font-weight:600;">{{ $item->title }}</td>
-                                <td>
+                                <td class="col-bagian col-left" style="font-weight:600;">{{ $item->title }}</td>
+                                <td class="col-gambar col-center">
                                     @if ($item->path)
                                         <img src="{{ asset($item->path) }}" class="thumb" alt="{{ $item->title }}">
                                     @else
                                         -
                                     @endif
                                 </td>
-                                <td style="text-align:left">{!! \Illuminate\Support\Str::limit(strip_tags($item->deskripsi), 120) !!}</td>
-                                <td>{{ (int) $item->status === 1 ? 'Aktif' : 'Nonaktif' }}</td>
-                                <td>
+                                <td class="col-deskripsi col-left">{!! \Illuminate\Support\Str::limit(strip_tags($item->deskripsi), 120) !!}</td>
+                                <td class="col-status">{{ (int) $item->status === 1 ? 'Aktif' : 'Nonaktif' }}</td>
+                                <td class="col-aksi">
                                     <div class="btr-actions">
                                         <a href="{{ url('dashboard/profil-singkat/' . $item->id . '/edit?scope=landing&tab=visi-misi') }}" class="btr-action edit" title="Edit">
                                             <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path stroke-linecap="round" stroke-linejoin="round" d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
@@ -155,32 +154,32 @@
             </div>
         </div>
 
-        <div data-profil-panel="tugas-fungsi" style="{{ $activeTab === 'tugas-fungsi' ? '' : 'display:none;' }}">
+        <div data-profil-panel="tugas-fungsi" class="btr-tab-panel" style="{{ $activeTab === 'tugas-fungsi' ? '' : 'display:none;' }}">
             <div class="btr-table-wrap">
                 <table class="btr-table">
                     <thead>
                         <tr>
-                            <th style="width:120px">Bagian</th>
-                            <th style="width:140px">Gambar</th>
-                            <th>Deskripsi</th>
-                            <th style="width:110px">Status</th>
-                            <th style="width:120px">Aksi</th>
+                            <th class="col-bagian col-left" style="width:120px">Bagian</th>
+                            <th class="col-gambar col-center" style="width:140px">Gambar</th>
+                            <th class="col-deskripsi col-left">Deskripsi</th>
+                            <th class="col-status" style="width:110px">Status</th>
+                            <th class="col-aksi" style="width:120px">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach (['tugas' => $landingEntries['tugas'], 'fungsi' => $landingEntries['fungsi']] as $item)
                             <tr>
-                                <td style="text-align:left;font-weight:600;">{{ $item->title }}</td>
-                                <td>
+                                <td class="col-bagian col-left" style="font-weight:600;">{{ $item->title }}</td>
+                                <td class="col-gambar col-center">
                                     @if ($item->path)
                                         <img src="{{ asset($item->path) }}" class="thumb" alt="{{ $item->title }}">
                                     @else
                                         -
                                     @endif
                                 </td>
-                                <td style="text-align:left">{!! \Illuminate\Support\Str::limit(strip_tags($item->deskripsi), 120) !!}</td>
-                                <td>{{ (int) $item->status === 1 ? 'Aktif' : 'Nonaktif' }}</td>
-                                <td>
+                                <td class="col-deskripsi col-left">{!! \Illuminate\Support\Str::limit(strip_tags($item->deskripsi), 120) !!}</td>
+                                <td class="col-status">{{ (int) $item->status === 1 ? 'Aktif' : 'Nonaktif' }}</td>
+                                <td class="col-aksi">
                                     <div class="btr-actions">
                                         <a href="{{ url('dashboard/profil-singkat/' . $item->id . '/edit?scope=landing&tab=tugas-fungsi') }}" class="btr-action edit" title="Edit">
                                             <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path stroke-linecap="round" stroke-linejoin="round" d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
@@ -276,8 +275,7 @@
             function activateTab(key) {
                 buttons.forEach(function (btn) {
                     var active = btn.getAttribute('data-profil-tab-button') === key;
-                    btn.style.background = active ? '#ffffff' : '#FCD34D';
-                    btn.style.color = '#1E3A6B';
+                    btn.classList.toggle('active', active);
                 });
 
                 panels.forEach(function (panel) {

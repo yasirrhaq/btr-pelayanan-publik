@@ -1,14 +1,5 @@
 @extends('dashboard.layouts.main')
 
-@php
-    $tabMeta = [
-        'kebijakan-ppid' => ['label' => 'Kebijakan PPID', 'title' => 'Kebijakan PPID'],
-        'info-berkala' => ['label' => 'Info Berkala', 'title' => 'Informasi Berkala'],
-        'info-serta-merta' => ['label' => 'Info Serta Merta', 'title' => 'Informasi Serta Merta'],
-        'info-setiap-saat' => ['label' => 'Info Setiap Saat', 'title' => 'Informasi Setiap Saat'],
-    ];
-@endphp
-
 @section('container')
     <h1 class="btr-page-title">Publikasi - PPID</h1>
 
@@ -45,13 +36,12 @@
         <script src="https://cdn.jsdelivr.net/npm/jodit@4.6.2/es2021/jodit.min.js"></script>
     @endpush
 
-    <div class="btr-card" style="overflow:hidden;">
-        <div style="display:flex;gap:0;flex-wrap:wrap;border-bottom:1px solid var(--border-soft);margin:-28px -28px 24px;padding:0 20px;background:#F8FAFC;">
+    <div class="btr-wizard">
+        <div class="btr-tabs">
             @foreach ($tabMeta as $key => $meta)
                 <button type="button"
                     data-ppid-tab-button="{{ $key }}"
-                    class="{{ $activeTab === $key ? 'bg-white text-[#1E3A6B]' : 'bg-[#FCD34D] text-[#1E3A6B]' }}"
-                    style="border:none;padding:16px 20px;font-weight:600;cursor:pointer;border-right:1px solid rgba(30,58,107,.08);">
+                    class="btr-tab {{ $activeTab === $key ? 'active' : '' }}">
                     {{ $meta['label'] }}
                 </button>
             @endforeach
@@ -66,7 +56,7 @@
                 $panelDisplay = $activeTab === $key ? '' : 'display:none;';
             @endphp
 
-            <div data-ppid-panel="{{ $key }}" style="{{ $panelDisplay }}">
+            <div data-ppid-panel="{{ $key }}" class="btr-tab-panel" style="{{ $panelDisplay }}">
                 <form method="post" action="{{ route('admin.ppid.save') }}" enctype="multipart/form-data">
                     @csrf
                     <input type="hidden" name="ppid_type" value="{{ $key }}">
@@ -75,7 +65,7 @@
                     <div style="display:grid;grid-template-columns:140px minmax(0,1fr);gap:20px;align-items:start;">
                         <label class="btr-label" for="title_{{ $key }}" style="padding-top:12px;">Judul</label>
                         <div>
-                            <input type="text" id="title_{{ $key }}" name="title" class="btr-input" value="{{ old('ppid_type') === $key ? old('title') : ($entry->title ?? $meta['title']) }}" required>
+                            <input type="text" id="title_{{ $key }}" name="title" class="btr-input" value="{{ old('ppid_type') === $key ? old('title') : ($entry->title ?? $meta['type_title']) }}" required>
                         </div>
 
                         <label class="btr-label" for="deskripsi_{{ $key }}" style="padding-top:12px;">Isi {{ $meta['label'] }}</label>
@@ -200,8 +190,7 @@
             function activateTab(key) {
                 buttons.forEach(function (btn) {
                     var active = btn.getAttribute('data-ppid-tab-button') === key;
-                    btn.style.background = active ? '#ffffff' : '#FCD34D';
-                    btn.style.color = '#1E3A6B';
+                    btn.classList.toggle('active', active);
                 });
 
                 panels.forEach(function (panel) {

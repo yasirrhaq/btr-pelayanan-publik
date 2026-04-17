@@ -263,9 +263,9 @@ docker compose exec app php artisan route:clear
 - image upload wired to Laravel endpoint
 
 2. Profil identitas follow-up
-- `Maskot` admin tab now stores content/image
-- no dedicated public `maskot` page has been wired yet
-- if client wants public mascot page/section later, add route + frontend block
+- `Maskot` admin tab now stores content/image from `profil-singkat`
+- dedicated public maskot page is now wired at `/maskot-balai-teknik-rawa`
+- topbar `Profil > Maskot Balai Teknik Rawa` now points to that page
 
 3. Renstra vs dokumen
 - admin `Renstra` kept
@@ -288,7 +288,22 @@ docker compose exec app php artisan route:clear
 - main shell wrappers and sidebars are still separate files
 - they can be consolidated further later if needed, but current highest-value duplication is already reduced
 
-7. Tailwind CDN warning
+7. PPID public integration status
+- public PPID is now split into dedicated pages plus hub:
+  - `/ppid`
+  - `/ppid/kebijakan-ppid`
+  - `/ppid/info-berkala`
+  - `/ppid/info-serta-merta`
+  - `/ppid/info-setiap-saat`
+- admin PPID and public PPID now share canonical section mapping via `App\Support\PpidSections`
+- public topbar `PPID` label points to `/ppid` and submenu items point directly to each PPID page
+
+8. Admin wizard UI status
+- tabbed admin sections now share one wizard style from `public/css/admin.css`
+- applied to PPID, Profil Singkat, Struktur Organisasi, Informasi Pegawai, and Galeri create/edit/index
+- wizard sizing was tightened after first pass so tabs feel less bulky
+
+9. Tailwind CDN warning
 - still present in browser console on frontend/admin pages using CDN script
 - non-blocking, but should move to compiled asset flow later
 

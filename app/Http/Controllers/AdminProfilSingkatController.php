@@ -15,7 +15,7 @@ class AdminProfilSingkatController extends Controller
         'sejarah' => ['label' => 'Sejarah', 'scope' => 'landing'],
         'visi-misi' => ['label' => 'Visi & Misi', 'scope' => 'landing-list'],
         'tugas-fungsi' => ['label' => 'Tugas & Fungsi', 'scope' => 'landing-list'],
-        'maskot' => ['label' => 'Maskot', 'scope' => 'url'],
+        'maskot' => ['label' => 'Maskot', 'scope' => 'landing'],
     ];
 
     private const LANDING_TITLES = [
@@ -24,6 +24,7 @@ class AdminProfilSingkatController extends Controller
         'sejarah' => 'Sejarah',
         'tugas' => 'Tugas',
         'fungsi' => 'Fungsi',
+        'maskot' => 'Maskot Balai Teknik Rawa',
     ];
 
     protected function deleteFile(?string $path): void
@@ -90,7 +91,7 @@ class AdminProfilSingkatController extends Controller
         $title = self::LANDING_TITLES[$key];
         $type = LandingPageTipe::firstOrCreate(['title' => $title]);
 
-        return LandingPage::firstOrCreate(
+        $entry = LandingPage::firstOrCreate(
             ['landing_page_tipe_id' => $type->id],
             [
                 'title' => $title,
@@ -98,6 +99,20 @@ class AdminProfilSingkatController extends Controller
                 'status' => 1,
             ]
         );
+
+        if ($key === 'maskot' && blank($entry->deskripsi) && blank($entry->path)) {
+            $legacyMaskot = UrlLayanan::where('name', 'Maskot')->first();
+
+            if ($legacyMaskot && (filled($legacyMaskot->deskripsi) || filled($legacyMaskot->path_image))) {
+                $entry->title = $entry->title ?: $title;
+                $entry->deskripsi = $legacyMaskot->deskripsi ?? '';
+                $entry->path = $legacyMaskot->path_image;
+                $entry->status = 1;
+                $entry->save();
+            }
+        }
+
+        return $entry;
     }
 
     protected function buildPayload(): array
@@ -106,7 +121,6 @@ class AdminProfilSingkatController extends Controller
             'tabs' => self::TAB_META,
             'urlEntries' => [
                 'tentang-kami' => $this->ensureUrlEntry('tentang-kami'),
-                'maskot' => $this->ensureUrlEntry('maskot'),
             ],
             'landingEntries' => [
                 'sejarah' => $this->ensureLandingEntry('sejarah'),
@@ -114,6 +128,7 @@ class AdminProfilSingkatController extends Controller
                 'misi' => $this->ensureLandingEntry('misi'),
                 'tugas' => $this->ensureLandingEntry('tugas'),
                 'fungsi' => $this->ensureLandingEntry('fungsi'),
+                'maskot' => $this->ensureLandingEntry('maskot'),
             ],
         ];
     }
@@ -125,6 +140,7 @@ class AdminProfilSingkatController extends Controller
             'sejarah' => url('/sejarah'),
             'visi-misi' => url('/visi-misi'),
             'tugas-fungsi' => url('/tugas'),
+            'maskot' => url('/maskot-balai-teknik-rawa'),
             default => null,
         };
     }

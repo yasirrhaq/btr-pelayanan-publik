@@ -398,20 +398,58 @@ body.btr-pelanggan {
     border: 1px solid var(--border-soft);
 }
 
-.btr-table { width: 100%; border-collapse: collapse; background: #FFFFFF; }
+.btr-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #FFFFFF;
+    table-layout: auto;
+}
 .btr-table thead th {
     background: #FFFFFF; color: var(--text-primary); font-weight: 600;
-    text-align: center; padding: 14px 12px;
+    text-align: center; padding: 15px 14px;
     border-bottom: 1px solid var(--border-soft); font-size: 13px;
+    line-height: 1.45; vertical-align: middle;
     white-space: nowrap;
 }
 .btr-table tbody td {
-    padding: 14px 12px; text-align: center;
+    padding: 15px 14px; text-align: center;
     border-bottom: 1px solid var(--border-soft);
     color: var(--text-body); font-size: 13px; vertical-align: middle;
+    line-height: 1.6;
 }
 .btr-table tbody tr:last-child td { border-bottom: none; }
 .btr-table tbody tr:hover { background: #F9FAFC; }
+
+.btr-table .col-left {
+    text-align: left !important;
+}
+
+.btr-table th:last-child,
+.btr-table td:last-child,
+.btr-table .col-center,
+.btr-table .col-no,
+.btr-table .col-foto,
+.btr-table .col-status,
+.btr-table .col-aksi,
+.btr-table .col-action,
+.btr-table .col-actions {
+    text-align: center;
+}
+
+.btr-table .btr-actions {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.btr-table .btr-status,
+.btr-table .btr-status-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
 
 /* Buttons */
 .btr-btn {

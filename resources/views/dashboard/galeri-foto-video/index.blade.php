@@ -3,28 +3,29 @@
 @section('container')
     <h1 class="btr-page-title">Publikasi - Galeri</h1>
 
-    <div class="btr-tabs">
-        <a href="{{ url('dashboard/galeri/foto-video?tab=foto') }}" class="btr-tab {{ $activeTab === 'foto' ? 'active' : '' }}">Foto</a>
-        <a href="{{ url('dashboard/galeri/foto-video?tab=video') }}" class="btr-tab {{ $activeTab === 'video' ? 'active' : '' }}">Video</a>
-        <a href="{{ url('dashboard/galeri/foto-video?tab=dokumen') }}" class="btr-tab {{ $activeTab === 'dokumen' ? 'active' : '' }}">Dokumen</a>
-    </div>
-
-    <div class="btr-tab-panel">
-        <div class="btr-toolbar">
-            <a href="{{ url('dashboard/galeri/foto-video/create?tab=' . $activeTab) }}" class="btr-btn">
-                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
-                {{ $activeTab === 'foto' ? 'Upload Foto' : ($activeTab === 'video' ? 'Upload Video' : 'Upload Dokumen') }}
-            </a>
-            <div class="spacer"></div>
-            <div class="btr-search">
-                <input type="text" placeholder="Cari {{ $activeTab }}...">
-                <button type="button">
-                    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35"/></svg>
-                </button>
-            </div>
+    <div class="btr-wizard">
+        <div class="btr-tabs">
+            <a href="{{ url('dashboard/galeri/foto-video?tab=foto') }}" class="btr-tab {{ $activeTab === 'foto' ? 'active' : '' }}">Foto</a>
+            <a href="{{ url('dashboard/galeri/foto-video?tab=video') }}" class="btr-tab {{ $activeTab === 'video' ? 'active' : '' }}">Video</a>
+            <a href="{{ url('dashboard/galeri/foto-video?tab=dokumen') }}" class="btr-tab {{ $activeTab === 'dokumen' ? 'active' : '' }}">Dokumen</a>
         </div>
 
-        <div class="btr-gallery-grid">
+        <div class="btr-tab-panel">
+            <div class="btr-toolbar">
+                <a href="{{ url('dashboard/galeri/foto-video/create?tab=' . $activeTab) }}" class="btr-btn">
+                    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
+                    {{ $activeTab === 'foto' ? 'Upload Foto' : ($activeTab === 'video' ? 'Upload Video' : 'Upload Dokumen') }}
+                </a>
+                <div class="spacer"></div>
+                <div class="btr-search">
+                    <input type="text" placeholder="Cari {{ $activeTab }}...">
+                    <button type="button">
+                        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35"/></svg>
+                    </button>
+                </div>
+            </div>
+
+            <div class="btr-gallery-grid">
             @forelse ($fotoVideo as $items)
                 <div class="btr-gallery-card">
                     <div class="tanggal">Tanggal: {{ optional($items->created_at)->format('d/m/Y') }}</div>
@@ -66,6 +67,7 @@
                     @endif
                 </div>
             @endforelse
+            </div>
         </div>
     </div>
 @endsection

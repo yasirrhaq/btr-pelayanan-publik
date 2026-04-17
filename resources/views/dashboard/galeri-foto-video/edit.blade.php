@@ -11,14 +11,15 @@
 @section('container')
     <h1 class="btr-page-title">Publikasi - Galeri <small>Edit {{ $label }}</small></h1>
 
-    <div class="btr-tabs" style="margin-bottom:16px;">
-        <a href="{{ url('dashboard/galeri/foto-video/' . $galeri_foto->id . '/edit?tab=foto') }}" class="btr-tab {{ $normalizedType === 'foto' ? 'active' : '' }}">Foto</a>
-        <a href="{{ url('dashboard/galeri/foto-video/' . $galeri_foto->id . '/edit?tab=video') }}" class="btr-tab {{ $normalizedType === 'video' ? 'active' : '' }}">Video</a>
-        <a href="{{ url('dashboard/galeri/foto-video/' . $galeri_foto->id . '/edit?tab=dokumen') }}" class="btr-tab {{ $normalizedType === 'dokumen' ? 'active' : '' }}">Dokumen</a>
-    </div>
+    <div class="btr-wizard">
+        <div class="btr-tabs">
+            <a href="{{ url('dashboard/galeri/foto-video/' . $galeri_foto->id . '/edit?tab=foto') }}" class="btr-tab {{ $normalizedType === 'foto' ? 'active' : '' }}">Foto</a>
+            <a href="{{ url('dashboard/galeri/foto-video/' . $galeri_foto->id . '/edit?tab=video') }}" class="btr-tab {{ $normalizedType === 'video' ? 'active' : '' }}">Video</a>
+            <a href="{{ url('dashboard/galeri/foto-video/' . $galeri_foto->id . '/edit?tab=dokumen') }}" class="btr-tab {{ $normalizedType === 'dokumen' ? 'active' : '' }}">Dokumen</a>
+        </div>
 
-    <div class="btr-card">
-        <form method="post" action="{{ url('dashboard/galeri/foto-video/' . $galeri_foto->id) }}" enctype="multipart/form-data">
+        <div class="btr-card">
+            <form method="post" action="{{ url('dashboard/galeri/foto-video/' . $galeri_foto->id) }}" enctype="multipart/form-data">
             @method('put')
             @csrf
             <input type="hidden" name="type" value="{{ $dbType }}">
@@ -63,7 +64,8 @@
                 <a href="{{ url('dashboard/galeri/foto-video?tab=' . $normalizedType) }}" class="btr-btn btr-btn-outline">Batal</a>
                 <button type="submit" class="btr-btn">Update</button>
             </div>
-        </form>
+            </form>
+        </div>
     </div>
 
     <script>

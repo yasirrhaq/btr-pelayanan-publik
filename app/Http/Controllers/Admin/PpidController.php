@@ -5,24 +5,18 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\LandingPage;
 use App\Models\LandingPageTipe;
+use App\Support\PpidSections;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
 class PpidController extends Controller
 {
-    private const TYPES = [
-        'kebijakan-ppid' => 'Kebijakan PPID',
-        'info-berkala' => 'Info Berkala',
-        'info-serta-merta' => 'Info Serta Merta',
-        'info-setiap-saat' => 'Info Setiap Saat',
-    ];
-
     protected function ensureTypes()
     {
         $types = collect();
 
-        foreach (self::TYPES as $key => $title) {
-            $type = LandingPageTipe::firstOrCreate(['title' => $title]);
+        foreach (PpidSections::all() as $key => $section) {
+            $type = LandingPageTipe::firstOrCreate(['title' => $section['type_title']]);
             $types->put($key, $type);
         }
 
@@ -92,6 +86,7 @@ class PpidController extends Controller
         $entries = LandingPage::whereIn('landing_page_tipe_id', $types->pluck('id')->all())->get()->keyBy('landing_page_tipe_id');
 
         return view('dashboard.ppid.index', [
+            'tabMeta' => PpidSections::all(),
             'types' => $types,
             'entries' => $entries,
             'activeTab' => request('tab', 'kebijakan-ppid'),
@@ -101,7 +96,7 @@ class PpidController extends Controller
     public function save(Request $request)
     {
         $validated = $request->validate([
-            'ppid_type' => 'required|in:' . implode(',', array_keys(self::TYPES)),
+            'ppid_type' => 'required|in:' . implode(',', array_keys(PpidSections::all())),
             'title' => 'required|string|max:255',
             'deskripsi' => 'required|string',
             'dokumen' => 'nullable|file|max:10240|mimes:pdf,doc,docx,jpg,jpeg,png,webp',

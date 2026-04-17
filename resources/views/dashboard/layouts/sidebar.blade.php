@@ -37,8 +37,8 @@
                 </button>
                 <ul class="btr-nav-children {{ $group(['dashboard/profil-singkat*','dashboard/info-pegawai*','dashboard/struktur-organisasi*','dashboard/fasilitas-balai*']) }}">
                     <li><a class="btr-nav-link {{ $is('dashboard/profil-singkat*') }}" href="{{ url('dashboard/profil-singkat') }}">Identitas</a></li>
-                    <li><a class="btr-nav-link {{ $is('dashboard/info-pegawai*') }}" href="{{ url('dashboard/info-pegawai') }}">Informasi Pegawai</a></li>
                     <li><a class="btr-nav-link {{ $is('dashboard/struktur-organisasi*') }}" href="{{ url('dashboard/struktur-organisasi') }}">Struktur Organisasi</a></li>
+                    <li><a class="btr-nav-link {{ $is('dashboard/info-pegawai*') }}" href="{{ url('dashboard/info-pegawai') }}">Informasi Pegawai</a></li>
                     <li><a class="btr-nav-link {{ $is('dashboard/fasilitas-balai*') }}" href="{{ url('dashboard/fasilitas-balai') }}">Fasilitas</a></li>
                 </ul>
             </li>

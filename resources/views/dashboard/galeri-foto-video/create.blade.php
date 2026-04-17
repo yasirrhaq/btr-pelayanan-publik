@@ -11,14 +11,15 @@
 @section('container')
     <h1 class="btr-page-title">Publikasi - Galeri <small>Upload {{ $label }}</small></h1>
 
-    <div class="btr-tabs" style="margin-bottom:16px;">
-        <a href="{{ url('dashboard/galeri/foto-video/create?tab=foto') }}" class="btr-tab {{ $normalizedType === 'foto' ? 'active' : '' }}">Foto</a>
-        <a href="{{ url('dashboard/galeri/foto-video/create?tab=video') }}" class="btr-tab {{ $normalizedType === 'video' ? 'active' : '' }}">Video</a>
-        <a href="{{ url('dashboard/galeri/foto-video/create?tab=dokumen') }}" class="btr-tab {{ $normalizedType === 'dokumen' ? 'active' : '' }}">Dokumen</a>
-    </div>
+    <div class="btr-wizard">
+        <div class="btr-tabs">
+            <a href="{{ url('dashboard/galeri/foto-video/create?tab=foto') }}" class="btr-tab {{ $normalizedType === 'foto' ? 'active' : '' }}">Foto</a>
+            <a href="{{ url('dashboard/galeri/foto-video/create?tab=video') }}" class="btr-tab {{ $normalizedType === 'video' ? 'active' : '' }}">Video</a>
+            <a href="{{ url('dashboard/galeri/foto-video/create?tab=dokumen') }}" class="btr-tab {{ $normalizedType === 'dokumen' ? 'active' : '' }}">Dokumen</a>
+        </div>
 
-    <div class="btr-card">
-        <form method="post" action="{{ url('dashboard/galeri/foto-video') }}" enctype="multipart/form-data">
+        <div class="btr-card">
+            <form method="post" action="{{ url('dashboard/galeri/foto-video') }}" enctype="multipart/form-data">
             @csrf
             <input type="hidden" name="type" value="{{ $dbType }}">
 
@@ -49,7 +50,8 @@
                 <a href="{{ url('dashboard/galeri/foto-video?tab=' . $normalizedType) }}" class="btr-btn btr-btn-outline">Batal</a>
                 <button type="submit" class="btr-btn">Simpan</button>
             </div>
-        </form>
+            </form>
+        </div>
     </div>
 
     <script>

@@ -5,7 +5,7 @@
         ['label' => 'Visi dan Misi', 'href' => url('/visi-misi')],
         ['label' => 'Sejarah', 'href' => url('/sejarah')],
         ['label' => 'Tugas dan Fungsi', 'href' => url('/tugas')],
-        ['label' => 'Maskot Balai Teknik Rawa', 'href' => '#'],
+        ['label' => 'Maskot Balai Teknik Rawa', 'href' => url('/maskot-balai-teknik-rawa')],
         ['label' => 'Struktur Organisasi', 'href' => url('/struktur-organisasi')],
         ['label' => 'Informasi Pegawai', 'href' => url('/info-pegawai')],
         ['label' => 'Fasilitas Balai', 'href' => url('/fasilitas-balai')],
@@ -37,12 +37,13 @@
     $publikasiMenu = [
         [
             'label' => 'PPID',
+            'href' => route('ppid.index'),
             'children' => [
                 ['label' => 'E-PPID', 'href' => 'https://eppid.pu.go.id/', 'external' => true],
-                ['label' => 'Kebijakan PPID', 'href' => url('/ppid#kebijakan-ppid')],
-                ['label' => 'Informasi Berkala', 'href' => url('/ppid#informasi-berkala')],
-                ['label' => 'Informasi Serta Merta', 'href' => url('/ppid#informasi-serta-merta')],
-                ['label' => 'Informasi Setiap Saat', 'href' => url('/ppid#informasi-setiap-saat')],
+                ['label' => 'Kebijakan PPID', 'href' => route('ppid.show', 'kebijakan-ppid')],
+                ['label' => 'Informasi Berkala', 'href' => route('ppid.show', 'info-berkala')],
+                ['label' => 'Informasi Serta Merta', 'href' => route('ppid.show', 'info-serta-merta')],
+                ['label' => 'Informasi Setiap Saat', 'href' => route('ppid.show', 'info-setiap-saat')],
             ],
         ],
         [
