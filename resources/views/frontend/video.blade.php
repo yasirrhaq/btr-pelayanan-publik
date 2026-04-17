@@ -1,76 +1,42 @@
 @extends('frontend.layouts.mainTailwind')
 
-@section('customCss')
-    <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous"> -->
-    <link rel="stylesheet" href="{{ url('css/frontend/fasilitas.css')}}">
-@endsection
 @section('container')
-    
-    <main>
-        <div class="about-area">
-            <div class="container">
-                   <div class="row">
-                        <div class="col-lg-12">
-                            <div class="about-right mb-90">
-                                <!-- <div class="about-img">
-                                    <img src="{{ asset('img/post/about_heor.jpg') }}" alt="">
-                                </div> -->
-                                <div class="mb-30 pt-30 text-center">
-                                    <h3 class="title-tugas">Video
-                                    </h3>
-                                    <div class="d-flex justify-content-center">
-                                        <div class="divider-title-tugas"></div>
-                                    </div>
-                                </div>
-                                <div class="about-prea">
-                                </div>
-                            </div>
-                        </div>
-                   </div>
+    <section class="bg-slate-50 px-4 py-12 md:py-16">
+        <div class="mx-auto max-w-6xl">
+            <div class="text-center">
+                <span class="inline-flex items-center rounded-full bg-amber-100 px-3 py-1 text-xs font-semibold uppercase tracking-[0.24em] text-[#354776]">
+                    Galeri Balai
+                </span>
+                <h1 class="mt-5 text-3xl font-bold tracking-tight text-[#354776] md:text-5xl">Video</h1>
+                <div class="mx-auto mt-4 h-1.5 w-24 rounded-full bg-amber-400"></div>
+                <p class="mx-auto mt-6 max-w-3xl text-sm leading-7 text-slate-600 md:text-base">
+                    Kumpulan video kegiatan, layanan, dan dokumentasi Balai Teknik Rawa.
+                </p>
+            </div>
 
-                   <!-- <div class="container">
-                        <div id="carouselExampleCaptions" class="carousel slide mt-5" data-bs-ride="false">
-                            <div class="carousel-indicators">
-                                <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-                                <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="1" aria-label="Slide 2"></button>
-                                <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="2" aria-label="Slide 3"></button>
-                            </div>
-                            <div class="carousel-inner">
-                                <div class="carousel-shadow"></div>
-                                <div class="carousel-item active">
-                                <iframe style="width: 100%; height:500px;" src="https://www.youtube.com/embed/AjxL87NyLRs" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                                </div>
-                                <div class="carousel-item">
-                                <iframe style="width: 100%; height:500px;" src="https://www.youtube.com/embed/AjxL87NyLRs" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                                </div>
-                                <div class="carousel-item">
-                                <iframe style="width: 100%; height:500px;" src="https://www.youtube.com/embed/AjxL87NyLRs" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                                </div>
-                            </div>
-                            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="prev">
-                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                <span class="visually-hidden">Previous</span>
-                            </button>
-                            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="next">
-                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                                <span class="visually-hidden">Next</span>
-                            </button>
+            <div class="mt-10 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+                @forelse ($galeri_foto as $item)
+                    <article class="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm">
+                        <div class="aspect-video bg-slate-950">
+                            <video controls preload="metadata" class="h-full w-full object-cover">
+                                <source src="{{ asset($item->path_image) }}">
+                            </video>
                         </div>
-                    </div> -->
-                    <div class="card-deck mt-2">
-                        
+                        <div class="px-5 py-5">
+                            <h2 class="text-lg font-semibold text-[#354776]">{{ $item->title }}</h2>
+                            <p class="mt-2 text-xs uppercase tracking-[0.16em] text-slate-400">{{ optional($item->created_at)->format('d M Y') }}</p>
+                        </div>
+                    </article>
+                @empty
+                    <div class="rounded-3xl border border-dashed border-slate-300 bg-white px-6 py-12 text-center text-slate-500 md:col-span-2 xl:col-span-3">
+                        Belum ada video.
                     </div>
-                    <iframe allowfullscreen id="wallsio-iframe" src="https://my.walls.io/r3b3y?nobackground=1&amp;show_header=0" style="border:0;height:800px;width:100%" loading="lazy" title="PUPRSDA BALTEKRAWA"></iframe>
+                @endforelse
+            </div>
 
-                    <div class="card-deck mt-5">
-                        
-                    </div>
+            <div class="mt-8 flex justify-center">
+                {{ $galeri_foto->links() }}
             </div>
         </div>
-    </main>
-    
-   @endsection
-
-   @section('customJs')
-   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8" crossorigin="anonymous"></script>
-   @endsection
+    </section>
+@endsection

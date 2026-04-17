@@ -92,7 +92,6 @@
                                                     target="_blank">e-Perpustakaan</a></li>
                                             <li><a href="{{ $urls->find(4)->url ?? '#' }}" target="_blank">Layanan
                                                     Perpustakaan (Intranet)</a></li>
-                                            <li><a href="{{ url(env('APP_URL')) }}/karya-ilmiah">Karya Ilmiah</a></li>
                                             <li><a href="{{ $urls->find(5)->url ?? '#' }}" target="_blank">Rencana
                                                     Strategi</a></li>
                                             <li><a href="{{ $urls->find(10)->url ?? '#' }}" target="_blank">User Manual</a></li>

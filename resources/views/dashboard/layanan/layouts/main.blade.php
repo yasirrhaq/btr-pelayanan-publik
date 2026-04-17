@@ -14,6 +14,7 @@
 
 <body class="btr-admin">
     <div class="btr-shell">
+        <button type="button" class="btr-sidebar-overlay" aria-label="Tutup menu" onclick="document.body.classList.remove('btr-sidebar-open')"></button>
         @include('dashboard.layanan.layouts.sidebar')
 
         <div class="btr-main">
@@ -40,6 +41,12 @@
                 if (children && children.classList.contains('btr-nav-children')) {
                     children.classList.toggle('open');
                 }
+            });
+        });
+
+        document.querySelectorAll('.btr-nav-link').forEach(function(link) {
+            link.addEventListener('click', function() {
+                document.body.classList.remove('btr-sidebar-open');
             });
         });
 

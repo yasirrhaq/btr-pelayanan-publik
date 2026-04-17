@@ -60,6 +60,7 @@ class PengumumanController extends Controller
             'isi'       => 'required|string',
             'is_active' => 'boolean',
             'lampiran'  => 'nullable|file|max:5120|mimes:pdf,doc,docx,jpg,jpeg,png',
+            'remove_lampiran' => 'nullable|boolean',
         ]);
 
         $data = [
@@ -68,7 +69,15 @@ class PengumumanController extends Controller
             'is_active' => $request->boolean('is_active', true),
         ];
 
+        if ($request->boolean('remove_lampiran') && $pengumuman->lampiran_path) {
+            Storage::disk('public')->delete($pengumuman->lampiran_path);
+            $data['lampiran_path'] = null;
+        }
+
         if ($request->hasFile('lampiran')) {
+            if ($pengumuman->lampiran_path) {
+                Storage::disk('public')->delete($pengumuman->lampiran_path);
+            }
             $data['lampiran_path'] = $request->file('lampiran')->store('pengumuman', 'public');
         }
 

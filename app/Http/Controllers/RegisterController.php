@@ -26,7 +26,7 @@ class RegisterController extends Controller
         $rules = [
             'name'                  => 'required|max:255|regex:/^([a-zA-Z]+)(\s[a-zA-Z]+)*$/',
             'username'              => ['required', 'min:3', 'max:255', 'unique:users'],
-            'email'                 => 'required|email:rfc,dns|unique:users',
+            'email'                 => 'required|email|unique:users',
             'password'              => 'required|min:8|max:255|regex:/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]/',
             'password_confirmation' => 'required_with:password|same:password',
             'foto_profile'          => 'image|file|max:1024',

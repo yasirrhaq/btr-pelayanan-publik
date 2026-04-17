@@ -74,7 +74,7 @@
     <div class="btr-logout">
         <form action="{{ url('') }}/logout" method="post">
             @csrf
-            <button type="submit">
+            <button type="submit" class="btr-logout-btn">
                 <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H9m4 4v1a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v1"/></svg>
                 Logout
             </button>

@@ -49,7 +49,7 @@
             width: 100%;
             padding: 0.75rem 1rem;
             border-radius: 0.75rem;
-            border: 2px solid #9ca3af;   /* gray-400 — always visible */
+            border: 2px solid #e5e7eb;   /* gray-200 */
             background-color: #ffffff;
             color: #1f2937;
             font-size: 0.875rem;

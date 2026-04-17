@@ -1,6 +1,6 @@
 # Implementation Tracker — BTR Pelayanan Publik
 
-> Last updated: 2026-04-16
+> Last updated: 2026-04-17
 
 ## Legend
 
@@ -59,15 +59,15 @@
 | Feature | Status | Notes |
 |---------|--------|-------|
 | Dashboard Admin Master | :white_check_mark: | Basic dashboard view |
-| Manajemen Profil (Identitas, Sejarah, Visi Misi) | :white_check_mark: | ProfilSingkat + dedicated pages |
+| Manajemen Profil (Identitas, Sejarah, Visi Misi) | :white_check_mark: | `/dashboard/profil-singkat` rebuilt into tabbed flow for Tentang Kami, Sejarah, Visi & Misi, Tugas & Fungsi, Maskot using Jodit and shared public data sources |
 | Manajemen SDM (Info Pegawai) | :white_check_mark: | Full CRUD |
 | Manajemen Fasilitas | :white_check_mark: | Full CRUD |
 | Manajemen Struktur Organisasi | :white_check_mark: | Full CRUD |
 | Manajemen Banner / Foto Home | :white_check_mark: | Edit + update |
-| Manajemen Berita | :white_check_mark: | Full CRUD with slugs |
+| Manajemen Berita | :white_check_mark: | Full CRUD with slugs + Jodit editor on create/edit |
 | Manajemen Galeri Foto/Video | :white_check_mark: | Full CRUD |
 | Manajemen Pengumuman | :white_check_mark: | PengumumanController — full CRUD with lampiran file upload |
-| Manajemen PPID (4 kategori informasi) | :white_check_mark: | ppid/index.blade.php — 4 info category cards linking to landing page |
+| Manajemen PPID (4 kategori informasi) | :white_check_mark: | Tabbed PPID admin page with Jodit editor, upload handling, and landing-page-backed content |
 | Manajemen Dokumen Layanan (Standar/Maklumat PDF) | :construction: | Uses LandingPage model, no dedicated upload center |
 | Manajemen Renstra | :white_check_mark: | Repurposed Karya Ilmiah as Renstra in sidebar |
 | Kop Surat & Identitas Web | :construction: | FooterSetting exists, no letterhead |

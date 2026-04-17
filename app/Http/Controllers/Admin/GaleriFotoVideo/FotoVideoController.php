@@ -5,155 +5,167 @@ namespace App\Http\Controllers\Admin\GaleriFotoVideo;
 use App\Http\Controllers\Controller;
 use App\Models\GaleriFoto;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class FotoVideoController extends Controller
 {
     protected $redirect_path = '/dashboard/galeri/foto-video';
     protected $path_file_save = 'galeri';
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
+
+    protected function normalizeType(?string $type): string
     {
-        $title = 'Foto';
-        $fotoVideo = GaleriFoto::all();
-        return view('dashboard.galeri-foto-video.index', compact(
-            'fotoVideo',
-            'title'
-        ));
+        return match ($type) {
+            'video' => 'video',
+            'dokumen' => 'dokumen',
+            default => 'image',
+        };
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
+    protected function tabFromType(string $type): string
     {
-        return view('dashboard.galeri-foto-video.create');
+        return $type === 'image' ? 'foto' : $type;
     }
 
-    // /**
-    //  * Store a newly created resource in storage.
-    //  *
-    //  * @param  \Illuminate\Http\Request  $request
-    //  * @return \Illuminate\Http\Response
-    //  */
-    public function store(Request $request)
+    protected function deleteFile(?string $path): void
     {
-        $validatedData = $request->validate([
-            'title' => 'required|max:255',
-            'path_image' => 'image|file|max:1024',
-        ]);
-
-
-        if ($request->file('path_image')) {
-
-            $slug      = slugCustom($request->nama);
-            $file      = $request->file() ?? [];
-            $path      = 'uploads/'.$this->path_file_save.'/';
-            $config_file = [
-                'patern_filename'   => $slug,
-                'is_convert'        => true,
-                'file'              => $file,
-                'path'              => $path,
-                'convert_extention' => 'jpeg'
-            ];
-
-            $validatedData['path_image'] = (new \App\Http\Controllers\Functions\ImageUpload())->imageUpload('file', $config_file)['path_image'];
+        if (!$path) {
+            return;
         }
 
-        $validatedData['created_by'] = auth()->id();
-        GaleriFoto::create($validatedData);
-        return redirect($this->redirect_path)->with('success', 'Berhasil menambahkan Data');
+        $absolute = public_path(ltrim(str_replace('\\', '/', $path), '/'));
+        if (is_file($absolute)) {
+            @unlink($absolute);
+        }
     }
 
+    protected function uploadByType(Request $request, string $field, string $type): ?string
+    {
+        if (!$request->hasFile($field)) {
+            return null;
+        }
 
-    // /**
-    //  * Display the specified resource.
-    //  *
-    //  * @param  \App\Models\Post  $post
-    //  * @return \Illuminate\Http\Response
-    //  */
+        if ($type === 'image') {
+            $slug = slugCustom($request->title ?? 'galeri');
+            $file = $request->file() ?? [];
+            $path = 'uploads/' . $this->path_file_save . '/';
+            $config_file = [
+                'patern_filename' => $slug,
+                'is_convert' => true,
+                'file' => $file,
+                'path' => $path,
+                'convert_extention' => 'jpeg',
+            ];
+
+            return (new \App\Http\Controllers\Functions\ImageUpload())->imageUpload('file', $config_file)[$field];
+        }
+
+        $uploaded = $request->file($field);
+        $filename = Str::slug($request->title ?: 'galeri') . '-' . time() . '.' . $uploaded->getClientOriginalExtension();
+        $targetDir = public_path('uploads/' . $this->path_file_save);
+
+        if (!is_dir($targetDir)) {
+            mkdir($targetDir, 0777, true);
+        }
+
+        $uploaded->move($targetDir, $filename);
+
+        return 'uploads/' . $this->path_file_save . '/' . $filename;
+    }
+
+    public function index()
+    {
+        $activeTab = request('tab', 'foto');
+        $title = ucfirst($activeTab);
+
+        $fotoVideo = match ($activeTab) {
+            'video' => GaleriFoto::where('type', 'video')->latest()->get(),
+            'dokumen' => GaleriFoto::where('type', 'dokumen')->latest()->get(),
+            default => GaleriFoto::where('type', 'image')->latest()->get(),
+        };
+
+        return view('dashboard.galeri-foto-video.index', compact('fotoVideo', 'title', 'activeTab'));
+    }
+
+    public function create()
+    {
+        $activeTab = request('tab', 'foto');
+        return view('dashboard.galeri-foto-video.create', compact('activeTab'));
+    }
+
+    public function store(Request $request)
+    {
+        $type = $this->normalizeType($request->input('type'));
+
+        $rules = [
+            'title' => 'required|max:255',
+            'type' => 'required|in:image,video,dokumen',
+        ];
+
+        $rules['path_image'] = match ($type) {
+            'video' => 'required|file|max:51200|mimetypes:video/mp4,video/quicktime,video/x-msvideo,video/webm',
+            'dokumen' => 'required|file|max:10240|mimes:pdf,doc,docx,xls,xlsx,ppt,pptx',
+            default => 'required|image|file|max:1024',
+        };
+
+        $validatedData = $request->validate($rules);
+        $validatedData['path_image'] = $this->uploadByType($request, 'path_image', $type);
+        $validatedData['type'] = $type;
+        $validatedData['created_by'] = auth()->id();
+
+        GaleriFoto::create($validatedData);
+
+        return redirect($this->redirect_path . '?tab=' . $this->tabFromType($type))->with('success', 'Berhasil menambahkan Data');
+    }
+
     public function show($id)
     {
         $galeriFoto = GaleriFoto::find($id);
-        return view('dashboard.galeri-foto-video.show', [
-            'galeri_foto' => $galeriFoto
-        ]);
+        return view('dashboard.galeri-foto-video.show', ['galeri_foto' => $galeriFoto]);
     }
 
-    // /**
-    //  * Show the form for editing the specified resource.
-    //  *
-    //  * @param  \App\Models\Post  $post
-    //  * @return \Illuminate\Http\Response
-    //  */
-    public function edit(Int $id)
+    public function edit(int $id)
     {
         $galeri_foto = GaleriFoto::find($id);
-        return view('dashboard.galeri-foto-video.edit', compact(
-            'galeri_foto'
-        ));
+        return view('dashboard.galeri-foto-video.edit', compact('galeri_foto'));
     }
 
-    // /**
-    //  * Update the specified resource in storage.
-    //  *
-    //  * @param  \Illuminate\Http\Request  $request
-    //  * @param  \App\Models\Post  $post
-    //  * @return \Illuminate\Http\Response
-    //  */
-    public function update(Request $request, Int $id)
+    public function update(Request $request, int $id)
     {
+        $galeri_foto = GaleriFoto::where('id', $id)->firstOrFail();
+        $type = $this->normalizeType($request->input('type', $galeri_foto->type));
+
         $rules = [
             'title' => 'required|max:255',
-            'path_image' => 'image|file|max:1024',
+            'type' => 'required|in:image,video,dokumen',
         ];
-        
+
+        $rules['path_image'] = match ($type) {
+            'video' => 'nullable|file|max:51200|mimetypes:video/mp4,video/quicktime,video/x-msvideo,video/webm',
+            'dokumen' => 'nullable|file|max:10240|mimes:pdf,doc,docx,xls,xlsx,ppt,pptx',
+            default => 'nullable|image|file|max:1024',
+        };
+
         $validatedData = $request->validate($rules);
-        $galeri_foto = GaleriFoto::where('id', $id)->first();
-        if ($request->file('path_image')) {
-            if (!empty($galeri_foto->path_image)) {
-                unlink($galeri_foto->path_image);
-            }
 
-            $slug      = slugCustom($request->nama);
-            $file      = $request->file() ?? [];
-            $path      = 'uploads/galeri/';
-            $config_file = [
-                'patern_filename'   => $slug,
-                'is_convert'        => true,
-                'file'              => $file,
-                'path'              => $path,
-                'convert_extention' => 'jpeg'
-            ];
-
-            $validatedData['path_image'] = (new \App\Http\Controllers\Functions\ImageUpload())->imageUpload('file', $config_file)['path_image'];
+        if ($request->hasFile('path_image')) {
+            $this->deleteFile($galeri_foto->path_image);
+            $validatedData['path_image'] = $this->uploadByType($request, 'path_image', $type);
         }
 
+        $validatedData['type'] = $type;
+        $galeri_foto->update($validatedData);
 
-        $galeri_foto = $galeri_foto
-            ->update($validatedData);
-        return redirect($this->redirect_path)->with('success', 'Data berhasil diupdate!');
+        return redirect($this->redirect_path . '?tab=' . $this->tabFromType($type))->with('success', 'Data berhasil diupdate!');
     }
 
-    // /**
-    //  * Remove the specified resource from storage.
-    //  *
-    //  * @param  \App\Models\Post  $post
-    //  * @return \Illuminate\Http\Response
-    //  */
-    public function destroy(Int $id)
+    public function destroy(int $id)
     {
-        $galeri_foto = GaleriFoto::find($id);
-        if ($galeri_foto->path_image) {
-            Storage::delete($galeri_foto->path_image);
-        }
+        $galeri_foto = GaleriFoto::findOrFail($id);
+        $tab = $this->tabFromType($this->normalizeType($galeri_foto->type));
+
+        $this->deleteFile($galeri_foto->path_image);
         $galeri_foto->delete();
-        return redirect($this->redirect_path)->with('success', 'Data berhasil dihapus!');
+
+        return redirect($this->redirect_path . '?tab=' . $tab)->with('success', 'Data berhasil dihapus!');
     }
 }

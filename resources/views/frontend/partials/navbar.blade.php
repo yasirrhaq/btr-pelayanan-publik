@@ -72,7 +72,6 @@
                                 <li><a class="dropdown-item" href="#">Layanan Perpustakaan</a></li>
                             </ul>
                         </li>
-                        <li><a class="dropdown-item" href="../karyailmiah/karyailmiah.html">Karya Ilmiah</a></li>
                         <li><a class="dropdown-item" href="#">Rencana Strategi</a></li>
                         <li><a class="dropdown-item" href="#">JDIH PU</a></li>
                     </ul>

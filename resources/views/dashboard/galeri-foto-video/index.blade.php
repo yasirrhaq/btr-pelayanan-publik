@@ -4,20 +4,20 @@
     <h1 class="btr-page-title">Publikasi - Galeri</h1>
 
     <div class="btr-tabs">
-        <a href="#" class="btr-tab active">Foto</a>
-        <a href="#" class="btr-tab">Video</a>
-        <a href="#" class="btr-tab">Dokumen</a>
+        <a href="{{ url('dashboard/galeri/foto-video?tab=foto') }}" class="btr-tab {{ $activeTab === 'foto' ? 'active' : '' }}">Foto</a>
+        <a href="{{ url('dashboard/galeri/foto-video?tab=video') }}" class="btr-tab {{ $activeTab === 'video' ? 'active' : '' }}">Video</a>
+        <a href="{{ url('dashboard/galeri/foto-video?tab=dokumen') }}" class="btr-tab {{ $activeTab === 'dokumen' ? 'active' : '' }}">Dokumen</a>
     </div>
 
     <div class="btr-tab-panel">
         <div class="btr-toolbar">
-            <a href="{{ url('dashboard/galeri/foto-video/create') }}" class="btr-btn">
+            <a href="{{ url('dashboard/galeri/foto-video/create?tab=' . $activeTab) }}" class="btr-btn">
                 <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
-                Upload Foto
+                {{ $activeTab === 'foto' ? 'Upload Foto' : ($activeTab === 'video' ? 'Upload Video' : 'Upload Dokumen') }}
             </a>
             <div class="spacer"></div>
             <div class="btr-search">
-                <input type="text" placeholder="Cari foto...">
+                <input type="text" placeholder="Cari {{ $activeTab }}...">
                 <button type="button">
                     <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35"/></svg>
                 </button>
@@ -28,7 +28,11 @@
             @forelse ($fotoVideo as $items)
                 <div class="btr-gallery-card">
                     <div class="tanggal">Tanggal: {{ optional($items->created_at)->format('d/m/Y') }}</div>
-                    @if ($items->path_image)
+                    @if ($items->type === 'video')
+                        <div class="thumb" style="display:flex;align-items:center;justify-content:center;background:#0f172a;color:#fff;font-weight:700;">VIDEO</div>
+                    @elseif ($items->type === 'dokumen')
+                        <div class="thumb" style="display:flex;align-items:center;justify-content:center;background:#EFF6FF;color:#2563EB;font-weight:700;">DOC</div>
+                    @elseif ($items->path_image)
                         <img src="{{ asset($items->path_image) }}" class="thumb" alt="">
                     @else
                         <div class="thumb"></div>
@@ -52,7 +56,15 @@
                     </div>
                 </div>
             @empty
-                <div style="color:var(--text-muted);grid-column:1/-1;padding:28px;text-align:center">Belum ada foto.</div>
+                <div style="color:var(--text-muted);grid-column:1/-1;padding:28px;text-align:center">
+                    @if ($activeTab === 'foto')
+                        Belum ada foto.
+                    @elseif ($activeTab === 'video')
+                        Belum ada video.
+                    @else
+                        Belum ada dokumen.
+                    @endif
+                </div>
             @endforelse
         </div>
     </div>

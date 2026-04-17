@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\Layanan\PermohonanManagementController;
 use App\Http\Controllers\Admin\MasterTimController;
 use App\Http\Controllers\Admin\MasterSurveiController;
 use App\Http\Controllers\Admin\PengumumanController;
+use App\Http\Controllers\Admin\PpidController;
 use App\Http\Controllers\Pelanggan\DashboardController as PelangganDashboardController;
 use App\Http\Controllers\Pelanggan\PermohonanController as PelangganPermohonanController;
 use App\Http\Controllers\Pelanggan\PembayaranController as PelangganPembayaranController;
@@ -23,18 +24,17 @@ use App\Http\Controllers\SejarahController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\VisiMisiController;
 use App\Http\Controllers\UrlLayananController;
-use App\Http\Controllers\KaryaIlmiahController;
 use App\Http\Controllers\AdminCategoryController;
 use App\Http\Controllers\AdminFasilitasBalaiController;
 use App\Http\Controllers\AdminFooterSettingController;
 use App\Http\Controllers\AdminFotoLayananController;
 use App\Http\Controllers\AdminInfoPegawaiController;
+use App\Http\Controllers\AdminKaryaIlmiahController;
 use App\Http\Controllers\DashboardPostController;
 use App\Http\Controllers\StatusLayananController;
 use App\Http\Controllers\ChangePasswordController;
 use App\Http\Controllers\ForgotPasswordController;
 use App\Http\Controllers\AdminUrlLayananController;
-use App\Http\Controllers\AdminKaryaIlmiahController;
 use App\Http\Controllers\AdminProfilSingkatController;
 use App\Http\Controllers\AdminSitusTerkaitController;
 use App\Http\Controllers\AdminStrukturOrganisasiController;
@@ -87,8 +87,6 @@ Route::get('/visi-misi', [VisiMisiController::class, 'index']);
 Route::get('/tugas', [TugasController::class, 'index']);
 Route::get('/sejarah', [SejarahController::class, 'index']);
 Route::get('/home', [HomeController::class, 'index']);
-Route::get('/karya-ilmiah', [KaryaIlmiahController::class, 'index']);
-Route::get('/karya-ilmiah-detail/{karyaIlmiah:slug}', [KaryaIlmiahController::class, 'detail']);
 Route::get('/struktur-organisasi', [StrukturOrganisasiController::class, 'index']);
 
 Route::get('/info-pegawai', [InfoPegawaiController::class, 'index']);
@@ -140,59 +138,68 @@ Route::group([
 ], function () {
 
     Route::get('/', function () {
+        $user = auth()->user();
+
+        if ($user && $user->hasRole('admin-editor')) {
+            return redirect('/dashboard/posts');
+        }
+
+        if ($user && $user->hasAnyRole(['admin-layanan-master', 'katim', 'admin-bidang', 'analis', 'penyelia', 'teknisi'])
+            && !$user->hasAnyRole(['admin-master', 'admin-editor'])) {
+            return redirect()->route('admin.layanan.dashboard');
+        }
+
         return view('dashboard.index');
     });
 
-    Route::get('/posts/checkSlug', [DashboardPostController::class, 'checkSlug']);
-    Route::resource('/posts', DashboardPostController::class);
-    Route::get('/categories/checkSlug', [AdminCategoryController::class, 'checkSlug']);
-    Route::resource('/categories', AdminCategoryController::class)->except('show');
-    Route::resource('/status-layanan', StatusLayananController::class);
-    Route::resource('/karya-ilmiah', AdminKaryaIlmiahController::class)->except('show');
-    Route::get('/karya-ilmiah/checkSlug', [AdminKaryaIlmiahController::class, 'checkSlug']);
-    Route::resource('/url-layanan', AdminUrlLayananController::class)->only('index', 'edit', 'update');
-    Route::resource('/settings', App\Http\Controllers\Admin\AdminSettings::class)->only('index', 'store');
-    Route::resource('/galeri/foto-video', FotoVideoController::class);
-    Route::resource('/foto-home', FotoHomeController::class)->only('index', 'edit', 'update');
-    Route::resource('/foto-layanan', AdminFotoLayananController::class)->only('index', 'edit', 'update');
-    Route::resource('/situs-terkait', AdminSitusTerkaitController::class)->except('show');
-    Route::resource('/profil-singkat', AdminProfilSingkatController::class)->only('index', 'edit', 'update');
-    Route::resource('/info-pegawai', AdminInfoPegawaiController::class);
-    Route::resource('/fasilitas-balai', AdminFasilitasBalaiController::class);
-    Route::resource('/struktur-organisasi', AdminStrukturOrganisasiController::class);
-    Route::resource('/footer-setting', AdminFooterSettingController::class)->only('index', 'edit','update');
+    Route::middleware('role:admin-master,admin-editor')->group(function () {
+        Route::get('/posts/checkSlug', [DashboardPostController::class, 'checkSlug']);
+        Route::post('/posts/attachment', [DashboardPostController::class, 'uploadAttachment'])->name('admin.posts.attachment');
+        Route::resource('/posts', DashboardPostController::class);
+        Route::get('/categories/checkSlug', [AdminCategoryController::class, 'checkSlug']);
+        Route::resource('/categories', AdminCategoryController::class)->except('show');
+        Route::resource('/status-layanan', StatusLayananController::class);
+        Route::resource('/karya-ilmiah', AdminKaryaIlmiahController::class)->except('show');
+        Route::get('/karya-ilmiah/checkSlug', [AdminKaryaIlmiahController::class, 'checkSlug']);
+        Route::resource('/url-layanan', AdminUrlLayananController::class)->only('index', 'edit', 'update');
+        Route::resource('/settings', App\Http\Controllers\Admin\AdminSettings::class)->only('index', 'store');
+        Route::resource('/galeri/foto-video', FotoVideoController::class);
+        Route::resource('/foto-home', FotoHomeController::class)->only('index', 'edit', 'update');
+        Route::resource('/foto-layanan', AdminFotoLayananController::class)->only('index', 'edit', 'update');
+        Route::resource('/situs-terkait', AdminSitusTerkaitController::class)->except('show');
+        Route::post('/profil-singkat/attachment', [AdminProfilSingkatController::class, 'uploadAttachment'])->name('admin.profil-singkat.attachment');
+        Route::resource('/profil-singkat', AdminProfilSingkatController::class)->only('index', 'edit', 'update');
+        Route::resource('/info-pegawai', AdminInfoPegawaiController::class);
+        Route::resource('/fasilitas-balai', AdminFasilitasBalaiController::class);
+        Route::resource('/struktur-organisasi', AdminStrukturOrganisasiController::class);
+        Route::resource('/footer-setting', AdminFooterSettingController::class)->only('index', 'edit','update');
 
-    Route::get('/landing-page', 'App\Http\Controllers\Admin\LandingPage\LandingPageController@index');
-    Route::get('/landing-page/{id}/edit', 'App\Http\Controllers\Admin\LandingPage\LandingPageController@edit');
-    Route::get('/landing-page/create', 'App\Http\Controllers\Admin\LandingPage\LandingPageController@create');
-    Route::put('/landing-page/{id}', 'App\Http\Controllers\Admin\LandingPage\LandingPageController@update');
-    Route::post('/landing-page/create', 'App\Http\Controllers\Admin\LandingPage\LandingPageController@store');
-    Route::delete('/landing-page/{id}', 'App\Http\Controllers\Admin\LandingPage\LandingPageController@destroy');
+        Route::get('/landing-page', 'App\Http\Controllers\Admin\LandingPage\LandingPageController@index');
+        Route::get('/landing-page/{id}/edit', 'App\Http\Controllers\Admin\LandingPage\LandingPageController@edit');
+        Route::get('/landing-page/create', 'App\Http\Controllers\Admin\LandingPage\LandingPageController@create');
+        Route::put('/landing-page/{id}', 'App\Http\Controllers\Admin\LandingPage\LandingPageController@update');
+        Route::post('/landing-page/create', 'App\Http\Controllers\Admin\LandingPage\LandingPageController@store');
+        Route::delete('/landing-page/{id}', 'App\Http\Controllers\Admin\LandingPage\LandingPageController@destroy');
 
-    // Hak Akses (RBAC)
-    Route::get('/hak-akses', [HakAksesController::class, 'index'])->name('admin.hak-akses.index');
-    Route::get('/hak-akses/{user}/edit', [HakAksesController::class, 'edit'])->name('admin.hak-akses.edit');
-    Route::put('/hak-akses/{user}', [HakAksesController::class, 'update'])->name('admin.hak-akses.update');
+        Route::get('/hak-akses', [HakAksesController::class, 'index'])->name('admin.hak-akses.index');
+        Route::get('/hak-akses/{user}/edit', [HakAksesController::class, 'edit'])->name('admin.hak-akses.edit');
+        Route::put('/hak-akses/{user}', [HakAksesController::class, 'update'])->name('admin.hak-akses.update');
 
-    // Master Tim
-    Route::resource('/master-tim', MasterTimController::class)->names('admin.master-tim')->parameters(['master-tim' => 'tim']);
+        Route::resource('/master-tim', MasterTimController::class)->names('admin.master-tim')->parameters(['master-tim' => 'tim']);
 
-    // Master Survei
-    Route::get('/master-survei', [MasterSurveiController::class, 'index'])->name('admin.master-survei.index');
-    Route::post('/master-survei', [MasterSurveiController::class, 'store'])->name('admin.master-survei.store');
-    Route::put('/master-survei/{pertanyaan}', [MasterSurveiController::class, 'update'])->name('admin.master-survei.update');
-    Route::delete('/master-survei/{pertanyaan}', [MasterSurveiController::class, 'destroy'])->name('admin.master-survei.destroy');
+        Route::get('/master-survei', [MasterSurveiController::class, 'index'])->name('admin.master-survei.index');
+        Route::post('/master-survei', [MasterSurveiController::class, 'store'])->name('admin.master-survei.store');
+        Route::put('/master-survei/{pertanyaan}', [MasterSurveiController::class, 'update'])->name('admin.master-survei.update');
+        Route::delete('/master-survei/{pertanyaan}', [MasterSurveiController::class, 'destroy'])->name('admin.master-survei.destroy');
 
-    // Pengumuman
-    Route::resource('/pengumuman', PengumumanController::class)->names('admin.pengumuman')->except('show');
-
-    // PPID
-    Route::get('/ppid', function () {
-        return view('dashboard.ppid.index');
-    })->name('admin.ppid.index');
+        Route::resource('/pengumuman', PengumumanController::class)->names('admin.pengumuman')->except('show');
+        Route::get('/ppid', [PpidController::class, 'index'])->name('admin.ppid.index');
+        Route::post('/ppid', [PpidController::class, 'save'])->name('admin.ppid.save');
+        Route::post('/ppid/attachment', [PpidController::class, 'uploadAttachment'])->name('admin.ppid.attachment');
+    });
 
     // Admin Layanan routes
-    Route::prefix('layanan')->name('admin.layanan.')->group(function () {
+    Route::prefix('layanan')->name('admin.layanan.')->middleware('role:admin-master,admin-layanan-master,katim,admin-bidang,analis,penyelia,teknisi')->group(function () {
         Route::get('/', [PermohonanManagementController::class, 'dashboard'])->name('dashboard');
         Route::get('/permohonan', [PermohonanManagementController::class, 'index'])->name('permohonan.index');
         Route::get('/permohonan/{permohonan}', [PermohonanManagementController::class, 'show'])->name('permohonan.show');

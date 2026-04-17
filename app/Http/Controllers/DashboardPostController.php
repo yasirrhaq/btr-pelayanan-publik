@@ -6,13 +6,25 @@ use App\Models\Post;
 use App\Models\Category;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 use Cviebrock\EloquentSluggable\Services\SlugService;
 
 class DashboardPostController extends Controller
 {
     protected $redirect_path = '/dashboard/posts';
     protected $path_file_save = 'berita';
+
+    protected function deleteImage(?string $path): void
+    {
+        if (!$path) {
+            return;
+        }
+
+        $absolute = public_path(ltrim(str_replace('\\', '/', $path), '/'));
+
+        if (is_file($absolute)) {
+            @unlink($absolute);
+        }
+    }
     /**
      * Display a listing of the resource.
      *
@@ -110,7 +122,8 @@ class DashboardPostController extends Controller
             'title' => 'required|max:255',
             'category_id' => 'required',
             'image' => 'image|file|max:1024',
-            'body' => 'required'
+            'body' => 'required',
+            'remove_image' => 'nullable|boolean',
         ];
         if ($request->slug != $post->slug) {
             $rules['slug'] = 'required|unique:posts';
@@ -118,10 +131,14 @@ class DashboardPostController extends Controller
 
         $validatedData = $request->validate($rules);
         $post = Post::where('id', $post->id)->first();
+
+        if ($request->boolean('remove_image')) {
+            $this->deleteImage($post->image);
+            $validatedData['image'] = null;
+        }
+
         if ($request->file('image')) {
-            if(!empty($post->image)){
-                unlink($post->image);
-            }
+            $this->deleteImage($post->image);
 
             $slug      = slugCustom($request->nama);
             $file      = $request->file() ?? [];
@@ -152,11 +169,31 @@ class DashboardPostController extends Controller
      */
     public function destroy(Post $post)
     {
-        if (!empty($post->image)) {
-            unlink($post->image);
-        }
+        $this->deleteImage($post->image);
         Post::destroy($post->id);
         return redirect('/dashboard/posts')->with('success', 'Berita berhasil dihapus!');
+    }
+
+    public function uploadAttachment(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|file|max:5120|mimes:jpg,jpeg,png,gif,webp',
+        ]);
+
+        $file = $request->file('file');
+        $filename = 'post-editor-' . time() . '-' . Str::random(8) . '.' . $file->getClientOriginalExtension();
+        $dir = public_path('uploads/berita/editor');
+
+        if (!is_dir($dir)) {
+            mkdir($dir, 0777, true);
+        }
+
+        $file->move($dir, $filename);
+
+        return response()->json([
+            'url' => asset('uploads/berita/editor/' . $filename),
+            'message' => 'Upload berhasil',
+        ]);
     }
 
     public function checkSlug(Request $request)

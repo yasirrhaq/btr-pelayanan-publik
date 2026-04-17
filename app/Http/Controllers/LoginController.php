@@ -8,6 +8,24 @@ use Illuminate\Support\Facades\Auth;
 
 class LoginController extends Controller
 {
+    protected function redirectPathFor(User $user): string
+    {
+        if ($user->is_admin) {
+            if ($user->hasRole('admin-editor')) {
+                return url('/dashboard/posts');
+            }
+
+            if ($user->hasAnyRole(['admin-layanan-master', 'katim', 'admin-bidang', 'analis', 'penyelia', 'teknisi'])
+                && !$user->hasAnyRole(['admin-master', 'admin-editor'])) {
+                return route('admin.layanan.dashboard');
+            }
+
+            return '/dashboard';
+        }
+
+        return route('pelanggan.dashboard');
+    }
+
     public function index()
     {
         return view('login.index', [
@@ -18,7 +36,7 @@ class LoginController extends Controller
     public function authenticate(Request $request)
     {
         $rules = [
-            'email'    => 'required|email:rfc,dns',
+            'email'    => 'required|email',
             'password' => 'required',
         ];
 
@@ -38,7 +56,7 @@ class LoginController extends Controller
 
         if (Auth::attempt($credentials) && Auth::user()->is_verified == 1) {
             $request->session()->regenerate();
-            return redirect()->intended(Auth::user()->is_admin ? '/dashboard' : '/pelanggan');
+            return redirect()->intended($this->redirectPathFor(Auth::user()));
         } else if (Auth::attempt($credentials) && Auth::user()->is_verified == 0) {
             return redirect()->intended('verify-email');
         }

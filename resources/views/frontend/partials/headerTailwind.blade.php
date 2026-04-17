@@ -152,7 +152,6 @@
                             <li><a href="{{ url('/berita') }}" class="block px-4 py-2.5 text-sm hover:bg-gray-50 border-b border-gray-100">Berita {{ config('app.name') }}</a></li>
                             <li><a href="{{ url('/foto') }}" class="block px-4 py-2.5 text-sm hover:bg-gray-50 border-b border-gray-100">Galeri Foto</a></li>
                             <li><a href="{{ url('/video') }}" class="block px-4 py-2.5 text-sm hover:bg-gray-50 border-b border-gray-100">Galeri Video</a></li>
-                            <li><a href="{{ url('/karya-ilmiah') }}" class="block px-4 py-2.5 text-sm hover:bg-gray-50 border-b border-gray-100">Karya Ilmiah</a></li>
                             <li><a href="https://pustaka.pu.go.id/perpustakaan/balai-rawa" target="_blank" class="block px-4 py-2.5 text-sm hover:bg-gray-50">e-Perpustakaan</a></li>
                         </ul>
                     </div>

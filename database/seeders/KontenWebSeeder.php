@@ -105,17 +105,18 @@ class KontenWebSeeder extends Seeder
 
         // --- Galeri Foto ---
         $galeri = [
-            ['title' => 'Kegiatan Survei Lapangan 2024',     'path_image' => 'assets/fotoDumy.jpeg', 'created_by' => 'admin'],
-            ['title' => 'Workshop Teknis Rawa Nasional',      'path_image' => 'assets/fotoDumy.jpeg', 'created_by' => 'admin'],
-            ['title' => 'Pengujian Laboratorium Sedimen',     'path_image' => 'assets/fotoDumy.jpeg', 'created_by' => 'admin'],
-            ['title' => 'Kunjungan Dinas Provinsi Sumsel',    'path_image' => 'assets/fotoDumy.jpeg', 'created_by' => 'admin'],
-            ['title' => 'Pelatihan Penggunaan Alat Ukur',     'path_image' => 'assets/fotoDumy.jpeg', 'created_by' => 'admin'],
+            ['title' => 'Kegiatan Survei Lapangan 2024',     'path_image' => 'assets/fotoDumy.jpeg', 'type' => 'image', 'created_by' => 'admin'],
+            ['title' => 'Workshop Teknis Rawa Nasional',      'path_image' => 'assets/fotoDumy.jpeg', 'type' => 'image', 'created_by' => 'admin'],
+            ['title' => 'Pengujian Laboratorium Sedimen',     'path_image' => 'assets/fotoDumy.jpeg', 'type' => 'image', 'created_by' => 'admin'],
+            ['title' => 'Kunjungan Dinas Provinsi Sumsel',    'path_image' => 'assets/fotoDumy.jpeg', 'type' => 'image', 'created_by' => 'admin'],
+            ['title' => 'Pelatihan Penggunaan Alat Ukur',     'path_image' => 'assets/fotoDumy.jpeg', 'type' => 'image', 'created_by' => 'admin'],
+            ['title' => 'Video Profil Laboratorium Balai',    'path_image' => 'assets/sample-video.mp4', 'type' => 'video', 'created_by' => 'admin'],
+            ['title' => 'Dokumen Brosur Layanan Balai',       'path_image' => 'assets/sample-dokumen.pdf', 'type' => 'dokumen', 'created_by' => 'admin'],
         ];
-        if (GaleriFoto::count() <= 1) {
-            foreach ($galeri as $g) {
-                GaleriFoto::firstOrCreate(['title' => $g['title']], $g);
-            }
+        foreach ($galeri as $g) {
+            GaleriFoto::firstOrCreate(['title' => $g['title']], $g);
         }
+        GaleriFoto::whereNull('type')->update(['type' => 'image']);
         GaleriFoto::where(function ($query) {
             $query->whereNull('path_image')->orWhere('path_image', '');
         })->update(['path_image' => 'assets/fotoDumy.jpeg']);

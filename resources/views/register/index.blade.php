@@ -65,8 +65,8 @@
                 @csrf
 
                 {{-- ---- Section 1: Identitas Akun ---- --}}
-                <div class="bg-white rounded-2xl border-2 border-gray-400 shadow-md overflow-hidden">
-                    <div class="bg-btr/5 border-b-2 border-gray-400 px-5 py-3 flex items-center gap-2">
+                <div class="bg-white rounded-2xl border-2 border-gray-200 shadow-md overflow-hidden">
+                    <div class="bg-btr/5 border-b-2 border-gray-200 px-5 py-3 flex items-center gap-2">
                         <div class="w-6 h-6 rounded-lg bg-btr flex items-center justify-center flex-shrink-0">
                             <i class="fas fa-user text-white text-[10px]"></i>
                         </div>
@@ -187,8 +187,8 @@
                 </div>
 
                 {{-- ---- Section 2: Data Diri ---- --}}
-                <div class="bg-white rounded-2xl border-2 border-gray-400 shadow-md overflow-hidden">
-                    <div class="bg-btr/5 border-b-2 border-gray-400 px-5 py-3 flex items-center gap-2">
+                <div class="bg-white rounded-2xl border-2 border-gray-200 shadow-md overflow-hidden">
+                    <div class="bg-btr/5 border-b-2 border-gray-200 px-5 py-3 flex items-center gap-2">
                         <div class="w-6 h-6 rounded-lg bg-btr flex items-center justify-center flex-shrink-0">
                             <i class="fas fa-id-card text-white text-[10px]"></i>
                         </div>
@@ -283,15 +283,15 @@
                 </div>
 
                 {{-- ---- Section 3: Verifikasi Keamanan ---- --}}
-                <div class="bg-white rounded-2xl border-2 border-gray-400 shadow-md overflow-hidden">
-                    <div class="bg-btr/5 border-b-2 border-gray-400 px-5 py-3 flex items-center gap-2">
+                <div class="bg-white rounded-2xl border-2 border-gray-200 shadow-md overflow-hidden">
+                    <div class="bg-btr/5 border-b-2 border-gray-200 px-5 py-3 flex items-center gap-2">
                         <div class="w-6 h-6 rounded-lg bg-btr flex items-center justify-center flex-shrink-0">
                             <i class="fas fa-shield-halved text-white text-[10px]"></i>
                         </div>
                         <h3 class="text-sm font-semibold text-gray-700">Verifikasi Keamanan</h3>
                     </div>
                     <div class="p-5">
-                        <div class="bg-gray-50 rounded-xl border-2 border-gray-400 p-3 space-y-3">
+                        <div class="bg-gray-50 rounded-xl border-2 border-gray-200 p-3 space-y-3">
                             <div class="flex items-center gap-3">
                                 <div class="captcha-img flex-shrink-0">
                                     {!! captcha_img('flat') !!}

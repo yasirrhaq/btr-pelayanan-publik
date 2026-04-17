@@ -117,21 +117,29 @@
                 <h2 class="text-2xl md:text-3xl font-bold text-[#354776]">Tentang Kami</h2>
                 <div class="w-16 h-1 bg-amber-400 mx-auto mt-2 rounded-full"></div>
             </div>
-            <div class="text-gray-700 text-sm md:text-base leading-relaxed text-justify">
-                @if (!empty($url_yt) && !empty($url_yt->deskripsi))
-                    {!! nl2br(e(strip_tags($url_yt->deskripsi))) !!}
-                @else
-                    <p class="mb-4">
-                        Balai Teknik Rawa merupakan Unit Pelaksana Teknis (UPT) di lingkungan Direktorat Jenderal
-                        Sumber Daya Air, Kementerian Pekerjaan Umum dan Perumahan Rakyat yang berlokasi di Palembang,
-                        Sumatera Selatan. Balai Teknik Rawa mempunyai tugas melaksanakan penelitian, pengembangan,
-                        penerapan, pengujian, dan layanan teknik di bidang rawa.
-                    </p>
-                    <p>
-                        Dalam melaksanakan tugasnya, Balai Teknik Rawa menyelenggarakan fungsi pelaksanaan penelitian
-                        dan pengembangan di bidang rawa, pelaksanaan penerapan teknologi di bidang rawa, pengujian
-                        laboratorium, serta pemberian advis teknik dan pelayanan jasa rekayasa.
-                    </p>
+            <div class="grid gap-8 items-start md:grid-cols-[1.05fr_0.95fr]">
+                <div class="text-gray-700 text-sm md:text-base leading-relaxed text-justify [&_p]:mb-4 [&_p:last-child]:mb-0">
+                    @if (!empty($url_yt) && !empty($url_yt->deskripsi))
+                        {!! $url_yt->deskripsi !!}
+                    @else
+                        <p class="mb-4">
+                            Balai Teknik Rawa merupakan Unit Pelaksana Teknis (UPT) di lingkungan Direktorat Jenderal
+                            Sumber Daya Air, Kementerian Pekerjaan Umum dan Perumahan Rakyat yang berlokasi di Palembang,
+                            Sumatera Selatan. Balai Teknik Rawa mempunyai tugas melaksanakan penelitian, pengembangan,
+                            penerapan, pengujian, dan layanan teknik di bidang rawa.
+                        </p>
+                        <p>
+                            Dalam melaksanakan tugasnya, Balai Teknik Rawa menyelenggarakan fungsi pelaksanaan penelitian
+                            dan pengembangan di bidang rawa, pelaksanaan penerapan teknologi di bidang rawa, pengujian
+                            laboratorium, serta pemberian advis teknik dan pelayanan jasa rekayasa.
+                        </p>
+                    @endif
+                </div>
+
+                @if (!empty($tentangKami?->path_image))
+                    <div class="overflow-hidden rounded-3xl border border-slate-200 bg-slate-100 shadow-sm">
+                        <img src="{{ imageExists($tentangKami->path_image) }}" alt="Tentang Kami" class="h-full min-h-[280px] w-full object-cover">
+                    </div>
                 @endif
             </div>
         </div>

@@ -67,7 +67,7 @@
             </div>
 
             {{-- Card with border --}}
-            <div class="bg-white rounded-2xl border-2 border-gray-400 shadow-md p-7">
+            <div class="bg-white rounded-2xl border-2 border-gray-200 shadow-md p-7">
 
             {{-- Heading --}}
             <div class="mb-7">
@@ -152,7 +152,7 @@
                     <label class="block text-xs font-semibold text-gray-600 mb-1.5 uppercase tracking-wide">
                         Verifikasi Keamanan
                     </label>
-                    <div class="bg-gray-50 rounded-xl border-2 border-gray-400 p-3 space-y-3">
+                    <div class="bg-gray-50 rounded-xl border-2 border-gray-200 p-3 space-y-3">
                         <div class="flex items-center gap-3">
                             <div class="captcha-img flex-shrink-0">
                                 {!! captcha_img('flat') !!}

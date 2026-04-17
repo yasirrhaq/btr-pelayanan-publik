@@ -6,8 +6,7 @@ use App\Models\FotoHome;
 use App\Models\GaleriFoto;
 use App\Models\JenisLayanan;
 use App\Models\Pengumuman;
-use App\Models\UserStatusLayanan;
-use Illuminate\Http\Request;
+use App\Models\Permohonan;
 use App\Models\Post;
 use App\Models\SitusTerkait;
 use App\Models\UrlLayanan;
@@ -16,18 +15,30 @@ class HomeController extends Controller
 {
     public function index()
     {
-        // Build stats per jenis layanan
+        $tentangKami = UrlLayanan::where('name', 'Tentang Kami')->first() ?? UrlLayanan::find(9);
+
+        // Build stats from real workflow permohonan data
         $statsLayanan = [];
-        $jenisAll = JenisLayanan::orderBy('id')->get();
+        $jenisAll = JenisLayanan::orderBy('id')->take(3)->get();
 
         foreach ($jenisAll as $jenis) {
-            $base = UserStatusLayanan::where('layanan_id', $jenis->id);
+            $base = Permohonan::where('jenis_layanan_id', $jenis->id);
             $statsLayanan[] = [
                 'name'    => $jenis->name,
                 'all'     => (clone $base)->count(),
-                'baru'    => (clone $base)->whereHas('status', fn($q) => $q->whereIn('name', ['Baru', 'Disetujui']))->count(),
-                'proses'  => (clone $base)->whereHas('status', fn($q) => $q->whereIn('name', ['Proses', 'Diproses']))->count(),
-                'selesai' => (clone $base)->whereHas('status', fn($q) => $q->where('name', 'Selesai'))->count(),
+                'baru'    => (clone $base)->whereIn('status', [
+                    Permohonan::STATUS_BARU,
+                    Permohonan::STATUS_VERIFIKASI,
+                    Permohonan::STATUS_PENUGASAN,
+                ])->count(),
+                'proses'  => (clone $base)->whereIn('status', [
+                    Permohonan::STATUS_PEMBAYARAN,
+                    Permohonan::STATUS_PELAKSANAAN,
+                    Permohonan::STATUS_ANALISIS,
+                    Permohonan::STATUS_EVALUASI,
+                    Permohonan::STATUS_FINALISASI,
+                ])->count(),
+                'selesai' => (clone $base)->where('status', Permohonan::STATUS_SELESAI)->count(),
             ];
         }
 
@@ -41,7 +52,8 @@ class HomeController extends Controller
             'terkini'      => Post::latest()->get(),
             'foto_home'    => FotoHome::all(),
             'url'          => UrlLayanan::find(3),
-            'url_yt'       => UrlLayanan::find(9),
+            'url_yt'       => $tentangKami,
+            'tentangKami'  => $tentangKami,
             'galeri_foto'  => GaleriFoto::latest()->take(4)->get(),
             'situsTerkait' => SitusTerkait::all(),
             'statsLayanan' => $statsLayanan,
