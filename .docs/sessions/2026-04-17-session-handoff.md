@@ -303,7 +303,16 @@ docker compose exec app php artisan route:clear
 - applied to PPID, Profil Singkat, Struktur Organisasi, Informasi Pegawai, and Galeri create/edit/index
 - wizard sizing was tightened after first pass so tabs feel less bulky
 
-9. Tailwind CDN warning
+9. Renstra status
+- public Renstra pages now exist at:
+  - `/renstra`
+  - `/renstra/{slug}`
+- public topbar `Publikasi > Rencana Strategis` now points to the public Renstra index
+- admin visible path is now `/dashboard/renstra`
+- legacy public/admin `karya-ilmiah` URLs remain as redirects for compatibility
+- admin resource names are namespaced as `admin.renstra.*` so they do not collide with public `renstra.*` route names
+
+10. Tailwind CDN warning
 - still present in browser console on frontend/admin pages using CDN script
 - non-blocking, but should move to compiled asset flow later
 

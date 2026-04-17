@@ -1,10 +1,10 @@
 @extends('dashboard.layouts.main')
 
 @section('container')
-    <h1 class="btr-page-title">Karya Ilmiah <small>Edit Karya Ilmiah</small></h1>
+    <h1 class="btr-page-title">Renstra <small>Edit Data Renstra</small></h1>
 
     <div class="btr-card">
-        <form method="post" action="{{ url('dashboard/karya-ilmiah/' . $karya->slug) }}" enctype="multipart/form-data">
+        <form method="post" action="{{ url('dashboard/renstra/' . $karya->slug) }}" enctype="multipart/form-data">
             @method('put')
             @csrf
 
@@ -80,7 +80,7 @@
             </div>
 
             <div class="btr-form-actions">
-                <a href="{{ url('dashboard/karya-ilmiah') }}" class="btr-btn btr-btn-outline">Batal</a>
+                <a href="{{ url('dashboard/renstra') }}" class="btr-btn btr-btn-outline">Batal</a>
                 <button type="submit" class="btr-btn">Update</button>
             </div>
         </form>
@@ -88,7 +88,7 @@
 
     <script>
         document.querySelector('#title').addEventListener('change', function () {
-            fetch('/dashboard/posts/checkSlug?title=' + this.value)
+            fetch('/dashboard/renstra/checkSlug?title=' + encodeURIComponent(this.value))
                 .then(r => r.json())
                 .then(d => document.querySelector('#slug').value = d.slug);
         });

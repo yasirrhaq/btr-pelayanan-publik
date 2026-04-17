@@ -51,7 +51,7 @@
             'children' => [
                 ['label' => 'E-Perpustakaan', 'href' => 'https://pustaka.pu.go.id/perpustakaan/balai-rawa', 'external' => true],
                 ['label' => 'SANDRA', 'href' => '#'],
-                ['label' => 'Rencana Strategis', 'href' => '#'],
+                ['label' => 'Rencana Strategis', 'href' => route('renstra.index')],
                 ['label' => 'JDIH PU', 'href' => '#'],
                 ['label' => 'Pengumuman', 'href' => route('pengumuman.index')],
                 ['label' => 'Berita', 'href' => url('/berita')],

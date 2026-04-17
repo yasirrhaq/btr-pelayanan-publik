@@ -62,17 +62,17 @@
 
         {{-- Publikasi --}}
         <li class="btr-nav-item">
-            <button class="btr-nav-parent {{ $group(['dashboard/foto-home*','dashboard/posts*','dashboard/categories*','dashboard/galeri*','dashboard/karya-ilmiah*','dashboard/pengumuman*','dashboard/ppid*']) }}">
+            <button class="btr-nav-parent {{ $group(['dashboard/foto-home*','dashboard/posts*','dashboard/categories*','dashboard/galeri*','dashboard/renstra*','dashboard/karya-ilmiah*','dashboard/pengumuman*','dashboard/ppid*']) }}">
                 <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2M9 5a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2M9 5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2"/></svg>
                 Publikasi
                 <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
             </button>
-            <ul class="btr-nav-children {{ $group(['dashboard/foto-home*','dashboard/posts*','dashboard/categories*','dashboard/galeri*','dashboard/karya-ilmiah*','dashboard/pengumuman*','dashboard/ppid*']) }}">
+            <ul class="btr-nav-children {{ $group(['dashboard/foto-home*','dashboard/posts*','dashboard/categories*','dashboard/galeri*','dashboard/renstra*','dashboard/karya-ilmiah*','dashboard/pengumuman*','dashboard/ppid*']) }}">
                 <li><a class="btr-nav-link {{ $is('dashboard/foto-home*') }}" href="{{ url('dashboard/foto-home') }}">Banner</a></li>
                 <li><a class="btr-nav-link {{ $is('dashboard/posts*') || request()->is('dashboard/categories*') ? 'active' : '' }}" href="{{ url('dashboard/posts') }}">Berita</a></li>
                 <li><a class="btr-nav-link {{ $is('dashboard/galeri*') }}" href="{{ url('dashboard/galeri/foto-video') }}">Galeri</a></li>
                 <li><a class="btr-nav-link {{ $is('dashboard/pengumuman*') }}" href="{{ route('admin.pengumuman.index') }}">Pengumuman</a></li>
-                <li><a class="btr-nav-link {{ $is('dashboard/karya-ilmiah*') }}" href="{{ url('dashboard/karya-ilmiah') }}">Renstra</a></li>
+                <li><a class="btr-nav-link {{ request()->is('dashboard/renstra*') || request()->is('dashboard/karya-ilmiah*') ? 'active' : '' }}" href="{{ url('dashboard/renstra') }}">Renstra</a></li>
                 <li><a class="btr-nav-link {{ $is('dashboard/ppid*') }}" href="{{ route('admin.ppid.index') }}">PPID</a></li>
             </ul>
         </li>

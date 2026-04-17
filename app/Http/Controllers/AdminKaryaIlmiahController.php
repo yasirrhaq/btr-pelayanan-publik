@@ -4,11 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Models\KaryaIlmiah;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 
 class AdminKaryaIlmiahController extends Controller
 {
-    protected $redirect_path = '/dashboard/karya-ilmiah';
+    protected $redirect_path = '/dashboard/renstra';
     protected $path_file_save = 'gambar-karya-ilmiah';
     /**
      * Display a listing of the resource.
@@ -69,7 +70,7 @@ class AdminKaryaIlmiahController extends Controller
         }
 
         KaryaIlmiah::create($validatedData);
-        return redirect($this->redirect_path)->with('success', 'Karya Ilmiah berhasil ditambahkan!');
+        return redirect($this->redirect_path)->with('success', 'Renstra berhasil ditambahkan!');
     }
 
     /**
@@ -141,7 +142,7 @@ class AdminKaryaIlmiahController extends Controller
 
         $karya_ilmiah = $karya_ilmiah
             ->update($validatedData);
-        return redirect($this->redirect_path)->with('success', 'Data berhasil diupdate!');
+        return redirect($this->redirect_path)->with('success', 'Data Renstra berhasil diupdate!');
     }
 
     /**
@@ -156,6 +157,13 @@ class AdminKaryaIlmiahController extends Controller
             Storage::delete($karyaIlmiah->path_image);
         }
         KaryaIlmiah::destroy($karyaIlmiah->id);
-        return redirect($this->redirect_path)->with('success', 'Karya Ilmiah berhasil dihapus!');
+        return redirect($this->redirect_path)->with('success', 'Renstra berhasil dihapus!');
+    }
+
+    public function checkSlug(Request $request)
+    {
+        return response()->json([
+            'slug' => Str::slug($request->title),
+        ]);
     }
 }

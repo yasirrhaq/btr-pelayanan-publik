@@ -1,17 +1,17 @@
 @extends('dashboard.layouts.main')
 
 @section('container')
-    <h1 class="btr-page-title">Publikasi - Karya Ilmiah</h1>
+    <h1 class="btr-page-title">Publikasi - Renstra</h1>
 
     <div class="btr-card">
         <div class="btr-toolbar">
-            <a href="{{ url('dashboard/karya-ilmiah/create') }}" class="btr-btn">
+            <a href="{{ url('dashboard/renstra/create') }}" class="btr-btn">
                 <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
-                Karya Ilmiah
+                Tambah Renstra
             </a>
             <div class="spacer"></div>
             <div class="btr-search">
-                <input type="text" placeholder="Cari karya ilmiah...">
+                <input type="text" placeholder="Cari Renstra...">
                 <button type="button">
                     <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35"/></svg>
                 </button>
@@ -42,10 +42,10 @@
                             <td>{{ $karya->issn_cetak }}</td>
                             <td>
                                 <div class="btr-actions">
-                                    <a href="{{ url('dashboard/karya-ilmiah/' . $karya->slug . '/edit') }}" class="btr-action edit" title="Edit">
+                                    <a href="{{ url('dashboard/renstra/' . $karya->slug . '/edit') }}" class="btr-action edit" title="Edit">
                                         <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path stroke-linecap="round" stroke-linejoin="round" d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
                                     </a>
-                                    <form action="{{ url('dashboard/karya-ilmiah/' . $karya->slug) }}" method="post" class="btr-action-form" onsubmit="return confirm('Yakin hapus data?')">
+                                    <form action="{{ url('dashboard/renstra/' . $karya->slug) }}" method="post" class="btr-action-form" onsubmit="return confirm('Yakin hapus data?')">
                                         @csrf
                                         @method('delete')
                                         <button class="btr-action delete" type="submit" title="Hapus">
@@ -56,7 +56,7 @@
                             </td>
                         </tr>
                     @empty
-                        <tr><td colspan="7" style="color:var(--text-muted);padding:28px">Belum ada karya ilmiah.</td></tr>
+                        <tr><td colspan="7" style="color:var(--text-muted);padding:28px">Belum ada data Renstra.</td></tr>
                     @endforelse
                 </tbody>
             </table>

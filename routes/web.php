@@ -21,6 +21,7 @@ use App\Http\Controllers\PostController;
 use App\Http\Controllers\PublicPengumumanController;
 use App\Http\Controllers\PublicDokumenController;
 use App\Http\Controllers\PublicPpidController;
+use App\Http\Controllers\PublicRenstraController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\TugasController;
 use App\Http\Controllers\SejarahController;
@@ -86,6 +87,12 @@ Route::get('/berita/{post:slug}', [PostController::class, 'show']);
 Route::get('/pengumuman', [PublicPengumumanController::class, 'index'])->name('pengumuman.index');
 Route::get('/pengumuman/{pengumuman}', [PublicPengumumanController::class, 'show'])->name('pengumuman.show');
 Route::get('/dokumen', [PublicDokumenController::class, 'index'])->name('dokumen.index');
+Route::get('/renstra', [PublicRenstraController::class, 'index'])->name('renstra.index');
+Route::get('/renstra/{renstra:slug}', [PublicRenstraController::class, 'show'])->name('renstra.show');
+Route::redirect('/karya-ilmiah', '/renstra', 301);
+Route::get('/karya-ilmiah-detail/{renstra:slug}', function (\App\Models\KaryaIlmiah $renstra) {
+    return redirect()->route('renstra.show', $renstra, 301);
+});
 Route::get('/ppid', [PublicPpidController::class, 'index'])->name('ppid.index');
 Route::get('/ppid/{slug}', [PublicPpidController::class, 'show'])->name('ppid.show');
 Route::post('/ajax-search-berita', 'App\Http\Controllers\PostController@ajaxListBerita');
@@ -170,8 +177,14 @@ Route::group([
         Route::get('/categories/checkSlug', [AdminCategoryController::class, 'checkSlug']);
         Route::resource('/categories', AdminCategoryController::class)->except('show');
         Route::resource('/status-layanan', StatusLayananController::class);
-        Route::resource('/karya-ilmiah', AdminKaryaIlmiahController::class)->except('show');
-        Route::get('/karya-ilmiah/checkSlug', [AdminKaryaIlmiahController::class, 'checkSlug']);
+        Route::resource('/renstra', AdminKaryaIlmiahController::class)->names('admin.renstra')->except('show');
+        Route::get('/renstra/checkSlug', [AdminKaryaIlmiahController::class, 'checkSlug']);
+        Route::redirect('/karya-ilmiah', '/dashboard/renstra', 301);
+        Route::redirect('/karya-ilmiah/create', '/dashboard/renstra/create', 301);
+        Route::redirect('/karya-ilmiah/checkSlug', '/dashboard/renstra/checkSlug', 301);
+        Route::get('/karya-ilmiah/{karyaIlmiah:slug}/edit', function (\App\Models\KaryaIlmiah $karyaIlmiah) {
+            return redirect('/dashboard/renstra/' . $karyaIlmiah->slug . '/edit', 301);
+        });
         Route::resource('/url-layanan', AdminUrlLayananController::class)->only('index', 'edit', 'update');
         Route::resource('/settings', App\Http\Controllers\Admin\AdminSettings::class)->only('index', 'store');
         Route::resource('/galeri/foto-video', FotoVideoController::class);
