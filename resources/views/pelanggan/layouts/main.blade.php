@@ -20,55 +20,17 @@
             @include('pelanggan.layouts.header')
 
             <main class="btr-content">
-                @if (session()->has('success'))
-                    <div class="btr-alert btr-alert-success">{{ session('success') }}</div>
-                @endif
-                @if (session()->has('error'))
-                    <div class="btr-alert btr-alert-error">{{ session('error') }}</div>
-                @endif
-                @if (session()->has('info'))
-                    <div class="btr-alert btr-alert-info">{{ session('info') }}</div>
-                @endif
+                @include('partials.btr.alerts')
 
                 @yield('container')
             </main>
         </div>
     </div>
 
-    <script>
-        var sidebarToggle = document.getElementById('btr-sidebar-toggle');
-        var overlay = document.getElementById('btr-overlay');
-        if (sidebarToggle) {
-            sidebarToggle.addEventListener('click', function() {
-                document.body.classList.toggle('btr-sidebar-open');
-                if (overlay) overlay.classList.toggle('open');
-            });
-        }
-        if (overlay) {
-            overlay.addEventListener('click', function() {
-                document.body.classList.remove('btr-sidebar-open');
-                overlay.classList.remove('open');
-            });
-        }
-
-        document.addEventListener('click', function(event) {
-            document.querySelectorAll('.btr-topbar-profile-menu[open]').forEach(function(menu) {
-                if (!menu.contains(event.target)) {
-                    menu.removeAttribute('open');
-                }
-            });
-        });
-
-        function btrTickClock() {
-            var el = document.getElementById('btr-clock');
-            if (!el) return;
-            var d = new Date();
-            var pad = function(n) { return n < 10 ? '0' + n : n; };
-            el.textContent = pad(d.getHours()) + ':' + pad(d.getMinutes()) + ':' + pad(d.getSeconds());
-        }
-        setInterval(btrTickClock, 1000);
-        btrTickClock();
-    </script>
+    @include('partials.btr.shell-scripts', [
+        'btrSidebarToggleId' => 'btr-sidebar-toggle',
+        'btrOverlayId' => 'btr-overlay',
+    ])
     @stack('js')
 </body>
 

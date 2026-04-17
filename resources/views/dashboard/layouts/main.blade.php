@@ -37,48 +37,21 @@
             @include('dashboard.layouts.header')
 
             <main class="btr-content">
-                @if (session()->has('success'))
-                    <div class="btr-alert btr-alert-success">{{ session('success') }}</div>
-                @endif
-
-                @if (session()->has('deleteError'))
-                    <div class="btr-alert btr-alert-error">{{ session('deleteError') }}</div>
-                @endif
+                @include('partials.btr.alerts', [
+                    'btrAlertMap' => [
+                        'success' => 'btr-alert-success',
+                        'deleteError' => 'btr-alert-error',
+                    ],
+                ])
 
                 @yield('container')
             </main>
         </div>
     </div>
 
-    <script>
-        // Sidebar dropdown toggle
-        document.querySelectorAll('.btr-nav-parent').forEach(function (btn) {
-            btn.addEventListener('click', function () {
-                var children = btn.nextElementSibling;
-                btn.classList.toggle('open');
-                if (children && children.classList.contains('btr-nav-children')) {
-                    children.classList.toggle('open');
-                }
-            });
-        });
-
-        document.querySelectorAll('.btr-nav-link').forEach(function (link) {
-            link.addEventListener('click', function () {
-                document.body.classList.remove('btr-sidebar-open');
-            });
-        });
-
-        // Live clock
-        function btrTickClock() {
-            var el = document.getElementById('btr-clock');
-            if (!el) return;
-            var d = new Date();
-            var pad = function (n) { return n < 10 ? '0' + n : n; };
-            el.textContent = pad(d.getHours()) + ':' + pad(d.getMinutes()) + ':' + pad(d.getSeconds());
-        }
-        setInterval(btrTickClock, 1000);
-        btrTickClock();
-    </script>
+    @include('partials.btr.shell-scripts', [
+        'btrToggleNavParents' => true,
+    ])
     @stack('js')
 </body>
 

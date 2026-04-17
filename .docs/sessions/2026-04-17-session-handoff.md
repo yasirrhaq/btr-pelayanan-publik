@@ -163,6 +163,21 @@
   - fixed select option labels to use `nama`
   - replaced brittle Blade selected directive with explicit `selected` output
 
+### Shared shell cleanup
+- Extracted shared alert rendering into:
+  - `resources/views/partials/btr/alerts.blade.php`
+- Extracted shared shell JS into:
+  - `resources/views/partials/btr/shell-scripts.blade.php`
+- Rewired these layouts to use the shared partials:
+  - `dashboard.layouts.main`
+  - `pelanggan.layouts.main`
+  - `profile.layouts.main`
+- Current shared-shell status:
+  - topbar markup shared
+  - shell alerts shared
+  - shell JS shared
+  - sidebars still separate by area
+
 ### Karya ilmiah / renstra
 - Public `karya-ilmiah` routes/menu removed earlier per request
 - Admin `Renstra` restored after clarification
@@ -213,6 +228,8 @@
 - `resources/views/pelanggan/layouts/sidebar.blade.php`
 - `resources/views/pelanggan/layouts/header.blade.php`
 - `resources/views/partials/btr/topbar.blade.php`
+- `resources/views/partials/btr/alerts.blade.php`
+- `resources/views/partials/btr/shell-scripts.blade.php`
 - `app/Http/Controllers/Pelanggan/ProfilController.php`
 - `resources/views/pelanggan/profil/edit.blade.php`
 - `resources/views/pelanggan/profil/password.blade.php`
