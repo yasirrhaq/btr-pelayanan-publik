@@ -15,11 +15,25 @@ use App\Models\SitusTerkait;
 use App\Models\StrukturOrganisasi;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
 
 class KontenWebSeeder extends Seeder
 {
     public function run(): void
     {
+        $sampleDokumenSource = public_path('assets/sample-dokumen.pdf');
+        $sampleDokumenTarget = storage_path('app/public/pengumuman/sample-dokumen-btr.pdf');
+
+        if (is_file($sampleDokumenSource)) {
+            if (!is_dir(dirname($sampleDokumenTarget))) {
+                File::makeDirectory(dirname($sampleDokumenTarget), 0777, true, true);
+            }
+
+            if (!is_file($sampleDokumenTarget)) {
+                File::copy($sampleDokumenSource, $sampleDokumenTarget);
+            }
+        }
+
         // --- Kategori Berita ---
         $categories = [
             ['name' => 'Berita Utama',      'slug' => 'berita-utama'],
@@ -242,7 +256,7 @@ class KontenWebSeeder extends Seeder
                     'slug' => 'balai-teknik-rawa-perkuat-layanan-advis-teknis-tahun-2026',
                     'image' => 'assets/beritautama.png',
                     'excerpt' => 'Balai Teknik Rawa memperkuat layanan advis teknis untuk mempercepat dukungan teknis bidang rawa di berbagai wilayah kerja.',
-                    'body' => '<p>Balai Teknik Rawa terus memperkuat layanan advis teknis guna mendukung kebutuhan perencanaan, pelaksanaan, dan evaluasi infrastruktur rawa secara lebih cepat dan terukur.</p><p>Penguatan layanan dilakukan melalui penajaman proses konsultasi teknis, penyiapan dokumen rujukan, serta peningkatan koordinasi dengan pemohon layanan dari pusat maupun daerah.</p><p>Langkah ini diharapkan membantu pemangku kepentingan memperoleh rekomendasi teknis yang lebih responsif, akurat, dan sesuai karakteristik wilayah rawa.</p>',
+                    'body' => '<p>Balai Teknik Rawa terus memperkuat layanan advis teknis guna mendukung kebutuhan perencanaan, pelaksanaan, dan evaluasi infrastruktur rawa secara lebih cepat dan terukur.</p><p>Penguatan layanan dilakukan melalui penajaman proses konsultasi teknis, penyiapan dokumen rujukan, serta peningkatan koordinasi dengan pemohon layanan dari pusat maupun daerah.</p><p>Langkah ini diharapkan membantu pemangku kepentingan memperoleh rekomendasi teknis yang lebih responsif, akurat, dan sesuai karakteristik wilayah rawa.</p><p><a href="/assets/sample-dokumen.pdf" target="_blank" rel="noopener">Unduh lampiran pendukung</a></p>',
                     'publish_at' => '2026-04-10 09:00:00',
                 ],
                 [
@@ -251,7 +265,7 @@ class KontenWebSeeder extends Seeder
                     'slug' => 'tim-balai-teknik-rawa-laksanakan-survei-lapangan-di-sumatera-selatan',
                     'image' => 'assets/fotoBaner.png',
                     'excerpt' => 'Survei lapangan dilakukan untuk memperkuat data dukung layanan teknis dan evaluasi kondisi lapangan pada kawasan rawa prioritas.',
-                    'body' => '<p>Tim teknis Balai Teknik Rawa melaksanakan survei lapangan pada beberapa lokasi prioritas di Sumatera Selatan sebagai bagian dari pengumpulan data teknis dan verifikasi kondisi eksisting.</p><p>Kegiatan ini mencakup observasi lapangan, dokumentasi visual, dan koordinasi dengan pihak setempat untuk memastikan kebutuhan teknis dapat diidentifikasi secara tepat.</p><p>Hasil survei akan menjadi dasar penyusunan rekomendasi teknis lanjutan dan penguatan basis data pelayanan balai.</p>',
+                    'body' => '<p>Tim teknis Balai Teknik Rawa melaksanakan survei lapangan pada beberapa lokasi prioritas di Sumatera Selatan sebagai bagian dari pengumpulan data teknis dan verifikasi kondisi eksisting.</p><p>Kegiatan ini mencakup observasi lapangan, dokumentasi visual, dan koordinasi dengan pihak setempat untuk memastikan kebutuhan teknis dapat diidentifikasi secara tepat.</p><p>Hasil survei akan menjadi dasar penyusunan rekomendasi teknis lanjutan dan penguatan basis data pelayanan balai.</p><p><a href="/assets/sample-dokumen.pdf" target="_blank" rel="noopener">Unduh lampiran hasil survei</a></p>',
                     'publish_at' => '2026-04-08 10:30:00',
                 ],
                 [
@@ -260,7 +274,7 @@ class KontenWebSeeder extends Seeder
                     'slug' => 'pengujian-laboratorium-sedimen-dukung-inovasi-analisis-rawa',
                     'image' => 'assets/beritaterkini1.png',
                     'excerpt' => 'Penguatan laboratorium dilakukan melalui pengujian sedimen dan pemanfaatan hasil analisis untuk pengembangan teknologi bidang rawa.',
-                    'body' => '<p>Laboratorium Balai Teknik Rawa melaksanakan pengujian sedimen untuk mendukung kebutuhan analisis teknis dan pengembangan inovasi bidang rawa.</p><p>Data hasil pengujian dimanfaatkan sebagai masukan dalam penyusunan kajian, evaluasi mutu, dan pengembangan metode pelayanan teknis yang lebih adaptif.</p><p>Dengan dukungan laboratorium yang semakin baik, proses layanan teknis diharapkan menjadi lebih konsisten dan dapat dipertanggungjawabkan.</p>',
+                    'body' => '<p>Laboratorium Balai Teknik Rawa melaksanakan pengujian sedimen untuk mendukung kebutuhan analisis teknis dan pengembangan inovasi bidang rawa.</p><p>Data hasil pengujian dimanfaatkan sebagai masukan dalam penyusunan kajian, evaluasi mutu, dan pengembangan metode pelayanan teknis yang lebih adaptif.</p><p>Dengan dukungan laboratorium yang semakin baik, proses layanan teknis diharapkan menjadi lebih konsisten dan dapat dipertanggungjawabkan.</p><p><a href="/assets/sample-dokumen.pdf" target="_blank" rel="noopener">Unduh lampiran hasil pengujian</a></p>',
                     'publish_at' => '2026-04-05 13:00:00',
                 ],
                 [
@@ -303,18 +317,21 @@ class KontenWebSeeder extends Seeder
                 [
                     'judul'      => 'Jadwal Pemeliharaan Sistem Layanan Online',
                     'isi'        => 'Diberitahukan kepada seluruh pengguna layanan bahwa sistem layanan online akan dilakukan pemeliharaan pada hari Sabtu, 20 April 2024 pukul 22.00-06.00 WIB. Selama periode tersebut, layanan online tidak dapat diakses.',
+                    'lampiran_path' => 'pengumuman/sample-dokumen-btr.pdf',
                     'is_active'  => true,
                     'created_by' => $adminUser->id,
                 ],
                 [
                     'judul'      => 'Pengumuman Penerimaan Permohonan Layanan Advis Teknis Batch 2 Tahun 2024',
                     'isi'        => 'Balai Teknik Rawa membuka penerimaan permohonan layanan advis teknis batch kedua tahun 2024. Pendaftaran dibuka mulai 1 Mei 2024. Pemohon wajib melengkapi dokumen persyaratan sesuai standar pelayanan yang berlaku.',
+                    'lampiran_path' => 'pengumuman/sample-dokumen-btr.pdf',
                     'is_active'  => true,
                     'created_by' => $adminUser->id,
                 ],
                 [
                     'judul'      => 'Informasi Tarif Layanan Pengujian Laboratorium 2024',
                     'isi'        => 'Sesuai Peraturan Pemerintah Nomor 30 Tahun 2021 tentang Jenis dan Tarif atas Jenis PNBP yang Berlaku pada Kementerian PUPR, tarif layanan pengujian laboratorium BTR mengalami pembaruan terhitung 1 Januari 2024.',
+                    'lampiran_path' => 'pengumuman/sample-dokumen-btr.pdf',
                     'is_active'  => true,
                     'created_by' => $adminUser->id,
                 ],

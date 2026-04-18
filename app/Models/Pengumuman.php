@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Schema;
 
 class Pengumuman extends Model
 {
@@ -24,6 +25,14 @@ class Pengumuman extends Model
 
     public function scopePublished($query)
     {
-        return $query->where('is_published', true);
+        if (Schema::hasColumn($this->getTable(), 'is_published')) {
+            return $query->where('is_published', true);
+        }
+
+        if (Schema::hasColumn($this->getTable(), 'is_active')) {
+            return $query->where('is_active', true);
+        }
+
+        return $query;
     }
 }

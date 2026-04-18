@@ -129,6 +129,11 @@
   - aggregates `pengumuman.lampiran_path`
   - aggregates `galeri_foto.type = dokumen`
   - also scans berita body links for direct document files when present
+- Added `demo:populate-dokumen-lampiran` artisan command
+  - copies sample PDF into `storage/app/public/pengumuman`
+  - backfills 3 active pengumuman with `lampiran_path`
+  - appends sample document links into 3 latest berita bodies
+  - keeps `/dokumen` easy to verify on demo data
 - Updated public `Dokumen` menu item to point to the new public page
 - Restyled pelanggan shell to match the newer admin visual language while keeping pelanggan-specific navigation:
   - sidebar now uses `assets/logo.png`

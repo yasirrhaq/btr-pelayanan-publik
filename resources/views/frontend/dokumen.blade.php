@@ -1,6 +1,20 @@
 @extends('frontend.layouts.mainTailwind')
 
 @section('container')
+    <style>
+        .dokumen-preview-btn {
+            border-color: #e2e8f0;
+            background: #ffffff;
+            color: #475569;
+        }
+
+        .dokumen-preview-btn:hover {
+            border-color: #2a3a61;
+            background: #eef3ff;
+            color: #2a3a61;
+        }
+    </style>
+
     <section class="bg-[#354776] text-white py-12 px-4">
         <div class="max-w-6xl mx-auto">
             <p class="text-xs uppercase tracking-[0.3em] text-amber-300 font-semibold">Publikasi</p>
@@ -20,35 +34,46 @@
             @if ($dokumen->count())
                 <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
                     @foreach ($dokumen as $item)
-                        <article class="rounded-[26px] border border-slate-200 bg-white shadow-sm transition-all hover:-translate-y-1 hover:shadow-lg">
-                            <div class="p-6">
-                                <div class="flex items-center justify-between gap-3">
-                                    <span class="inline-flex items-center rounded-full bg-[#354776]/8 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.16em] text-[#354776]">
+                        <article class="group flex h-full flex-col overflow-hidden rounded-[26px] border border-slate-200 bg-white shadow-sm transition-all duration-200 hover:-translate-y-1 hover:border-slate-300 hover:shadow-xl">
+                            <div class="h-1.5 w-full bg-gradient-to-r from-[#354776] via-[#49639f] to-amber-400"></div>
+
+                            <div class="flex flex-1 flex-col p-6">
+                                <div class="flex min-h-[2.5rem] items-start justify-between gap-3">
+                                    <span class="inline-flex items-center rounded-full bg-[#354776]/8 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-[#354776]">
                                         {{ $item['source'] }}
                                     </span>
-                                    <span class="text-xs font-medium text-slate-400">{{ optional($item['published_at'])->format('d M Y') }}</span>
+                                    <span class="pt-1 text-[11px] font-semibold uppercase tracking-[0.12em] text-slate-400">{{ optional($item['published_at'])->format('d M Y') }}</span>
                                 </div>
 
-                                <h2 class="mt-4 text-lg font-bold leading-snug text-slate-900">{{ $item['title'] }}</h2>
-                                <p class="mt-3 text-sm leading-6 text-slate-600">{{ $item['summary'] }}</p>
+                                <div class="mt-4 min-h-[4.5rem]">
+                                    <h2 class="text-[1.15rem] font-bold leading-snug text-slate-900" style="display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">
+                                        {{ $item['title'] }}
+                                    </h2>
+                                </div>
 
-                                <div class="mt-5 flex items-center gap-3 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3">
-                                    <div class="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-2xl bg-amber-100 text-amber-600">
+                                <div class="mt-3 min-h-[5.75rem]">
+                                    <p class="text-sm leading-6 text-slate-600" style="display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;">
+                                        {{ $item['summary'] }}
+                                    </p>
+                                </div>
+
+                                <div class="mt-5 flex min-h-[5.5rem] items-center gap-3 rounded-2xl border border-slate-200 bg-slate-50/90 px-4 py-3">
+                                    <div class="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-2xl bg-amber-100 text-amber-600 shadow-sm">
                                         <i class="fas fa-file-alt"></i>
                                     </div>
                                     <div class="min-w-0">
                                         <p class="truncate text-sm font-semibold text-slate-900">{{ $item['filename'] }}</p>
-                                        <p class="text-xs uppercase tracking-[0.2em] text-slate-400">{{ strtoupper($item['extension'] ?: 'FILE') }}</p>
+                                        <p class="mt-1 text-[11px] uppercase tracking-[0.22em] text-slate-400">{{ strtoupper($item['extension'] ?: 'FILE') }}</p>
                                     </div>
                                 </div>
                             </div>
 
-                            <div class="flex items-center justify-between gap-3 border-t border-slate-100 px-6 py-4">
-                                <a href="{{ $item['page_url'] }}" class="inline-flex items-center gap-2 text-sm font-semibold text-[#354776] hover:text-[#2a3a61] transition-colors">
-                                    Lihat Sumber
-                                    <i class="fas fa-arrow-right text-xs"></i>
+                            <div class="mt-auto flex items-center gap-3 border-t border-slate-100 px-6 py-4">
+                                <a href="{{ $item['page_url'] }}" class="inline-flex min-h-[44px] min-w-0 flex-1 items-center gap-2 text-sm font-semibold text-[#354776] transition-colors hover:text-[#2a3a61]">
+                                    <span>Lihat Sumber</span>
+                                    <i class="fas fa-arrow-right text-xs transition-transform duration-200 group-hover:translate-x-0.5"></i>
                                 </a>
-                                <div class="flex items-center gap-2">
+                                <div class="ml-auto flex flex-shrink-0 items-center gap-2">
                                     <button
                                         type="button"
                                         @click="open({
@@ -57,11 +82,11 @@
                                             extension: @js($item['extension']),
                                             filename: @js($item['filename'])
                                         })"
-                                        class="inline-flex items-center gap-2 rounded-full border border-slate-200 px-4 py-2 text-xs font-semibold text-slate-600 hover:border-[#354776] hover:text-[#354776] transition-colors"
+                                        class="dokumen-preview-btn inline-flex min-h-[44px] min-w-[84px] items-center justify-center gap-2 rounded-full border px-4 py-2 text-xs font-semibold transition-colors"
                                     >
                                         Preview
                                     </button>
-                                    <a href="{{ $item['url'] }}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 rounded-full bg-amber-400 px-4 py-2 text-xs font-semibold text-[#354776] hover:bg-amber-300 transition-colors">
+                                    <a href="{{ $item['url'] }}" target="_blank" rel="noopener noreferrer" class="inline-flex min-h-[44px] min-w-[84px] items-center justify-center gap-2 rounded-full bg-amber-400 px-4 py-2 text-xs font-semibold text-[#354776] transition-colors hover:bg-amber-300">
                                         Buka
                                     </a>
                                 </div>

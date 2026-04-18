@@ -14,7 +14,8 @@ class PublicDokumenController extends Controller
 {
     public function index(Request $request)
     {
-        $items = $this->collectPengumumanDocuments()
+        $items = collect()
+            ->merge($this->collectPengumumanDocuments())
             ->merge($this->collectBeritaDocuments())
             ->merge($this->collectGaleriDocuments())
             ->sortByDesc('published_at')
@@ -55,7 +56,7 @@ class PublicDokumenController extends Controller
                     'url' => $url,
                     'filename' => basename($item->lampiran_path),
                     'published_at' => $item->created_at,
-                    'page_url' => route('pengumuman.show', $item),
+                    'page_url' => route('pengumuman.show', ['pengumuman' => $item->getKey()]),
                 ]);
             });
     }

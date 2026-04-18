@@ -74,7 +74,7 @@
     ];
 @endphp
 
-<div class="sticky top-0 z-50 border-b border-slate-200/80 bg-white/95 shadow-sm backdrop-blur" x-data="{ mobileOpen: false, langOpen: false }">
+<div class="sticky top-0 z-50 border-b border-slate-200/80 bg-white/95 shadow-sm backdrop-blur" x-data="{ mobileOpen: false, langOpen: false, mobileSection: null, layananChild: null, publikasiChild: null }">
     <style>
         .nav-item:hover .nav-dropdown {
             display: block;
@@ -417,34 +417,101 @@
             </div>
 
             <div x-show="mobileOpen" x-cloak x-transition
-                class="md:hidden pb-3 border-t border-gray-200 space-y-0.5 pt-1">
-                <a href="{{ url('/home') }}" class="block px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-200 hover:text-[#354776] rounded font-medium">Beranda</a>
-                <div class="px-4 pt-2 text-[11px] font-bold uppercase tracking-[0.08em] text-[#354776]">Profil</div>
-                @foreach ($profilMenu as $link)
-                    <a href="{{ $link['href'] }}" class="block px-4 py-2 text-sm text-gray-500 hover:bg-gray-200 rounded pl-7">↳ {{ $link['label'] }}</a>
-                @endforeach
-                <div class="px-4 pt-2 text-[11px] font-bold uppercase tracking-[0.08em] text-[#354776]">Layanan</div>
-                @foreach ($layananMenu as $item)
-                    <div class="px-4 py-1 text-xs font-semibold text-gray-400 pl-7">{{ $item['label'] }}</div>
-                    @if (!empty($item['children']))
-                        @foreach ($item['children'] as $link)
-                            <a href="{{ $link['href'] }}" @if(!empty($link['external'])) target="_blank" rel="noopener noreferrer" @endif class="block px-4 py-2 text-sm text-gray-500 hover:bg-gray-200 rounded pl-10">↳ {{ $link['label'] }}</a>
-                        @endforeach
-                    @else
-                        <a href="{{ $item['href'] }}" class="block px-4 py-2 text-sm text-gray-500 hover:bg-gray-200 rounded pl-10">↳ {{ $item['label'] }}</a>
-                    @endif
-                @endforeach
-                <div class="px-4 pt-2 text-[11px] font-bold uppercase tracking-[0.08em] text-[#354776]">Publikasi</div>
-                @foreach ($publikasiMenu as $item)
-                    <div class="px-4 py-1 text-xs font-semibold text-gray-400 pl-7">{{ $item['label'] }}</div>
-                    @foreach ($item['children'] as $link)
-                        <a href="{{ $link['href'] }}" @if(!empty($link['external'])) target="_blank" rel="noopener noreferrer" @endif class="block px-4 py-2 text-sm text-gray-500 hover:bg-gray-200 rounded pl-10">↳ {{ $link['label'] }}</a>
-                    @endforeach
-                @endforeach
-                <div class="px-4 pt-2 text-[11px] font-bold uppercase tracking-[0.08em] text-[#354776]">Saran dan Pengaduan</div>
-                @foreach ($pengaduanMenu as $link)
-                    <a href="{{ $link['href'] }}" @if(!empty($link['external'])) target="_blank" rel="noopener noreferrer" @endif class="block px-4 py-2 text-sm text-gray-500 hover:bg-gray-200 rounded pl-7">↳ {{ $link['label'] }}</a>
-                @endforeach
+                class="md:hidden border-t border-gray-200 pt-2 pb-4">
+                <a href="{{ url('/home') }}" class="block rounded-xl px-4 py-3 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-100 hover:text-[#354776]">
+                    Beranda
+                </a>
+
+                <div class="mt-1 space-y-1">
+                    <div class="rounded-xl">
+                        <button type="button" @click="mobileSection = mobileSection === 'profil' ? null : 'profil'" class="flex w-full items-center justify-between rounded-xl px-4 py-3 text-left text-sm font-medium text-gray-800 transition-colors hover:bg-gray-100 hover:text-[#354776]">
+                            <span>Profil</span>
+                            <span class="text-base font-semibold" x-text="mobileSection === 'profil' ? '−' : '+'"></span>
+                        </button>
+                        <div x-show="mobileSection === 'profil'" x-transition x-cloak class="space-y-1 px-2 pb-2">
+                            @foreach ($profilMenu as $link)
+                                <a href="{{ $link['href'] }}" class="block rounded-lg px-5 py-2.5 text-sm text-gray-600 transition-colors hover:bg-gray-100 hover:text-[#354776]">
+                                    {{ $link['label'] }}
+                                </a>
+                            @endforeach
+                        </div>
+                    </div>
+
+                    <div class="rounded-xl">
+                        <button type="button" @click="mobileSection = mobileSection === 'layanan' ? null : 'layanan'" class="flex w-full items-center justify-between rounded-xl px-4 py-3 text-left text-sm font-medium text-gray-800 transition-colors hover:bg-gray-100 hover:text-[#354776]">
+                            <span>Layanan</span>
+                            <span class="text-base font-semibold" x-text="mobileSection === 'layanan' ? '−' : '+'"></span>
+                        </button>
+                        <div x-show="mobileSection === 'layanan'" x-transition x-cloak class="space-y-1 px-2 pb-2">
+                            @foreach ($layananMenu as $index => $item)
+                                @if (!empty($item['children']))
+                                    <div class="rounded-lg">
+                                        <button type="button" @click="layananChild = layananChild === {{ $index }} ? null : {{ $index }}" class="flex w-full items-center justify-between rounded-lg px-5 py-2.5 text-left text-sm font-medium text-gray-700 transition-colors hover:bg-gray-100 hover:text-[#354776]">
+                                            <span>{{ $item['label'] }}</span>
+                                            <i class="fas fa-chevron-down text-[11px] text-gray-400 transition-transform" :class="{ 'rotate-180': layananChild === {{ $index }} }"></i>
+                                        </button>
+                                        <div x-show="layananChild === {{ $index }}" x-transition x-cloak class="space-y-1 pl-3">
+                                            @foreach ($item['children'] as $link)
+                                                <a href="{{ $link['href'] }}" @if(!empty($link['external'])) target="_blank" rel="noopener noreferrer" @endif class="block rounded-lg px-5 py-2.5 text-sm text-gray-500 transition-colors hover:bg-gray-100 hover:text-[#354776]">
+                                                    {{ $link['label'] }}
+                                                </a>
+                                            @endforeach
+                                        </div>
+                                    </div>
+                                @else
+                                    <a href="{{ $item['href'] }}" class="block rounded-lg px-5 py-2.5 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-100 hover:text-[#354776]">
+                                        {{ $item['label'] }}
+                                    </a>
+                                @endif
+                            @endforeach
+                        </div>
+                    </div>
+
+                    <div class="rounded-xl">
+                        <button type="button" @click="mobileSection = mobileSection === 'publikasi' ? null : 'publikasi'" class="flex w-full items-center justify-between rounded-xl px-4 py-3 text-left text-sm font-medium text-gray-800 transition-colors hover:bg-gray-100 hover:text-[#354776]">
+                            <span>Publikasi</span>
+                            <span class="text-base font-semibold" x-text="mobileSection === 'publikasi' ? '−' : '+'"></span>
+                        </button>
+                        <div x-show="mobileSection === 'publikasi'" x-transition x-cloak class="space-y-1 px-2 pb-2">
+                            @foreach ($publikasiMenu as $index => $item)
+                                @if (!empty($item['children']))
+                                    <div class="rounded-lg">
+                                        <button type="button" @click="publikasiChild = publikasiChild === {{ $index }} ? null : {{ $index }}" class="flex w-full items-center justify-between rounded-lg px-5 py-2.5 text-left text-sm font-medium text-gray-700 transition-colors hover:bg-gray-100 hover:text-[#354776]">
+                                            <span>{{ $item['label'] }}</span>
+                                            <i class="fas fa-chevron-down text-[11px] text-gray-400 transition-transform" :class="{ 'rotate-180': publikasiChild === {{ $index }} }"></i>
+                                        </button>
+                                        <div x-show="publikasiChild === {{ $index }}" x-transition x-cloak class="space-y-1 pl-3">
+                                            @foreach ($item['children'] as $link)
+                                                <a href="{{ $link['href'] }}" @if(!empty($link['external'])) target="_blank" rel="noopener noreferrer" @endif class="block rounded-lg px-5 py-2.5 text-sm text-gray-500 transition-colors hover:bg-gray-100 hover:text-[#354776]">
+                                                    {{ $link['label'] }}
+                                                </a>
+                                            @endforeach
+                                        </div>
+                                    </div>
+                                @else
+                                    <a href="{{ $item['href'] ?? '#' }}" class="block rounded-lg px-5 py-2.5 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-100 hover:text-[#354776]">
+                                        {{ $item['label'] }}
+                                    </a>
+                                @endif
+                            @endforeach
+                        </div>
+                    </div>
+
+                    <div class="rounded-xl">
+                        <button type="button" @click="mobileSection = mobileSection === 'pengaduan' ? null : 'pengaduan'" class="flex w-full items-center justify-between rounded-xl px-4 py-3 text-left text-sm font-medium text-gray-800 transition-colors hover:bg-gray-100 hover:text-[#354776]">
+                            <span>Saran dan Pengaduan</span>
+                            <span class="text-base font-semibold" x-text="mobileSection === 'pengaduan' ? '−' : '+'"></span>
+                        </button>
+                        <div x-show="mobileSection === 'pengaduan'" x-transition x-cloak class="space-y-1 px-2 pb-2">
+                            @foreach ($pengaduanMenu as $link)
+                                <a href="{{ $link['href'] }}" @if(!empty($link['external'])) target="_blank" rel="noopener noreferrer" @endif class="block rounded-lg px-5 py-2.5 text-sm text-gray-600 transition-colors hover:bg-gray-100 hover:text-[#354776]">
+                                    {{ $link['label'] }}
+                                </a>
+                            @endforeach
+                        </div>
+                    </div>
+                </div>
+
                 <form action="{{ url('/berita') }}" method="GET" class="px-4 pt-1">
                     <div class="flex border border-gray-300 rounded overflow-hidden">
                         <input type="text" name="search" placeholder="Cari..." class="flex-1 px-3 py-1.5 text-sm bg-white focus:outline-none">
