@@ -1,6 +1,6 @@
 # Implementation Tracker — BTR Pelayanan Publik
 
-> Last updated: 2026-04-17
+> Last updated: 2026-04-23
 
 ## Legend
 
@@ -12,22 +12,22 @@
 
 ---
 
-## Module 1: Portal Publik (Frontend) — 90%
+## Module 1: Portal Publik (Frontend) — 95%
 
 | Feature | Status | Notes |
 |---------|--------|-------|
 | Beranda + Banner | :white_check_mark: | Tailwind redesign, carousel, stats widget |
 | Widget Statistik Real-time (Antri/Proses/Selesai) | :white_check_mark: | HomeController passes statsLayanan |
 | Profil Instansi (Visi Misi, Sejarah, Tugas, Struktur, Fasilitas) | :white_check_mark: | Public shell unified; Visi/Misi/Tugas cleaned up; Sejarah split layout with image; Struktur and Info Pegawai simplified |
-| Portal Berita & Publikasi | :white_check_mark: | Posts + categories + slugs + redesigned `/berita` and `berita/{slug}` with local image fallback and server-side filtering |
-| Karya Ilmiah | :white_check_mark: | Slug, multi-language support |
+| Portal Berita & Publikasi | :white_check_mark: | Posts + categories + slugs + redesigned `/berita` and `berita/{slug}` with local image fallback, server-side filtering, and real `lampiran_path` support surfaced on public detail and `/dokumen` |
+| Renstra / Publikasi Strategis | :white_check_mark: | Public `/renstra` and `/renstra/{slug}` are live; legacy `karya-ilmiah` URLs remain as compatibility redirects |
 | Galeri Foto & Video | :white_check_mark: | Separate pages |
 | Footer (Kontak, Lokasi, Links) | :white_check_mark: | FooterSetting model + admin CRUD |
 | Pencarian Global | :white_check_mark: | Search form in navbar |
 | Tanya Kaura (chatbot/floating button) | :white_check_mark: | Floating widget |
 | Tautan Media Sosial | :white_check_mark: | UrlLayanan model |
-| Layanan Informasi PPID | :construction: | Admin PPID page exists, public pages need landing page content |
-| Renstra / Dokumen Strategis | :white_check_mark: | Public `/dokumen` page now aggregates pengumuman lampiran, galeri dokumen, and berita-linked files where available |
+| Layanan Informasi PPID | :white_check_mark: | Public `/ppid` hub plus `/ppid/kebijakan-ppid`, `/ppid/info-berkala`, `/ppid/info-serta-merta`, and `/ppid/info-setiap-saat` are wired to admin-managed content |
+| Renstra / Dokumen Strategis | :white_check_mark: | Public `/dokumen` page now aggregates pengumuman lampiran, galeri dokumen, and real berita lampiran, with old body-link parsing kept as fallback |
 | Multilingual (ID/EN auto-translate) | :white_check_mark: | SetLocale + TranslateResponse middleware |
 
 ---
@@ -46,7 +46,7 @@
 | **Billing / PNBP** | :white_check_mark: | setBilling action + Pembayaran model |
 | **Payment Verification** | :white_check_mark: | verifyPayment (approve/reject) |
 | **Dokumen Final Upload** | :white_check_mark: | uploadDokumenFinal route + controller action + form in show.blade.php |
-| Sidebar Navigation (matches design) | :white_check_mark: | layanan/layouts/sidebar.blade.php — Advis, Lab, Data, Lainnya, Survei, etc. |
+| Sidebar Navigation (matches design) | :white_check_mark: | layanan/layouts/sidebar.blade.php — now permission-aware; management roles see layanan modules, stage roles get a narrowed inbox-style menu |
 | Layout + Header (date/time/user) | :white_check_mark: | layanan/layouts/main.blade.php — reuses admin.css + header |
 | Manajemen Data Pelanggan | :white_check_mark: | data-pelanggan.blade.php — searchable user list with permohonan counts |
 | Survei Kepuasan Analytics (SKM) | :white_check_mark: | survei-analytics.blade.php — stat cards, per-unsur bars, IKM, recent responses |
@@ -71,7 +71,7 @@
 | Manajemen Dokumen Layanan (Standar/Maklumat PDF) | :construction: | Uses LandingPage model, no dedicated upload center |
 | Manajemen Renstra | :white_check_mark: | Repurposed Karya Ilmiah as Renstra in sidebar |
 | Kop Surat & Identitas Web | :construction: | FooterSetting exists, no letterhead |
-| Manajemen Akun (RBAC) | :white_check_mark: | HakAksesController — list users, filter by role, assign/sync roles per user |
+| Manajemen Akun (RBAC) | :white_check_mark: | HakAksesController — list users, filter by role, assign/sync roles, create admin accounts, manage module-level access, direct per-user permissions, and active/inactive status |
 | Sidebar Navigation (matches design) | :white_check_mark: | Updated with PPID, Pengumuman, Hak Akses, Master Tim, Master Survei, grouped Layanan, split profile submenu, real BTR logo |
 | Master Tim | :white_check_mark: | MasterTimController — full CRUD with dynamic anggota form |
 | Master Format Nomor | :construction: | Model + service exist, no admin config page (uses seeder) |
@@ -100,7 +100,7 @@
 | Survei Kepuasan (9-unsur form) | :white_check_mark: | survei/create.blade.php — radio groups, saran textarea |
 | Profil Pelanggan | :white_check_mark: | profil/index.blade.php — info table, change password link |
 | Bantuan / FAQ | :white_check_mark: | bantuan/index.blade.php — collapsible FAQ |
-| Routes registered | :white_check_mark: | routes/web.php — pelanggan group with all routes |
+| Routes registered | :white_check_mark: | routes/web.php — pelanggan group restored and key pelanggan routes now load successfully in live browser checks |
 
 ---
 
@@ -108,7 +108,7 @@
 
 | Feature | Status | Notes |
 |---------|--------|-------|
-| **RBAC (spatie/laravel-permission)** | :white_check_mark: | 9 roles, 27 permissions seeded. Admin UI for assigning roles. |
+| **RBAC (spatie/laravel-permission)** | :white_check_mark: | 9 roles, 27 permissions seeded. Admin UI covers role assignment, module-level access, direct per-user permissions, and active/inactive state; route middleware now blocks editor/admin-layanan cross-area leaks and hides management-only layanan menus from stage roles. |
 | **Workflow Engine** | :white_check_mark: | WorkflowService — validates transitions, logs, notifies |
 | **SLA Calculation (hari kerja)** | :white_check_mark: | SlaService + hari_libur table |
 | **Auto Numbering (Format Nomor)** | :white_check_mark: | NomorPermohonanService with row-lock counter |

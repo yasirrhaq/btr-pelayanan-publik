@@ -1,0 +1,9 @@
+baltekrawa1@gmail.com	adminbaltekrawa123	admin-master
+editor@baltekrawa.go.id	editor123	admin-editor
+layanan@baltekrawa.go.id	layanan123	admin-layanan-master
+katim@baltekrawa.go.id	katim123	katim
+analis@baltekrawa.go.id	analis123	analis
+teknisi@baltekrawa.go.id	teknisi123	teknisi
+yasir.haq98@gmail.com	12345	pelanggan
+pelanggan2@example.com	pelanggan123	pelanggan
+dinas.pu@example.com	dinas123	pelanggan

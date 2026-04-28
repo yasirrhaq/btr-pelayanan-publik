@@ -24,6 +24,7 @@ Primary workflow reference: `.docs/WORKFLOW.md`.
 - Prefer elegant, minimal-impact fixes over patchy quick wins.
 - Handle bug fixing autonomously when enough context is available.
 - Track work in `tasks/todo.md`, capture review notes there, and record recurring corrections in `tasks/lessons.md`.
+- Update `.docs/IMPLEMENTATION_TRACKER.md` whenever a feature is finished or an existing feature's implementation status changes.
 - Write completed feature sessions to `.docs/sessions`.
 - Prefer current external docs through Context7 when latest documentation matters.
 

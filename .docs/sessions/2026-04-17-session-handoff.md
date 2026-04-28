@@ -345,3 +345,82 @@ docker compose exec app php artisan route:clear
 - decide whether standalone per-employee photos should be uploaded later for rows currently using initials fallback
 
 5. If ready, create commit for remaining uncommitted work and push
+
+---
+
+## Session Delta — 2026-04-18
+
+### Access control / admin master
+- Added module-level RBAC management in `Hak Akses`
+- Added per-user direct module permissions on top of role baseline
+- Added auto-check of related module access when role is selected
+- Added Indonesian role descriptions in `Pilih Role`
+- Added `Buat Akun Admin` flow from admin master
+- Admin account creation now supports:
+  - direct role assignment
+  - direct module permission assignment
+  - active/inactive toggle
+- Added `users.is_active` and blocked inactive users from logging in
+- Clarified admin identity field label:
+  - `No ID (ID Pegawai / NIP / No Identitas)`
+
+### Dokumen / berita lampiran
+- Fixed public `/dokumen` runtime issues:
+  - `Pengumuman::published()` fallback for `is_active` vs `is_published`
+  - collection merge bug causing `getKey()` on array
+- Reduced `/dokumen` pagination to `6`
+- Improved `/dokumen` card layout and footer alignment
+- Added real `lampiran_path` flow for `posts`
+- `/dashboard/posts` now supports:
+  - upload lampiran
+  - replace lampiran
+  - remove lampiran
+  - lampiran status in admin list
+- `/dokumen` now reads `posts.lampiran_path` first, with old body-link parsing kept only as fallback
+- Updated demo backfill command so sample berita gets real lampiran instead of injected body links
+
+### Public berita detail
+- Public `/berita/{slug}` now shows lampiran access when available
+- Final UI state:
+  - category badge uses amber background with `#354776` text
+  - lampiran is shown as a compact yellow `Lihat Lampiran` button beside `Kembali ke Berita`
+
+### Skill install
+- Installed Codex skill:
+  - `brand-guidelines`
+- Local path:
+  - `C:\Users\BugonPC\.codex\skills\brand-guidelines`
+- Codex restart is required before the new skill becomes available in-session
+
+### Files changed in this delta
+- `app/Http/Controllers/Admin/HakAksesController.php`
+- `app/Http/Controllers/DashboardPostController.php`
+- `app/Http/Controllers/LoginController.php`
+- `app/Http/Controllers/PublicDokumenController.php`
+- `app/Console/Commands/PopulateDokumenLampiranCommand.php`
+- `database/migrations/2026_04_18_000007_add_is_active_to_users_table.php`
+- `database/migrations/2026_04_18_000008_add_lampiran_path_to_posts_table.php`
+- `database/seeders/RolesAndPermissionsSeeder.php`
+- `database/seeders/KontenWebSeeder.php`
+- `resources/views/dashboard/hak-akses/index.blade.php`
+- `resources/views/dashboard/hak-akses/create.blade.php`
+- `resources/views/dashboard/hak-akses/edit.blade.php`
+- `resources/views/dashboard/posts/index.blade.php`
+- `resources/views/dashboard/posts/create.blade.php`
+- `resources/views/dashboard/posts/edit.blade.php`
+- `resources/views/frontend/dokumen.blade.php`
+- `resources/views/frontend/beritaDetail.blade.php`
+- `routes/web.php`
+
+### Verified commands run in this delta
+```bash
+docker compose exec app php artisan migrate --force
+docker compose exec app php artisan demo:populate-dokumen-lampiran
+docker compose exec app php artisan db:seed --class="Database\\Seeders\\RolesAndPermissionsSeeder" --force
+docker compose exec app php artisan view:clear
+```
+
+### Current state after this delta
+- `berita` now has a proper attachment model instead of relying only on editor body links
+- `/dokumen` can now surface pengumuman, galeri dokumen, and real berita lampiran consistently
+- `Hak Akses` is now closer to real module-based RBAC, not only role grouping
