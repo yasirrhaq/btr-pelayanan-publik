@@ -1,6 +1,6 @@
 import { Page } from '@playwright/test';
 
-export const ADMIN_USER_ID = 2;    // baltekrawa1@gmail.com — is_admin=1
+export const ADMIN_USER_ID = 1;    // baltekrawa1@gmail.com — admin-master
 export const PELANGGAN_USER_ID = 1; // yasir.haq98@gmail.com — pelanggan
 
 /**

@@ -60,7 +60,7 @@ class PublicPpidController extends Controller
         abort_unless($sections->has($slug), 404);
 
         return view('frontend.ppid.show', [
-            'section' => $sections->get($slug),
+            'currentSection' => $sections->get($slug),
             'sections' => $sections,
         ]);
     }

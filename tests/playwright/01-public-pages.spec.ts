@@ -82,6 +82,25 @@ test.describe('Public Pages', () => {
     expect(await hasAppError(page)).toBe(false);
   });
 
+  test('Dokumen public page loads', async ({ page }) => {
+    await page.goto('/dokumen');
+    expect(await hasAppError(page)).toBe(false);
+    await expect(page.locator('body')).toBeVisible();
+  });
+
+  test('PPID index page loads', async ({ page }) => {
+    await page.goto('/ppid');
+    expect(await hasAppError(page)).toBe(false);
+    await expect(page.locator('body')).toContainText('PPID');
+  });
+
+  test('PPID detail page loads with content', async ({ page }) => {
+    await page.goto('/ppid/kebijakan-ppid');
+    expect(await hasAppError(page)).toBe(false);
+    await expect(page.locator('body')).not.toBeEmpty();
+    await expect(page.locator('body')).toContainText(/PPID|Kebijakan/i);
+  });
+
   test('Pengujian Laboratorium service page loads', async ({ page }) => {
     await page.goto('/pengujian-laboratorium', { waitUntil: 'domcontentloaded' });
     expect(await hasAppError(page)).toBe(false);

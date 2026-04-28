@@ -132,9 +132,9 @@ test.describe('Admin Web (CMS)', () => {
   test('PPID admin page loads', async ({ page }) => {
     await page.goto('/dashboard/ppid');
     expect(await hasAppError(page)).toBe(false);
-    // Should show 4 category cards
-    const cards = page.locator('.btr-card');
-    await expect(cards.first()).toBeVisible();
+    await expect(page.getByRole('heading', { name: /Publikasi - PPID/i })).toBeVisible();
+    await expect(page.locator('input[name="title"]').first()).toBeVisible();
+    await expect(page.locator('.jodit-container').first()).toBeVisible();
   });
 
   test('Pengumuman list loads', async ({ page }) => {
