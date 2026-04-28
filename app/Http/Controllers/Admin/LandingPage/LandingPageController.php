@@ -13,9 +13,16 @@ class LandingPageController extends Controller
 
     public function __construct()
     {
+        $this->path_file_save = 'uploads/landing-page/';
+        $this->redirect_path = 'dashboard/landing-page';
+
+        if (app()->runningInConsole() || !request()->filled('type')) {
+            return;
+        }
+
         $type = $this->cekTypeSlug(request());
         $this->path_file_save = 'uploads/landing-page/' . $type->title . '/' . date('d-m-Y') . '/';
-        $this->redirect_path = 'dashboard/landing-page?type='.$type->slug;
+        $this->redirect_path = 'dashboard/landing-page?type=' . $type->slug;
     }
     /**
      * Display a listing of the resource.

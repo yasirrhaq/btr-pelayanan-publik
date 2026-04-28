@@ -46,6 +46,10 @@ class TranslateResponse
         }
 
         $translated = TranslationService::pageHtml($content);
+        if (! is_string($translated) || trim(strip_tags($translated)) === '') {
+            return $response;
+        }
+
         $response->setContent($translated);
 
         return $response;
