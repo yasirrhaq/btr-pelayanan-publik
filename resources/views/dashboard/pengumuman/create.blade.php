@@ -1,5 +1,38 @@
 @extends('dashboard.layouts.main')
 
+@push('head')
+    <style>
+        .pengumuman-editor-wrap textarea.pengumuman-jodit {
+            min-height: 320px;
+            resize: none;
+        }
+
+        .pengumuman-editor-wrap .jodit-container:not(.jodit_inline) {
+            border-radius: 14px;
+            overflow: hidden;
+            border: 1px solid var(--border-soft);
+            background: #fff;
+        }
+
+        .pengumuman-editor-wrap .jodit-toolbar__box,
+        .pengumuman-editor-wrap .jodit-status-bar {
+            background: #f8fafc;
+        }
+
+        .pengumuman-editor-wrap .jodit-wysiwyg,
+        .pengumuman-editor-wrap .jodit-workplace {
+            min-height: 320px !important;
+        }
+
+        .pengumuman-editor-wrap .jodit-container:focus-within {
+            border-color: #355caa;
+            box-shadow: 0 0 0 3px rgba(53, 92, 170, 0.12);
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jodit@4.6.2/es2021/jodit.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/jodit@4.6.2/es2021/jodit.min.js"></script>
+@endpush
+
 @section('container')
     <h1 class="btr-page-title">Tambah Pengumuman</h1>
 
@@ -17,8 +50,22 @@
 
             <div class="btr-form-group">
                 <label class="btr-label" for="isi">Isi Pengumuman</label>
-                <textarea name="isi" id="isi" class="btr-textarea" required>{{ old('isi') }}</textarea>
+                <div class="pengumuman-editor-wrap">
+                    <textarea name="isi" id="isi" class="pengumuman-jodit" required>{{ old('isi') }}</textarea>
+                </div>
                 @error('isi')
+                    <p style="color:var(--danger-red); font-size:13px; margin-top:4px;">{{ $message }}</p>
+                @enderror
+            </div>
+
+            <div class="btr-form-group">
+                <label class="btr-label" for="thumbnail">Thumbnail (opsional)</label>
+                <div id="thumbnail-preview-wrap" style="display:none;position:relative;max-width:320px;margin-bottom:10px;">
+                    <div id="thumbnail-preview-card" style="display:flex;align-items:center;gap:12px;padding:12px 14px;border:1px solid var(--border-soft);border-radius:12px;background:#fff;"></div>
+                    <button type="button" onclick="btrClearFile('#thumbnail','#thumbnail-preview-wrap','#thumbnail-preview-card')" style="position:absolute;top:8px;right:8px;width:28px;height:28px;border:none;border-radius:999px;background:rgba(15,23,42,.75);color:#fff;cursor:pointer;font-size:16px;line-height:1;">&times;</button>
+                </div>
+                <input type="file" name="thumbnail" id="thumbnail" class="btr-input" accept=".jpg,.jpeg,.png,.webp">
+                @error('thumbnail')
                     <p style="color:var(--danger-red); font-size:13px; margin-top:4px;">{{ $message }}</p>
                 @enderror
             </div>
@@ -27,7 +74,7 @@
                 <label class="btr-label" for="lampiran">Lampiran (opsional)</label>
                 <div id="lampiran-preview-wrap" style="display:none;position:relative;max-width:320px;margin-bottom:10px;">
                     <div id="lampiran-preview-card" style="display:flex;align-items:center;gap:12px;padding:12px 14px;border:1px solid var(--border-soft);border-radius:12px;background:#fff;"></div>
-                    <button type="button" onclick="btrClearLampiran('#lampiran','#lampiran-preview-wrap','#lampiran-preview-card')" style="position:absolute;top:8px;right:8px;width:28px;height:28px;border:none;border-radius:999px;background:rgba(15,23,42,.75);color:#fff;cursor:pointer;font-size:16px;line-height:1;">&times;</button>
+                    <button type="button" onclick="btrClearFile('#lampiran','#lampiran-preview-wrap','#lampiran-preview-card')" style="position:absolute;top:8px;right:8px;width:28px;height:28px;border:none;border-radius:999px;background:rgba(15,23,42,.75);color:#fff;cursor:pointer;font-size:16px;line-height:1;">&times;</button>
                 </div>
                 <input type="file" name="lampiran" id="lampiran" class="btr-input" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png">
                 @error('lampiran')
@@ -50,7 +97,77 @@
     </div>
 
     <script>
-        function btrRenderLampiranPreview(file, wrapSel, cardSel) {
+        document.querySelectorAll('.pengumuman-jodit').forEach(function (element) {
+            Jodit.make(element, {
+                height: 420,
+                toolbarAdaptive: false,
+                askBeforePasteHTML: false,
+                askBeforePasteFromWord: false,
+                beautifyHTML: false,
+                showCharsCounter: true,
+                showWordsCounter: true,
+                showXPathInStatusbar: false,
+                buttons: [
+                    'source', '|',
+                    'paragraph', 'font', 'fontsize', '|',
+                    'bold', 'italic', 'underline', 'strikethrough', '|',
+                    'brush', 'ul', 'ol', '|',
+                    'outdent', 'indent', '|',
+                    'align', '|',
+                    'image', 'table', 'link', 'hr', '|',
+                    'undo', 'redo', '|',
+                    'fullsize'
+                ],
+                controls: {
+                    font: {
+                        list: {
+                            'Arial,Helvetica,sans-serif': 'Arial',
+                            'Tahoma,Geneva,sans-serif': 'Tahoma',
+                            'Times New Roman,Times,serif': 'Times New Roman',
+                            'Georgia,serif': 'Georgia',
+                            'Verdana,Geneva,sans-serif': 'Verdana'
+                        }
+                    }
+                },
+                uploader: {
+                    url: '{{ route('admin.pengumuman.attachment') }}',
+                    format: 'json',
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '{{ csrf_token() }}'
+                    },
+                    filesVariableName: function () {
+                        return 'file';
+                    },
+                    isSuccess: function (resp) {
+                        return !!resp.url;
+                    },
+                    getMessage: function (resp) {
+                        return resp.message || (resp.url ? 'Upload berhasil' : 'Upload gagal');
+                    },
+                    process: function (resp) {
+                        return {
+                            files: resp.url ? [resp.url] : [],
+                            path: '',
+                            baseurl: '',
+                            error: resp.url ? 0 : 1,
+                            msg: resp.message || ''
+                        };
+                    },
+                    defaultHandlerSuccess: function (data) {
+                        if (data.files && data.files.length) {
+                            this.s.insertImage(data.files[0]);
+                        }
+                    },
+                    error: function (e) {
+                        this.j.message.error(e?.message || e || 'Upload gagal');
+                    }
+                },
+                imageDefaultWidth: 300
+            });
+        });
+
+        function btrRenderFilePreview(file, wrapSel, cardSel) {
             var wrap = document.querySelector(wrapSel);
             var card = document.querySelector(cardSel);
             if (!wrap || !card || !file) return;
@@ -72,7 +189,7 @@
             wrap.style.display = 'block';
         }
 
-        function btrClearLampiran(inputSel, wrapSel, cardSel) {
+        function btrClearFile(inputSel, wrapSel, cardSel) {
             var input = document.querySelector(inputSel);
             var wrap = document.querySelector(wrapSel);
             var card = document.querySelector(cardSel);
@@ -81,9 +198,15 @@
             if (wrap) wrap.style.display = 'none';
         }
 
+        document.getElementById('thumbnail')?.addEventListener('change', function () {
+            if (this.files && this.files[0]) {
+                btrRenderFilePreview(this.files[0], '#thumbnail-preview-wrap', '#thumbnail-preview-card');
+            }
+        });
+
         document.getElementById('lampiran')?.addEventListener('change', function () {
             if (this.files && this.files[0]) {
-                btrRenderLampiranPreview(this.files[0], '#lampiran-preview-wrap', '#lampiran-preview-card');
+                btrRenderFilePreview(this.files[0], '#lampiran-preview-wrap', '#lampiran-preview-card');
             }
         });
     </script>

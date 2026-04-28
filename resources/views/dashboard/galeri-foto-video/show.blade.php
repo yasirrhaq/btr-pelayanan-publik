@@ -5,6 +5,8 @@
     $tab = $type === 'image' ? 'foto' : $type;
     $ext = strtolower(pathinfo($galeri_foto->path_image ?? '', PATHINFO_EXTENSION));
     $isPlayableVideo = in_array($ext, ['mp4', 'webm', 'mov', 'avi']);
+    $embedUrl = $galeri_foto->embedRoute();
+    $embedCode = $galeri_foto->copyEmbedCode();
 @endphp
 
 @section('container')
@@ -26,8 +28,36 @@
         @if ($type === 'image' && $galeri_foto->path_image)
             <img src="{{ asset($galeri_foto->path_image) }}" style="max-width:100%;border-radius:12px">
         @elseif ($type === 'video')
+            <div style="display:grid;gap:14px;margin-bottom:22px;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));">
+                <div style="padding:14px 16px;border:1px solid var(--border-soft);border-radius:16px;background:#fff;">
+                    <div style="font-size:12px;color:var(--text-muted);margin-bottom:6px;">Kategori</div>
+                    <div style="font-weight:600;color:var(--text-primary);">{{ $galeri_foto->category ?: 'Tanpa kategori' }}</div>
+                </div>
+                <div style="padding:14px 16px;border:1px solid var(--border-soft);border-radius:16px;background:#fff;">
+                    <div style="font-size:12px;color:var(--text-muted);margin-bottom:6px;">Sumber</div>
+                    <div style="font-weight:600;color:var(--text-primary);">{{ $galeri_foto->sourceLabel() }}</div>
+                </div>
+                <div style="padding:14px 16px;border:1px solid var(--border-soft);border-radius:16px;background:#fff;">
+                    <div style="font-size:12px;color:var(--text-muted);margin-bottom:6px;">Embed Stabil</div>
+                    <div style="font-size:13px;color:var(--text-primary);word-break:break-all;">{{ $embedUrl }}</div>
+                </div>
+            </div>
+
+            <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:20px;">
+                <button type="button" class="btr-btn btr-btn-outline" onclick='navigator.clipboard.writeText(@json($embedUrl)).then(function(){ alert("URL embed tersalin"); })'>Copy URL</button>
+                <button type="button" class="btr-btn" onclick='navigator.clipboard.writeText(@json($embedCode)).then(function(){ alert("Embed iframe tersalin"); })'>Copy Embed</button>
+            </div>
+
             <div style="max-width:720px;border:1px solid var(--border-soft);border-radius:16px;padding:20px;background:#fff;">
-                @if ($galeri_foto->path_image && $isPlayableVideo)
+                @if ($galeri_foto->isYoutubeVideo())
+                    <iframe
+                        src="{{ $galeri_foto->youtubeEmbedUrl() }}"
+                        title="{{ $galeri_foto->title }}"
+                        style="width:100%;aspect-ratio:16/9;border:none;border-radius:12px;background:#0f172a;"
+                        loading="lazy"
+                        allowfullscreen
+                    ></iframe>
+                @elseif ($galeri_foto->path_image && $isPlayableVideo)
                     <video controls style="width:100%;border-radius:12px;background:#0f172a;">
                         <source src="{{ asset($galeri_foto->path_image) }}">
                     </video>

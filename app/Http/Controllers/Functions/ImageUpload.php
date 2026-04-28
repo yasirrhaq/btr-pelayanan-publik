@@ -4,9 +4,22 @@ namespace App\Http\Controllers\Functions;
 
 use App\Http\Controllers\Controller;
 use Image;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class ImageUpload extends Controller
 {
+    public function storeOptimizedPublicImage(UploadedFile $file, string $relativeDir, string $filenamePrefix = 'image', int $maxDimension = 1600): string
+    {
+        return $this->storeOptimizedImage($file, $relativeDir, $filenamePrefix, false, $maxDimension);
+    }
+
+    public function storeOptimizedStorageImage(UploadedFile $file, string $relativeDir, string $filenamePrefix = 'image', int $maxDimension = 1600): string
+    {
+        return $this->storeOptimizedImage($file, $relativeDir, $filenamePrefix, true, $maxDimension);
+    }
+
     /**
      * Penjelasan function
      * patern_filename = nama awalan untuk filenya
@@ -15,7 +28,7 @@ class ImageUpload extends Controller
      * path => nama path yang akan disimpan
      * convert_extention => pgn ganti format kemana ? jpg, jpeg, png atau yang lainnya defaulnya jpeg
      */
-    public function imageUpload($type = 'image', $config_file){
+    public function imageUpload($type, $config_file){
         $file_path = public_path($config_file['path']);
 
         if(!file_exists($file_path)) mkdir($file_path, 0775, true);
@@ -92,5 +105,56 @@ class ImageUpload extends Controller
         }
 
         return $full_path_name;
+    }
+
+    protected function storeOptimizedImage(UploadedFile $file, string $relativeDir, string $filenamePrefix, bool $useStorageDisk, int $maxDimension): string
+    {
+        $relativeDir = trim(str_replace('\\', '/', $relativeDir), '/');
+        $extension = strtolower($file->getClientOriginalExtension() ?: $file->extension() ?: 'jpg');
+        $normalizedExtension = $extension === 'jpeg' ? 'jpg' : $extension;
+        $filename = Str::slug($filenamePrefix ?: 'image') . '-' . now()->format('YmdHis') . '-' . Str::random(8) . '.' . $normalizedExtension;
+
+        $targetDir = $useStorageDisk
+            ? Storage::disk('public')->path($relativeDir)
+            : public_path($relativeDir);
+
+        if (!is_dir($targetDir)) {
+            mkdir($targetDir, 0775, true);
+        }
+
+        if (!$this->shouldTransform($normalizedExtension)) {
+            $file->move($targetDir, $filename);
+            return $relativeDir . '/' . $filename;
+        }
+
+        $targetPath = $targetDir . DIRECTORY_SEPARATOR . $filename;
+        $image = Image::make($file->getRealPath());
+
+        if (method_exists($image, 'orientate')) {
+            $image->orientate();
+        }
+
+        $image->resize($maxDimension, $maxDimension, function ($constraint) {
+            $constraint->aspectRatio();
+            $constraint->upsize();
+        });
+
+        $encodeFormat = $normalizedExtension === 'jpg' ? 'jpeg' : $normalizedExtension;
+        $image->encode($encodeFormat, $this->qualityFor($normalizedExtension))->save($targetPath);
+
+        return $relativeDir . '/' . $filename;
+    }
+
+    protected function shouldTransform(string $extension): bool
+    {
+        return in_array($extension, ['jpg', 'png', 'webp'], true);
+    }
+
+    protected function qualityFor(string $extension): int
+    {
+        return match ($extension) {
+            'png' => 90,
+            default => 85,
+        };
     }
 }

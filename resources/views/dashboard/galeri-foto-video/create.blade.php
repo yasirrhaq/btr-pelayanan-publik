@@ -6,6 +6,8 @@
     $dbType = $normalizedType === 'foto' ? 'image' : $normalizedType;
     $label = $normalizedType === 'foto' ? 'Foto' : ($normalizedType === 'video' ? 'Video' : 'Dokumen');
     $accept = $normalizedType === 'foto' ? 'image/*' : ($normalizedType === 'video' ? 'video/mp4,video/quicktime,video/x-msvideo,video/webm' : '.pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx');
+    $isVideo = $normalizedType === 'video';
+    $selectedSourceType = old('source_type', 'upload');
 @endphp
 
 @section('container')
@@ -29,21 +31,65 @@
                 @error('title') <small style="color:var(--danger-red)">{{ $message }}</small> @enderror
             </div>
 
+            @if ($isVideo)
+                <div class="btr-form-group">
+                    <label class="btr-label" for="category">Kategori Video</label>
+                    <select class="btr-select" id="category" name="category" required>
+                        <option value="">Pilih kategori</option>
+                        @foreach ($videoCategories as $videoCategory)
+                            <option value="{{ $videoCategory }}" @selected(old('category') === $videoCategory)>{{ $videoCategory }}</option>
+                        @endforeach
+                    </select>
+                    @error('category') <small style="color:var(--danger-red)">{{ $message }}</small> @enderror
+                </div>
+
+                <div class="btr-form-group">
+                    <label class="btr-label" for="source_type">Sumber Video</label>
+                    <select class="btr-select" id="source_type" name="source_type" onchange="btrToggleVideoSource()" required>
+                        <option value="upload" @selected($selectedSourceType === 'upload')>Upload Video</option>
+                        <option value="youtube" @selected($selectedSourceType === 'youtube')>YouTube URL</option>
+                    </select>
+                    @error('source_type') <small style="color:var(--danger-red)">{{ $message }}</small> @enderror
+                </div>
+            @endif
+
             <div class="btr-form-group">
-                <label class="btr-label">File {{ $label }}</label>
+                <label class="btr-label">{{ $isVideo ? 'Media Video' : ('File ' . $label) }}</label>
                 <div id="galeri-preview-wrap" style="display:none;position:relative;max-width:320px;margin-bottom:10px;">
                     <div id="galeri-preview-card" style="display:flex;align-items:center;gap:12px;padding:12px 14px;border:1px solid var(--border-soft);border-radius:12px;background:#fff;"></div>
                     <button type="button" onclick="btrClearGaleriFile()" style="position:absolute;top:8px;right:8px;width:28px;height:28px;border:none;border-radius:999px;background:rgba(15,23,42,.75);color:#fff;cursor:pointer;font-size:16px;line-height:1;">&times;</button>
                 </div>
-                <div class="btr-file-row">
-                    <label class="btr-file-pill">
-                        <span class="btr-file-icon">
-                            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M7 16V8m0 0l-3 3m3-3l3 3"/></svg>
-                        </span>
-                        <input type="file" id="path_image" name="path_image" accept="{{ $accept }}" onchange="btrPreviewGaleri(this,'{{ $normalizedType }}')" required>
-                    </label>
+                <div id="video-upload-field" style="{{ $isVideo && $selectedSourceType === 'youtube' ? 'display:none;' : '' }}">
+                    <div class="btr-file-row">
+                        <label class="btr-file-pill">
+                            <span class="btr-file-icon">
+                                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M7 16V8m0 0l-3 3m3-3l3 3"/></svg>
+                            </span>
+                            <input type="file" id="path_image" name="path_image" accept="{{ $accept }}" onchange="btrPreviewGaleri(this,'{{ $normalizedType }}')" {{ !$isVideo || $selectedSourceType === 'upload' ? 'required' : '' }}>
+                        </label>
+                    </div>
+                    @if ($isVideo)
+                        <small style="color:var(--text-muted)">Format upload: MP4, MOV, AVI, atau WEBM.</small>
+                    @endif
                 </div>
+
+                @if ($isVideo)
+                    <div id="video-youtube-field" style="{{ $selectedSourceType === 'youtube' ? '' : 'display:none;' }}">
+                        <input
+                            type="url"
+                            class="btr-input"
+                            id="source_url"
+                            name="source_url"
+                            value="{{ old('source_url') }}"
+                            placeholder="https://www.youtube.com/watch?v=..."
+                            {{ $selectedSourceType === 'youtube' ? 'required' : '' }}
+                        >
+                        <small style="display:block;margin-top:8px;color:var(--text-muted)">Simpan dulu videonya, lalu admin bisa pakai tombol <strong>Copy Embed</strong> atau <strong>Copy URL</strong> untuk ditempel ke Jodit berita/pengumuman.</small>
+                    </div>
+                @endif
+
                 @error('path_image') <small style="color:var(--danger-red)">{{ $message }}</small> @enderror
+                @error('source_url') <small style="color:var(--danger-red)">{{ $message }}</small> @enderror
             </div>
 
             <div class="btr-form-actions">
@@ -86,5 +132,33 @@
             document.getElementById('galeri-preview-card').innerHTML = '';
             document.getElementById('galeri-preview-wrap').style.display = 'none';
         }
+
+        function btrToggleVideoSource() {
+            var sourceSelect = document.getElementById('source_type');
+            if (!sourceSelect) return;
+
+            var uploadWrap = document.getElementById('video-upload-field');
+            var youtubeWrap = document.getElementById('video-youtube-field');
+            var fileInput = document.getElementById('path_image');
+            var urlInput = document.getElementById('source_url');
+            var isYoutube = sourceSelect.value === 'youtube';
+
+            if (uploadWrap) uploadWrap.style.display = isYoutube ? 'none' : '';
+            if (youtubeWrap) youtubeWrap.style.display = isYoutube ? '' : 'none';
+
+            if (fileInput) {
+                fileInput.required = !isYoutube;
+                if (isYoutube) {
+                    fileInput.value = '';
+                    btrClearGaleriFile();
+                }
+            }
+
+            if (urlInput) {
+                urlInput.required = isYoutube;
+            }
+        }
+
+        btrToggleVideoSource();
     </script>
 @endsection

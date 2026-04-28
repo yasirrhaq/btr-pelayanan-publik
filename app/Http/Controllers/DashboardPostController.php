@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Functions\ImageUpload;
 use App\Models\Post;
 use App\Models\Category;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Cviebrock\EloquentSluggable\Services\SlugService;
 
 class DashboardPostController extends Controller
@@ -24,6 +26,15 @@ class DashboardPostController extends Controller
         if (is_file($absolute)) {
             @unlink($absolute);
         }
+    }
+
+    protected function deleteLampiran(?string $path): void
+    {
+        if (!$path) {
+            return;
+        }
+
+        Storage::disk('public')->delete($path);
     }
     /**
      * Display a listing of the resource.
@@ -57,27 +68,24 @@ class DashboardPostController extends Controller
             'title' => 'required|max:255',
             'slug' => 'required|unique:posts',
             'category_id' => 'required',
-            'image' => 'image|file|max:1024',
+            'image' => 'image|file|max:12288',
+            'lampiran' => 'nullable|file|max:5120|mimes:pdf,doc,docx,xls,xlsx,ppt,pptx,jpg,jpeg,png',
             'body' => 'required'
         ]);
 
 
         if ($request->file('image')) {
-
-            $slug      = slugCustom($request->nama);
-            $file      = $request->file() ?? [];
-            $path      = 'uploads/'.$this->path_file_save.'/';
-            $config_file = [
-                'patern_filename'   => $slug,
-                'is_convert'        => true,
-                'file'              => $file,
-                'path'              => $path,
-                'convert_extention' => 'jpeg'
-            ];
-
-            $validatedData['image'] = (new \App\Http\Controllers\Functions\ImageUpload())->imageUpload('file', $config_file)['image'];
-
+            $validatedData['image'] = (new ImageUpload())->storeOptimizedPublicImage(
+                $request->file('image'),
+                'uploads/' . $this->path_file_save,
+                $validatedData['slug'] ?? $validatedData['title']
+            );
         }
+
+        if ($request->file('lampiran')) {
+            $validatedData['lampiran_path'] = $request->file('lampiran')->store('berita-lampiran', 'public');
+        }
+
         $validatedData['excerpt'] = Str::limit(strip_tags($request->body), 100, '...');
 
         Post::create($validatedData);
@@ -121,9 +129,11 @@ class DashboardPostController extends Controller
         $rules = [
             'title' => 'required|max:255',
             'category_id' => 'required',
-            'image' => 'image|file|max:1024',
+            'image' => 'image|file|max:12288',
+            'lampiran' => 'nullable|file|max:5120|mimes:pdf,doc,docx,xls,xlsx,ppt,pptx,jpg,jpeg,png',
             'body' => 'required',
             'remove_image' => 'nullable|boolean',
+            'remove_lampiran' => 'nullable|boolean',
         ];
         if ($request->slug != $post->slug) {
             $rules['slug'] = 'required|unique:posts';
@@ -137,21 +147,23 @@ class DashboardPostController extends Controller
             $validatedData['image'] = null;
         }
 
+        if ($request->boolean('remove_lampiran')) {
+            $this->deleteLampiran($post->lampiran_path);
+            $validatedData['lampiran_path'] = null;
+        }
+
         if ($request->file('image')) {
             $this->deleteImage($post->image);
+            $validatedData['image'] = (new ImageUpload())->storeOptimizedPublicImage(
+                $request->file('image'),
+                'uploads/' . $this->path_file_save,
+                $validatedData['slug'] ?? $validatedData['title']
+            );
+        }
 
-            $slug      = slugCustom($request->nama);
-            $file      = $request->file() ?? [];
-            $path      = 'uploads/'.$this->path_file_save.'/';
-            $config_file = [
-                'patern_filename'   => $slug,
-                'is_convert'        => true,
-                'file'              => $file,
-                'path'              => $path,
-                'convert_extention' => 'jpeg'
-            ];
-
-            $validatedData['image'] = (new \App\Http\Controllers\Functions\ImageUpload())->imageUpload('file', $config_file)['image'];
+        if ($request->file('lampiran')) {
+            $this->deleteLampiran($post->lampiran_path);
+            $validatedData['lampiran_path'] = $request->file('lampiran')->store('berita-lampiran', 'public');
         }
 
         $validatedData['excerpt'] = Str::limit(strip_tags($request->body), 100, '...');
@@ -170,6 +182,7 @@ class DashboardPostController extends Controller
     public function destroy(Post $post)
     {
         $this->deleteImage($post->image);
+        $this->deleteLampiran($post->lampiran_path);
         Post::destroy($post->id);
         return redirect('/dashboard/posts')->with('success', 'Berita berhasil dihapus!');
     }
@@ -177,21 +190,17 @@ class DashboardPostController extends Controller
     public function uploadAttachment(Request $request)
     {
         $request->validate([
-            'file' => 'required|file|max:5120|mimes:jpg,jpeg,png,gif,webp',
+            'file' => 'required|file|max:12288|mimes:jpg,jpeg,png,gif,webp',
         ]);
 
-        $file = $request->file('file');
-        $filename = 'post-editor-' . time() . '-' . Str::random(8) . '.' . $file->getClientOriginalExtension();
-        $dir = public_path('uploads/berita/editor');
-
-        if (!is_dir($dir)) {
-            mkdir($dir, 0777, true);
-        }
-
-        $file->move($dir, $filename);
+        $path = (new ImageUpload())->storeOptimizedPublicImage(
+            $request->file('file'),
+            'uploads/berita/editor',
+            'post-editor'
+        );
 
         return response()->json([
-            'url' => asset('uploads/berita/editor/' . $filename),
+            'url' => asset($path),
             'message' => 'Upload berhasil',
         ]);
     }

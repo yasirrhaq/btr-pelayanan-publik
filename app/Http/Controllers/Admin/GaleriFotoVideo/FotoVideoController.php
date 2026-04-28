@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin\GaleriFotoVideo;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Functions\ImageUpload;
 use App\Models\GaleriFoto;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -26,6 +27,42 @@ class FotoVideoController extends Controller
         return $type === 'image' ? 'foto' : $type;
     }
 
+    protected function videoCategories(): array
+    {
+        return GaleriFoto::VIDEO_CATEGORIES;
+    }
+
+    protected function makeUniqueSlug(string $title, ?int $ignoreId = null): string
+    {
+        $base = Str::slug($title) ?: 'galeri-video';
+        $slug = $base;
+        $counter = 2;
+
+        while (
+            GaleriFoto::where('slug', $slug)
+                ->when($ignoreId, fn ($query) => $query->where('id', '!=', $ignoreId))
+                ->exists()
+        ) {
+            $slug = $base . '-' . $counter;
+            $counter++;
+        }
+
+        return $slug;
+    }
+
+    protected function extractYoutubeUrl(?string $url): ?string
+    {
+        if (!$url) {
+            return null;
+        }
+
+        if (!preg_match('~(?:youtube\.com/watch\?v=|youtube\.com/embed/|youtu\.be/)([\w-]{11})~i', trim($url), $matches)) {
+            return null;
+        }
+
+        return 'https://www.youtube.com/watch?v=' . $matches[1];
+    }
+
     protected function deleteFile(?string $path): void
     {
         if (!$path) {
@@ -45,18 +82,11 @@ class FotoVideoController extends Controller
         }
 
         if ($type === 'image') {
-            $slug = slugCustom($request->title ?? 'galeri');
-            $file = $request->file() ?? [];
-            $path = 'uploads/' . $this->path_file_save . '/';
-            $config_file = [
-                'patern_filename' => $slug,
-                'is_convert' => true,
-                'file' => $file,
-                'path' => $path,
-                'convert_extention' => 'jpeg',
-            ];
-
-            return (new \App\Http\Controllers\Functions\ImageUpload())->imageUpload('file', $config_file)[$field];
+            return (new ImageUpload())->storeOptimizedPublicImage(
+                $request->file($field),
+                'uploads/' . $this->path_file_save,
+                $request->title ?? 'galeri'
+            );
         }
 
         $uploaded = $request->file($field);
@@ -76,20 +106,29 @@ class FotoVideoController extends Controller
     {
         $activeTab = request('tab', 'foto');
         $title = ucfirst($activeTab);
+        $search = trim((string) request('search'));
 
-        $fotoVideo = match ($activeTab) {
-            'video' => GaleriFoto::where('type', 'video')->latest()->get(),
-            'dokumen' => GaleriFoto::where('type', 'dokumen')->latest()->get(),
-            default => GaleriFoto::where('type', 'image')->latest()->get(),
+        $type = match ($activeTab) {
+            'video' => GaleriFoto::TYPE_VIDEO,
+            'dokumen' => GaleriFoto::TYPE_DOKUMEN,
+            default => GaleriFoto::TYPE_IMAGE,
         };
 
-        return view('dashboard.galeri-foto-video.index', compact('fotoVideo', 'title', 'activeTab'));
+        $fotoVideo = GaleriFoto::query()
+            ->where('type', $type)
+            ->when($search !== '', fn ($query) => $query->where('title', 'like', '%' . $search . '%'))
+            ->latest()
+            ->get();
+
+        return view('dashboard.galeri-foto-video.index', compact('fotoVideo', 'title', 'activeTab', 'search'));
     }
 
     public function create()
     {
         $activeTab = request('tab', 'foto');
-        return view('dashboard.galeri-foto-video.create', compact('activeTab'));
+        $videoCategories = $this->videoCategories();
+
+        return view('dashboard.galeri-foto-video.create', compact('activeTab', 'videoCategories'));
     }
 
     public function store(Request $request)
@@ -101,16 +140,42 @@ class FotoVideoController extends Controller
             'type' => 'required|in:image,video,dokumen',
         ];
 
-        $rules['path_image'] = match ($type) {
-            'video' => 'required|file|max:51200|mimetypes:video/mp4,video/quicktime,video/x-msvideo,video/webm',
+        if ($type === GaleriFoto::TYPE_VIDEO) {
+            $rules['category'] = 'required|in:' . implode(',', $this->videoCategories());
+            $rules['source_type'] = 'required|in:' . GaleriFoto::SOURCE_TYPE_UPLOAD . ',' . GaleriFoto::SOURCE_TYPE_YOUTUBE;
+            $rules['path_image'] = 'required_if:source_type,upload|nullable|file|max:51200|mimetypes:video/mp4,video/quicktime,video/x-msvideo,video/webm';
+            $rules['source_url'] = 'required_if:source_type,youtube|nullable|url';
+        } else {
+            $rules['path_image'] = match ($type) {
             'dokumen' => 'required|file|max:10240|mimes:pdf,doc,docx,xls,xlsx,ppt,pptx',
-            default => 'required|image|file|max:1024',
-        };
+                default => 'required|image|file|max:12288',
+            };
+        }
 
         $validatedData = $request->validate($rules);
-        $validatedData['path_image'] = $this->uploadByType($request, 'path_image', $type);
         $validatedData['type'] = $type;
         $validatedData['created_by'] = auth()->id();
+        $validatedData['slug'] = $this->makeUniqueSlug($validatedData['title']);
+
+        if ($type === GaleriFoto::TYPE_VIDEO) {
+            if (($validatedData['source_type'] ?? null) === GaleriFoto::SOURCE_TYPE_YOUTUBE) {
+                $validatedData['source_url'] = $this->extractYoutubeUrl($validatedData['source_url'] ?? null);
+                if (!$validatedData['source_url']) {
+                    return back()->withInput()->withErrors([
+                        'source_url' => 'URL YouTube tidak valid.',
+                    ]);
+                }
+                $validatedData['path_image'] = null;
+            } else {
+                $validatedData['path_image'] = $this->uploadByType($request, 'path_image', $type);
+                $validatedData['source_url'] = null;
+            }
+        } else {
+            $validatedData['path_image'] = $this->uploadByType($request, 'path_image', $type);
+            $validatedData['category'] = null;
+            $validatedData['source_type'] = null;
+            $validatedData['source_url'] = null;
+        }
 
         GaleriFoto::create($validatedData);
 
@@ -126,7 +191,9 @@ class FotoVideoController extends Controller
     public function edit(int $id)
     {
         $galeri_foto = GaleriFoto::find($id);
-        return view('dashboard.galeri-foto-video.edit', compact('galeri_foto'));
+        $videoCategories = $this->videoCategories();
+
+        return view('dashboard.galeri-foto-video.edit', compact('galeri_foto', 'videoCategories'));
     }
 
     public function update(Request $request, int $id)
@@ -139,20 +206,60 @@ class FotoVideoController extends Controller
             'type' => 'required|in:image,video,dokumen',
         ];
 
-        $rules['path_image'] = match ($type) {
-            'video' => 'nullable|file|max:51200|mimetypes:video/mp4,video/quicktime,video/x-msvideo,video/webm',
+        if ($type === GaleriFoto::TYPE_VIDEO) {
+            $nextSourceType = $request->input('source_type', $galeri_foto->source_type ?: GaleriFoto::SOURCE_TYPE_UPLOAD);
+            $videoFileRule = $nextSourceType === GaleriFoto::SOURCE_TYPE_UPLOAD && !$galeri_foto->path_image ? 'required' : 'nullable';
+            $rules['category'] = 'required|in:' . implode(',', $this->videoCategories());
+            $rules['source_type'] = 'required|in:' . GaleriFoto::SOURCE_TYPE_UPLOAD . ',' . GaleriFoto::SOURCE_TYPE_YOUTUBE;
+            $rules['path_image'] = $videoFileRule . '|file|max:51200|mimetypes:video/mp4,video/quicktime,video/x-msvideo,video/webm';
+            $rules['source_url'] = 'required_if:source_type,youtube|nullable|url';
+        } else {
+            $rules['path_image'] = match ($type) {
             'dokumen' => 'nullable|file|max:10240|mimes:pdf,doc,docx,xls,xlsx,ppt,pptx',
-            default => 'nullable|image|file|max:1024',
-        };
+                default => 'nullable|image|file|max:12288',
+            };
+        }
 
         $validatedData = $request->validate($rules);
 
-        if ($request->hasFile('path_image')) {
-            $this->deleteFile($galeri_foto->path_image);
-            $validatedData['path_image'] = $this->uploadByType($request, 'path_image', $type);
+        $validatedData['type'] = $type;
+
+        if (!$galeri_foto->slug) {
+            $validatedData['slug'] = $this->makeUniqueSlug($validatedData['title'], $galeri_foto->id);
         }
 
-        $validatedData['type'] = $type;
+        if ($type === GaleriFoto::TYPE_VIDEO) {
+            if (($validatedData['source_type'] ?? null) === GaleriFoto::SOURCE_TYPE_YOUTUBE) {
+                if ($galeri_foto->path_image) {
+                    $this->deleteFile($galeri_foto->path_image);
+                }
+
+                $validatedData['path_image'] = null;
+                $validatedData['source_url'] = $this->extractYoutubeUrl($validatedData['source_url'] ?? null);
+                if (!$validatedData['source_url']) {
+                    return back()->withInput()->withErrors([
+                        'source_url' => 'URL YouTube tidak valid.',
+                    ]);
+                }
+            } else {
+                if ($request->hasFile('path_image')) {
+                    $this->deleteFile($galeri_foto->path_image);
+                    $validatedData['path_image'] = $this->uploadByType($request, 'path_image', $type);
+                }
+
+                $validatedData['source_url'] = null;
+            }
+        } else {
+            if ($request->hasFile('path_image')) {
+                $this->deleteFile($galeri_foto->path_image);
+                $validatedData['path_image'] = $this->uploadByType($request, 'path_image', $type);
+            }
+
+            $validatedData['category'] = null;
+            $validatedData['source_type'] = null;
+            $validatedData['source_url'] = null;
+        }
+
         $galeri_foto->update($validatedData);
 
         return redirect($this->redirect_path . '?tab=' . $this->tabFromType($type))->with('success', 'Data berhasil diupdate!');

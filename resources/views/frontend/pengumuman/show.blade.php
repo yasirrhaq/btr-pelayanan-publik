@@ -9,15 +9,29 @@
             </a>
             <p class="mt-6 text-xs uppercase tracking-[0.3em] text-amber-300 font-semibold">Pengumuman</p>
             <h1 class="mt-3 text-3xl md:text-4xl font-bold max-w-4xl">{{ $pengumuman->judul }}</h1>
-            <p class="mt-3 text-sm text-white/80">Dipublikasikan {{ $pengumuman->created_at->translatedFormat('d F Y') }}</p>
+            <div class="mt-3 flex flex-wrap items-center gap-4 text-sm text-white/80">
+                <span>Dipublikasikan {{ $pengumuman->created_at->translatedFormat('d F Y') }}</span>
+                <span class="inline-flex items-center gap-2">
+                    <i class="far fa-eye text-xs"></i>
+                    {{ number_format($pengumuman->views) }} dilihat
+                </span>
+            </div>
         </div>
     </section>
 
     <section class="bg-gray-50 py-10 px-4" x-data="pengumumanAttachmentPreview()">
         <div class="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-[minmax(0,2fr)_360px] gap-8">
             <article class="bg-white rounded-2xl border border-gray-200 shadow-sm p-6 md:p-8">
+                <img src="{{ $pengumuman->thumbnailUrl() }}" alt="{{ $pengumuman->judul }}" class="mb-6 h-64 w-full rounded-2xl object-cover md:h-80">
+                @php
+                    $hasRichContent = $pengumuman->isi !== strip_tags($pengumuman->isi);
+                @endphp
                 <div class="prose prose-sm md:prose-base max-w-none prose-headings:text-[#354776] prose-a:text-[#354776]">
-                    {!! nl2br(e($pengumuman->isi)) !!}
+                    @if ($hasRichContent)
+                        {!! $pengumuman->isi !!}
+                    @else
+                        {!! nl2br(e($pengumuman->isi)) !!}
+                    @endif
                 </div>
 
                 @if ($pengumuman->lampiran_path)

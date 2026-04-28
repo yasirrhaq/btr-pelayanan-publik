@@ -30,4 +30,9 @@ AGENTS.md
 .cursor*
 # design
 GEMINI.md
+cookies.txt
+test-results/
+storage/audit.sqlite
+graphify-md-corpus/
+tmp/
 nul

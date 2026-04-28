@@ -17,19 +17,22 @@
                     {{ $activeTab === 'foto' ? 'Upload Foto' : ($activeTab === 'video' ? 'Upload Video' : 'Upload Dokumen') }}
                 </a>
                 <div class="spacer"></div>
-                <div class="btr-search">
-                    <input type="text" placeholder="Cari {{ $activeTab }}...">
-                    <button type="button">
+                <form method="get" action="{{ url('dashboard/galeri/foto-video') }}" class="btr-search">
+                    <input type="hidden" name="tab" value="{{ $activeTab }}">
+                    <input type="text" name="search" value="{{ $search ?? '' }}" placeholder="Cari {{ $activeTab }}...">
+                    <button type="submit">
                         <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35"/></svg>
                     </button>
-                </div>
+                </form>
             </div>
 
             <div class="btr-gallery-grid">
             @forelse ($fotoVideo as $items)
                 <div class="btr-gallery-card">
                     <div class="tanggal">Tanggal: {{ optional($items->created_at)->format('d/m/Y') }}</div>
-                    @if ($items->type === 'video')
+                    @if ($items->type === 'video' && $items->isYoutubeVideo())
+                        <img src="{{ $items->youtubeThumbnailUrl() }}" class="thumb" alt="{{ $items->title }}">
+                    @elseif ($items->type === 'video')
                         <div class="thumb" style="display:flex;align-items:center;justify-content:center;background:#0f172a;color:#fff;font-weight:700;">VIDEO</div>
                     @elseif ($items->type === 'dokumen')
                         <div class="thumb" style="display:flex;align-items:center;justify-content:center;background:#EFF6FF;color:#2563EB;font-weight:700;">DOC</div>
@@ -39,7 +42,23 @@
                         <div class="thumb"></div>
                     @endif
                     <div class="judul">{{ $items->title }}</div>
-                    <div class="deskripsi">-</div>
+                    <div class="deskripsi">
+                        @if ($items->type === 'video')
+                            <span style="display:inline-flex;align-items:center;gap:6px;flex-wrap:wrap;">
+                                <span>{{ $items->category ?: 'Tanpa kategori' }}</span>
+                                <span>&bull;</span>
+                                <span>{{ $items->sourceLabel() }}</span>
+                            </span>
+                        @else
+                            -
+                        @endif
+                    </div>
+                    @if ($items->type === 'video')
+                        <div style="display:grid;gap:8px;margin-top:12px;">
+                            <button type="button" class="btr-btn btr-btn-outline" style="padding:10px 14px;font-size:12px;" onclick='navigator.clipboard.writeText(@json($items->embedRoute())).then(function(){ alert("URL embed tersalin"); })'>Copy URL</button>
+                            <button type="button" class="btr-btn" style="padding:10px 14px;font-size:12px;" onclick='navigator.clipboard.writeText(@json($items->copyEmbedCode())).then(function(){ alert("Embed iframe tersalin"); })'>Copy Embed</button>
+                        </div>
+                    @endif
                     <div class="footer">
                         <form action="{{ url('dashboard/galeri/foto-video/' . $items->id) }}" method="post" class="btr-action-form" onsubmit="return confirm('Yakin hapus data?')">
                             @csrf

@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Functions\ImageUpload;
 use App\Models\Pengumuman;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
@@ -28,6 +30,7 @@ class PengumumanController extends Controller
             'judul'       => 'required|string|max:255',
             'isi'         => 'required|string',
             'is_active'   => 'boolean',
+            'thumbnail'   => 'nullable|image|max:12288|mimes:jpg,jpeg,png,webp',
             'lampiran'    => 'nullable|file|max:5120|mimes:pdf,doc,docx,jpg,jpeg,png',
         ]);
 
@@ -40,6 +43,14 @@ class PengumumanController extends Controller
 
         if ($request->hasFile('lampiran')) {
             $data['lampiran_path'] = $request->file('lampiran')->store('pengumuman', 'public');
+        }
+
+        if ($request->hasFile('thumbnail')) {
+            $data['thumbnail_path'] = (new ImageUpload())->storeOptimizedStorageImage(
+                $request->file('thumbnail'),
+                'pengumuman/thumbnails',
+                $validated['judul']
+            );
         }
 
         Pengumuman::create($data);
@@ -59,7 +70,9 @@ class PengumumanController extends Controller
             'judul'     => 'required|string|max:255',
             'isi'       => 'required|string',
             'is_active' => 'boolean',
+            'thumbnail' => 'nullable|image|max:12288|mimes:jpg,jpeg,png,webp',
             'lampiran'  => 'nullable|file|max:5120|mimes:pdf,doc,docx,jpg,jpeg,png',
+            'remove_thumbnail' => 'nullable|boolean',
             'remove_lampiran' => 'nullable|boolean',
         ]);
 
@@ -68,6 +81,26 @@ class PengumumanController extends Controller
             'isi'       => $validated['isi'],
             'is_active' => $request->boolean('is_active', true),
         ];
+
+        if ($request->boolean('remove_thumbnail')) {
+            if ($pengumuman->usesUploadedThumbnail()) {
+                Storage::disk('public')->delete($pengumuman->thumbnail_path);
+            }
+
+            $data['thumbnail_path'] = null;
+        }
+
+        if ($request->hasFile('thumbnail')) {
+            if ($pengumuman->usesUploadedThumbnail()) {
+                Storage::disk('public')->delete($pengumuman->thumbnail_path);
+            }
+
+            $data['thumbnail_path'] = (new ImageUpload())->storeOptimizedStorageImage(
+                $request->file('thumbnail'),
+                'pengumuman/thumbnails',
+                $validated['judul']
+            );
+        }
 
         if ($request->boolean('remove_lampiran') && $pengumuman->lampiran_path) {
             Storage::disk('public')->delete($pengumuman->lampiran_path);
@@ -89,6 +122,10 @@ class PengumumanController extends Controller
 
     public function destroy(Pengumuman $pengumuman)
     {
+        if ($pengumuman->usesUploadedThumbnail()) {
+            Storage::disk('public')->delete($pengumuman->thumbnail_path);
+        }
+
         if ($pengumuman->lampiran_path) {
             Storage::disk('public')->delete($pengumuman->lampiran_path);
         }
@@ -97,5 +134,23 @@ class PengumumanController extends Controller
 
         return redirect()->route('admin.pengumuman.index')
             ->with('success', 'Pengumuman berhasil dihapus.');
+    }
+
+    public function uploadAttachment(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|file|max:12288|mimes:jpg,jpeg,png,gif,webp',
+        ]);
+
+        $path = (new ImageUpload())->storeOptimizedPublicImage(
+            $request->file('file'),
+            'uploads/pengumuman/editor',
+            'pengumuman-editor'
+        );
+
+        return response()->json([
+            'url' => asset($path),
+            'message' => 'Upload berhasil',
+        ]);
     }
 }

@@ -57,8 +57,10 @@ RUN chown -R www-data:www-data storage bootstrap/cache \
     && chmod -R 775 storage bootstrap/cache
 
 # Entrypoint: runs package:discover + storage:link at container start
+COPY docker/app/uploads.ini /usr/local/etc/php/conf.d/uploads.ini
 COPY docker/app/entrypoint.sh /usr/local/bin/entrypoint.sh
-RUN chmod +x /usr/local/bin/entrypoint.sh
+RUN sed -i 's/\r$//' /usr/local/bin/entrypoint.sh \
+    && chmod +x /usr/local/bin/entrypoint.sh
 
 EXPOSE 9000
 
