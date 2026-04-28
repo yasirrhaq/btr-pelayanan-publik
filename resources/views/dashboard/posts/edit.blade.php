@@ -31,6 +31,72 @@
                 border-color: #355caa;
                 box-shadow: 0 0 0 3px rgba(53, 92, 170, 0.12);
             }
+
+            .post-attachment-card {
+                position: relative;
+                display: flex;
+                align-items: center;
+                gap: 14px;
+                max-width: 540px;
+                margin-bottom: 12px;
+                padding: 14px 16px;
+                border: 1px solid #f2dfac;
+                border-radius: 16px;
+                background: linear-gradient(180deg, #fff8e8 0%, #fff3d1 100%);
+            }
+
+            .post-attachment-icon {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                width: 42px;
+                height: 42px;
+                border-radius: 14px;
+                background: #fff;
+                color: #c98700;
+                box-shadow: 0 6px 16px rgba(201, 135, 0, 0.12);
+                flex-shrink: 0;
+            }
+
+            .post-attachment-name {
+                font-weight: 700;
+                color: var(--text-primary);
+                line-height: 1.45;
+                word-break: break-word;
+                padding-right: 40px;
+            }
+
+            .post-attachment-link {
+                display: inline-block;
+                margin-top: 4px;
+                font-size: 12px;
+                font-weight: 700;
+                color: #355caa;
+            }
+
+            .post-attachment-remove {
+                position: absolute;
+                top: 10px;
+                right: 10px;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                width: 30px;
+                height: 30px;
+                border: none;
+                border-radius: 999px;
+                background: rgba(30, 58, 107, 0.08);
+                color: #1e3a6b;
+                font-size: 18px;
+                line-height: 1;
+                cursor: pointer;
+                transition: background-color .2s ease, color .2s ease;
+            }
+
+            .post-attachment-remove:hover {
+                background: rgba(220, 38, 38, 0.12);
+                color: #dc2626;
+            }
         </style>
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jodit@4.6.2/es2021/jodit.min.css" />
         <script src="https://cdn.jsdelivr.net/npm/jodit@4.6.2/es2021/jodit.min.js"></script>
@@ -63,7 +129,7 @@
             </div>
 
             <div class="btr-form-group">
-                <label class="btr-label">Gambar Berita <small style="color:var(--text-muted)">(Max 1MB)</small></label>
+                <label class="btr-label">Gambar Berita <small style="color:var(--text-muted)">(Max 12MB, otomatis dioptimalkan)</small></label>
                 <input type="hidden" name="oldImage" value="{{ $post->image }}">
                 <input type="hidden" id="remove_image" name="remove_image" value="0">
                 @if ($post->image)
@@ -86,6 +152,35 @@
                     </label>
                 </div>
                 @error('image') <small style="color:var(--danger-red)">{{ $message }}</small> @enderror
+            </div>
+
+            <div class="btr-form-group">
+                <label class="btr-label">Lampiran Berita <small style="color:var(--text-muted)">(Opsional, Max 5MB)</small></label>
+                <input type="hidden" id="remove_lampiran" name="remove_lampiran" value="0">
+                <div id="post-lampiran-card" class="post-attachment-card" style="{{ $post->lampiran_path ? '' : 'display:none;' }}">
+                    <span class="post-attachment-icon">
+                        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="18" height="18"><path stroke-linecap="round" stroke-linejoin="round" d="M21.44 11.05l-8.49 8.49a5.5 5.5 0 0 1-7.78-7.78l8.49-8.48a3.5 3.5 0 0 1 4.95 4.95l-8.49 8.49a1.5 1.5 0 0 1-2.12-2.13l7.78-7.77"/></svg>
+                    </span>
+                    <div>
+                        <div class="post-attachment-name">{{ $post->lampiran_path ? basename($post->lampiran_path) : '' }}</div>
+                        @if ($post->lampiran_path)
+                            <a id="post-lampiran-link" href="{{ asset('storage/' . $post->lampiran_path) }}" target="_blank" rel="noopener" class="post-attachment-link">Lihat lampiran saat ini</a>
+                        @else
+                            <a id="post-lampiran-link" href="#" target="_blank" rel="noopener" class="post-attachment-link" style="display:none;">Lihat lampiran saat ini</a>
+                        @endif
+                    </div>
+                    <button type="button" class="post-attachment-remove" onclick="btrClearExistingLampiran()" aria-label="Hapus lampiran">&times;</button>
+                </div>
+                <div class="btr-file-row">
+                    <label class="btr-file-pill">
+                        <span class="btr-file-icon">
+                            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 5v14m7-7H5"/></svg>
+                        </span>
+                        <input type="file" id="lampiran" name="lampiran" accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.jpg,.jpeg,.png">
+                    </label>
+                    <small id="lampiran-file-name" style="color:var(--text-muted);font-weight:600;"></small>
+                </div>
+                @error('lampiran') <small style="color:var(--danger-red)">{{ $message }}</small> @enderror
             </div>
 
             <div class="btr-form-group">
@@ -199,6 +294,31 @@
                 img.src = '';
             }
             if (wrap) wrap.style.display = 'none';
+            if (remove) remove.value = '1';
+        }
+        document.querySelector('#lampiran')?.addEventListener('change', function () {
+            var label = document.querySelector('#lampiran-file-name');
+            var remove = document.querySelector('#remove_lampiran');
+            if (label) {
+                label.textContent = this.files && this.files[0] ? this.files[0].name : '';
+            }
+            if (remove) {
+                remove.value = '0';
+            }
+        });
+        function btrClearExistingLampiran() {
+            var input = document.querySelector('#lampiran');
+            var card = document.querySelector('#post-lampiran-card');
+            var link = document.querySelector('#post-lampiran-link');
+            var remove = document.querySelector('#remove_lampiran');
+            var label = document.querySelector('#lampiran-file-name');
+            if (input) input.value = '';
+            if (card) card.style.display = 'none';
+            if (link) {
+                link.href = '#';
+                link.style.display = 'none';
+            }
+            if (label) label.textContent = '';
             if (remove) remove.value = '1';
         }
     </script>

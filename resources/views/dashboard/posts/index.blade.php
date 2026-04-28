@@ -29,6 +29,7 @@
                         <th style="width:60px">No</th>
                         <th>Judul</th>
                         <th>Kategori</th>
+                        <th>Lampiran</th>
                         <th>Tanggal Kegiatan</th>
                         <th>Status</th>
                         <th style="width:140px">Aksi</th>
@@ -40,6 +41,11 @@
                             <td>{{ $loop->iteration }}</td>
                             <td style="text-align:left">{{ $post->title }}</td>
                             <td>{{ $post->category->name ?? '-' }}</td>
+                            <td>
+                                <span class="btr-status {{ $post->lampiran_path ? 'publish' : 'non-publish' }}">
+                                    {{ $post->lampiran_path ? 'Ada' : 'Kosong' }}
+                                </span>
+                            </td>
                             <td>{{ optional($post->created_at)->format('d/m/Y') }}</td>
                             <td><span class="btr-status publish">Publish</span></td>
                             <td>
@@ -61,7 +67,7 @@
                             </td>
                         </tr>
                     @empty
-                        <tr><td colspan="6" style="color:var(--text-muted);padding:28px">Belum ada berita.</td></tr>
+                        <tr><td colspan="7" style="color:var(--text-muted);padding:28px">Belum ada berita.</td></tr>
                     @endforelse
                 </tbody>
             </table>

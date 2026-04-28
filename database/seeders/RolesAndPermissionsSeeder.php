@@ -15,8 +15,8 @@ class RolesAndPermissionsSeeder extends Seeder
         // --- Permissions ---
         $permissions = [
             // Admin Web
+            'access-dashboard',
             'manage-users',
-            'manage-content',
             'manage-settings',
             'manage-berita',
             'manage-galeri',
@@ -25,6 +25,11 @@ class RolesAndPermissionsSeeder extends Seeder
             'manage-fasilitas',
             'manage-pengumuman',
             'manage-landing-page',
+            'manage-ppid',
+            'manage-renstra',
+            'manage-banner',
+            'manage-tautan',
+            'manage-layanan-info',
             // Admin Layanan
             'view-all-permohonan',
             'manage-permohonan',
@@ -55,45 +60,47 @@ class RolesAndPermissionsSeeder extends Seeder
 
         // Admin Web - Master: full CMS + user management
         Role::firstOrCreate(['name' => 'admin-master'])->syncPermissions([
-            'manage-users', 'manage-content', 'manage-settings',
+            'access-dashboard', 'manage-users', 'manage-settings',
             'manage-berita', 'manage-galeri', 'manage-profil',
             'manage-sdm', 'manage-fasilitas', 'manage-pengumuman',
-            'manage-landing-page', 'view-all-permohonan',
+            'manage-landing-page', 'manage-ppid', 'manage-renstra',
+            'manage-banner', 'manage-tautan', 'manage-layanan-info',
+            'view-all-permohonan',
             'manage-tim', 'manage-format-nomor', 'manage-survei',
         ]);
 
         // Admin Web - Editor: content management only
         Role::firstOrCreate(['name' => 'admin-editor'])->syncPermissions([
-            'manage-berita', 'manage-galeri', 'manage-pengumuman',
+            'access-dashboard', 'manage-berita', 'manage-galeri', 'manage-pengumuman',
         ]);
 
         // Admin Layanan - Master: full service management
         Role::firstOrCreate(['name' => 'admin-layanan-master'])->syncPermissions([
-            'view-all-permohonan', 'manage-permohonan',
+            'access-dashboard', 'view-all-permohonan', 'manage-permohonan',
             'manage-billing', 'manage-dokumen-final',
             'manage-survei', 'manage-tim', 'manage-format-nomor',
         ]);
 
         // Katim: verification + team assignment
         Role::firstOrCreate(['name' => 'katim'])->syncPermissions([
-            'view-all-permohonan', 'verifikasi-permohonan', 'assign-tim',
+            'access-dashboard', 'view-all-permohonan', 'verifikasi-permohonan', 'assign-tim',
             'manage-dokumen-final',
         ]);
 
         // Admin Bidang: billing + notifications + handover
         Role::firstOrCreate(['name' => 'admin-bidang'])->syncPermissions([
-            'view-all-permohonan', 'manage-billing', 'manage-permohonan',
+            'access-dashboard', 'view-all-permohonan', 'manage-billing', 'manage-permohonan',
         ]);
 
         // Technical staff roles
         Role::firstOrCreate(['name' => 'analis'])->syncPermissions([
-            'pelaksanaan-teknis', 'analisis-teknis',
+            'access-dashboard', 'pelaksanaan-teknis', 'analisis-teknis',
         ]);
         Role::firstOrCreate(['name' => 'penyelia'])->syncPermissions([
-            'pelaksanaan-teknis', 'evaluasi-teknis',
+            'access-dashboard', 'pelaksanaan-teknis', 'evaluasi-teknis',
         ]);
         Role::firstOrCreate(['name' => 'teknisi'])->syncPermissions([
-            'pelaksanaan-teknis',
+            'access-dashboard', 'pelaksanaan-teknis',
         ]);
 
         // Pelanggan: self-service portal

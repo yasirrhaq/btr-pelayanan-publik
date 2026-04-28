@@ -22,7 +22,7 @@ class PublicDokumenController extends Controller
             ->values();
 
         $currentPage = LengthAwarePaginator::resolveCurrentPage();
-        $perPage = 12;
+        $perPage = 6;
         $paginated = new LengthAwarePaginator(
             $items->slice(($currentPage - 1) * $perPage, $perPage)->values(),
             $items->count(),
@@ -56,7 +56,7 @@ class PublicDokumenController extends Controller
                     'url' => $url,
                     'filename' => basename($item->lampiran_path),
                     'published_at' => $item->created_at,
-                    'page_url' => route('pengumuman.show', ['pengumuman' => $item->getKey()]),
+                    'page_url' => route('pengumuman.show', $item),
                 ]);
             });
     }
@@ -89,6 +89,20 @@ class PublicDokumenController extends Controller
         $documents = collect();
 
         Post::latest()->get()->each(function (Post $post) use (&$documents) {
+            if ($post->lampiran_path) {
+                $documents->push($this->makeDocumentItem([
+                    'title' => $post->title,
+                    'summary' => Str::limit(strip_tags($post->excerpt ?: $post->body), 140),
+                    'source' => 'Berita',
+                    'url' => asset('storage/' . $post->lampiran_path),
+                    'filename' => basename($post->lampiran_path),
+                    'published_at' => $post->created_at,
+                    'page_url' => url('/berita/' . $post->slug),
+                ]));
+
+                return;
+            }
+
             preg_match_all('/<a[^>]+href=["\']([^"\']+\.(?:pdf|doc|docx|xls|xlsx|ppt|pptx))(?:\?[^"\']*)?["\']/i', $post->body ?? '', $matches);
 
             foreach (($matches[1] ?? []) as $href) {

@@ -156,6 +156,7 @@ Route::group([
     });
 
     Route::get('/posts/checkSlug', [DashboardPostController::class, 'checkSlug'])->middleware('permission:manage-berita');
+    Route::post('/posts/attachment', [DashboardPostController::class, 'uploadAttachment'])->middleware('permission:manage-berita')->name('admin.posts.attachment');
     Route::resource('/posts', DashboardPostController::class)->middleware('permission:manage-berita');
     Route::get('/categories/checkSlug', [AdminCategoryController::class, 'checkSlug'])->middleware('permission:manage-berita');
     Route::resource('/categories', AdminCategoryController::class)->except('show')->middleware('permission:manage-berita');

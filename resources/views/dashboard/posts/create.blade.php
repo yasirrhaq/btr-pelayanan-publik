@@ -62,7 +62,7 @@
             </div>
 
             <div class="btr-form-group">
-                <label class="btr-label">Gambar Berita <small style="color:var(--text-muted)">(Max 1MB)</small></label>
+                <label class="btr-label">Gambar Berita <small style="color:var(--text-muted)">(Max 12MB, otomatis dioptimalkan)</small></label>
                 <div id="post-image-preview-wrap" style="display:none;position:relative;max-width:280px;margin-bottom:10px;">
                     <img class="img-preview" src="" alt="" style="display:block;width:100%;border-radius:10px;border:1px solid var(--border-soft)">
                     <button type="button" onclick="btrClearPostPreview('#image','.img-preview','#post-image-preview-wrap')" style="position:absolute;top:8px;right:8px;width:28px;height:28px;border:none;border-radius:999px;background:rgba(15,23,42,.75);color:#fff;cursor:pointer;font-size:16px;line-height:1;">&times;</button>
@@ -76,6 +76,20 @@
                     </label>
                 </div>
                 @error('image') <small style="color:var(--danger-red)">{{ $message }}</small> @enderror
+            </div>
+
+            <div class="btr-form-group">
+                <label class="btr-label">Lampiran Berita <small style="color:var(--text-muted)">(Opsional, Max 5MB)</small></label>
+                <div class="btr-file-row">
+                    <label class="btr-file-pill">
+                        <span class="btr-file-icon">
+                            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 5v14m7-7H5"/></svg>
+                        </span>
+                        <input type="file" id="lampiran" name="lampiran" accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.jpg,.jpeg,.png">
+                    </label>
+                    <small id="lampiran-file-name" style="color:var(--text-muted);font-weight:600;"></small>
+                </div>
+                @error('lampiran') <small style="color:var(--danger-red)">{{ $message }}</small> @enderror
             </div>
 
             <div class="btr-form-group">
@@ -188,5 +202,11 @@
             }
             if (wrap) wrap.style.display = 'none';
         }
+        document.querySelector('#lampiran')?.addEventListener('change', function () {
+            var label = document.querySelector('#lampiran-file-name');
+            if (label) {
+                label.textContent = this.files && this.files[0] ? this.files[0].name : '';
+            }
+        });
     </script>
 @endsection

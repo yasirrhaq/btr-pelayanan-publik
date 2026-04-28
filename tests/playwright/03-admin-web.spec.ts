@@ -21,10 +21,16 @@ test.describe('Admin Web (CMS)', () => {
     await page.goto('/dashboard/posts/create');
     expect(await hasAppError(page)).toBe(false);
     await expect(page.locator('input[name="title"]')).toBeVisible();
+    await expect(page.locator('input[name="lampiran"]')).toBeVisible();
   });
 
   test('Categories list loads', async ({ page }) => {
     await page.goto('/dashboard/categories');
+    expect(await hasAppError(page)).toBe(false);
+  });
+
+  test('Landing page admin index loads without type query', async ({ page }) => {
+    await page.goto('/dashboard/landing-page');
     expect(await hasAppError(page)).toBe(false);
   });
 
@@ -202,6 +208,13 @@ test.describe('Admin Web (CMS)', () => {
   test('Hak Akses (RBAC) page loads', async ({ page }) => {
     await page.goto('/dashboard/hak-akses');
     expect(await hasAppError(page)).toBe(false);
+  });
+
+  test('Hak Akses create page loads', async ({ page }) => {
+    await page.goto('/dashboard/hak-akses/create');
+    expect(await hasAppError(page)).toBe(false);
+    await expect(page.locator('input[name="name"]')).toBeVisible();
+    await expect(page.locator('input[name="permissions[]"]').first()).toBeVisible();
   });
 
   test('Master Tim list loads', async ({ page }) => {

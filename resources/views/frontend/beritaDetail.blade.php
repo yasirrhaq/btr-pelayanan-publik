@@ -12,16 +12,23 @@
                         <div class="flex flex-wrap items-center gap-3 text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">
                             <span>{{ optional($post->created_at)->format('d M Y') }}</span>
                             <span>&bull;</span>
-                            <span>{{ $post->category->name ?? 'Berita' }}</span>
+                            <span class="inline-flex items-center rounded-full bg-[#FEF3C7] px-3 py-1 text-[11px] font-bold tracking-[0.18em] text-[#354776]">
+                                {{ $post->category->name ?? 'Berita' }}
+                            </span>
                         </div>
                         <h1 class="mt-4 text-3xl font-bold tracking-tight text-[#354776] md:text-5xl">{{ $post->title }}</h1>
                         <div class="mt-8 space-y-5 text-sm leading-8 text-slate-600 md:text-base [&_p]:text-justify [&_img]:rounded-2xl [&_img]:max-w-full">
                             {!! $post->body !!}
                         </div>
-                        <div class="mt-8">
+                        <div class="mt-8 flex flex-wrap items-center gap-3">
                             <a href="{{ url('/berita') }}" class="inline-flex items-center rounded-xl bg-slate-100 px-4 py-2.5 text-sm font-semibold text-[#354776] transition-colors hover:bg-slate-200">
                                 Kembali ke Berita
                             </a>
+                            @if ($post->lampiran_path)
+                                <a href="{{ asset('storage/' . $post->lampiran_path) }}" target="_blank" rel="noopener" class="inline-flex items-center rounded-xl bg-[#ffc425] px-4 py-2.5 text-sm font-semibold text-[#2a3a61] transition-colors hover:bg-[#ffcf47]">
+                                    Lihat Lampiran
+                                </a>
+                            @endif
                         </div>
                     </div>
                 </article>

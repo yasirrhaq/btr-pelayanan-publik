@@ -8,6 +8,9 @@
     };
     $user = auth()->user();
     $isEditor = $user && $user->hasRole('admin-editor');
+    $can = function ($permission) use ($user) {
+        return $user && ($user->hasRole('admin-master') || $user->can($permission));
+    };
 @endphp
 
 <aside class="btr-sidebar">
@@ -19,16 +22,16 @@
     </a>
 
     <ul class="btr-nav">
-        @unless($isEditor)
+        @if(!$isEditor && $can('access-dashboard'))
             <li class="btr-nav-item">
                 <a class="btr-nav-link {{ request()->is('dashboard') ? 'active' : '' }}" href="{{ url('dashboard') }}">
                     <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l9-9 9 9M5 10v10h14V10"/></svg>
                     Dashboard
                 </a>
             </li>
-        @endunless
+        @endif
 
-        @unless($isEditor)
+        @if(!$isEditor && ($can('manage-profil') || $can('manage-sdm') || $can('manage-fasilitas')))
             <li class="btr-nav-item">
                 <button class="btr-nav-parent {{ $group(['dashboard/profil-singkat*','dashboard/info-pegawai*','dashboard/struktur-organisasi*','dashboard/fasilitas-balai*']) }}">
                     <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 0 20M12 2a15.3 15.3 0 0 0 0 20"/></svg>
@@ -36,16 +39,16 @@
                     <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
                 </button>
                 <ul class="btr-nav-children {{ $group(['dashboard/profil-singkat*','dashboard/info-pegawai*','dashboard/struktur-organisasi*','dashboard/fasilitas-balai*']) }}">
-                    <li><a class="btr-nav-link {{ $is('dashboard/profil-singkat*') }}" href="{{ url('dashboard/profil-singkat') }}">Identitas</a></li>
-                    <li><a class="btr-nav-link {{ $is('dashboard/struktur-organisasi*') }}" href="{{ url('dashboard/struktur-organisasi') }}">Struktur Organisasi</a></li>
-                    <li><a class="btr-nav-link {{ $is('dashboard/info-pegawai*') }}" href="{{ url('dashboard/info-pegawai') }}">Informasi Pegawai</a></li>
-                    <li><a class="btr-nav-link {{ $is('dashboard/fasilitas-balai*') }}" href="{{ url('dashboard/fasilitas-balai') }}">Fasilitas</a></li>
+                    @if($can('manage-profil'))<li><a class="btr-nav-link {{ $is('dashboard/profil-singkat*') }}" href="{{ url('dashboard/profil-singkat') }}">Identitas</a></li>@endif
+                    @if($can('manage-sdm'))<li><a class="btr-nav-link {{ $is('dashboard/struktur-organisasi*') }}" href="{{ url('dashboard/struktur-organisasi') }}">Struktur Organisasi</a></li>@endif
+                    @if($can('manage-sdm'))<li><a class="btr-nav-link {{ $is('dashboard/info-pegawai*') }}" href="{{ url('dashboard/info-pegawai') }}">Informasi Pegawai</a></li>@endif
+                    @if($can('manage-fasilitas'))<li><a class="btr-nav-link {{ $is('dashboard/fasilitas-balai*') }}" href="{{ url('dashboard/fasilitas-balai') }}">Fasilitas</a></li>@endif
                 </ul>
             </li>
-        @endunless
+        @endif
 
         {{-- Layanan --}}
-        @unless($isEditor)
+        @if(!$isEditor && $can('manage-layanan-info'))
             <li class="btr-nav-item">
                 <button class="btr-nav-parent {{ $group(['dashboard/url-layanan*','dashboard/status-layanan*','dashboard/foto-layanan*']) }}">
                     <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2M9 5a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2M9 5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2"/></svg>
@@ -58,9 +61,10 @@
                     <li><a class="btr-nav-link {{ $is('dashboard/status-layanan*') }}" href="{{ url('dashboard/status-layanan') }}">Tracking Layanan</a></li>
                 </ul>
             </li>
-        @endunless
+        @endif
 
         {{-- Publikasi --}}
+        @if($can('manage-banner') || $can('manage-berita') || $can('manage-galeri') || $can('manage-pengumuman') || $can('manage-renstra') || $can('manage-ppid'))
         <li class="btr-nav-item">
             <button class="btr-nav-parent {{ $group(['dashboard/foto-home*','dashboard/posts*','dashboard/categories*','dashboard/galeri*','dashboard/renstra*','dashboard/karya-ilmiah*','dashboard/pengumuman*','dashboard/ppid*']) }}">
                 <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2M9 5a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2M9 5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2"/></svg>
@@ -68,27 +72,28 @@
                 <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
             </button>
             <ul class="btr-nav-children {{ $group(['dashboard/foto-home*','dashboard/posts*','dashboard/categories*','dashboard/galeri*','dashboard/renstra*','dashboard/karya-ilmiah*','dashboard/pengumuman*','dashboard/ppid*']) }}">
-                <li><a class="btr-nav-link {{ $is('dashboard/foto-home*') }}" href="{{ url('dashboard/foto-home') }}">Banner</a></li>
-                <li><a class="btr-nav-link {{ $is('dashboard/posts*') || request()->is('dashboard/categories*') ? 'active' : '' }}" href="{{ url('dashboard/posts') }}">Berita</a></li>
-                <li><a class="btr-nav-link {{ $is('dashboard/galeri*') }}" href="{{ url('dashboard/galeri/foto-video') }}">Galeri</a></li>
-                <li><a class="btr-nav-link {{ $is('dashboard/pengumuman*') }}" href="{{ route('admin.pengumuman.index') }}">Pengumuman</a></li>
-                <li><a class="btr-nav-link {{ request()->is('dashboard/renstra*') || request()->is('dashboard/karya-ilmiah*') ? 'active' : '' }}" href="{{ url('dashboard/renstra') }}">Renstra</a></li>
-                <li><a class="btr-nav-link {{ $is('dashboard/ppid*') }}" href="{{ route('admin.ppid.index') }}">PPID</a></li>
+                @if($can('manage-banner'))<li><a class="btr-nav-link {{ $is('dashboard/foto-home*') }}" href="{{ url('dashboard/foto-home') }}">Banner</a></li>@endif
+                @if($can('manage-berita'))<li><a class="btr-nav-link {{ $is('dashboard/posts*') || request()->is('dashboard/categories*') ? 'active' : '' }}" href="{{ url('dashboard/posts') }}">Berita</a></li>@endif
+                @if($can('manage-galeri'))<li><a class="btr-nav-link {{ $is('dashboard/galeri*') }}" href="{{ url('dashboard/galeri/foto-video') }}">Galeri</a></li>@endif
+                @if($can('manage-pengumuman'))<li><a class="btr-nav-link {{ $is('dashboard/pengumuman*') }}" href="{{ route('admin.pengumuman.index') }}">Pengumuman</a></li>@endif
+                @if($can('manage-renstra'))<li><a class="btr-nav-link {{ request()->is('dashboard/renstra*') || request()->is('dashboard/karya-ilmiah*') ? 'active' : '' }}" href="{{ url('dashboard/renstra') }}">Renstra</a></li>@endif
+                @if($can('manage-ppid'))<li><a class="btr-nav-link {{ $is('dashboard/ppid*') }}" href="{{ route('admin.ppid.index') }}">PPID</a></li>@endif
             </ul>
         </li>
+        @endif
 
         {{-- Tautan --}}
-        @unless($isEditor)
+        @if(!$isEditor && $can('manage-tautan'))
             <li class="btr-nav-item">
                 <a class="btr-nav-link {{ $is('dashboard/situs-terkait*') }}" href="{{ url('dashboard/situs-terkait') }}">
                     <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.828 10.172a4 4 0 0 0-5.656 0l-4 4a4 4 0 1 0 5.656 5.656l1.102-1.101"/><path stroke-linecap="round" stroke-linejoin="round" d="M10.172 13.828a4 4 0 0 0 5.656 0l4-4a4 4 0 1 0-5.656-5.656l-1.1 1.1"/></svg>
                     Tautan
                 </a>
             </li>
-        @endunless
+        @endif
 
         {{-- Pengaturan --}}
-        @unless($isEditor)
+        @if(!$isEditor && ($can('manage-users') || $can('manage-tim') || $can('manage-survei') || $can('manage-settings')))
             <li class="btr-nav-item">
                 <button class="btr-nav-parent {{ $group(['dashboard/footer-setting*','dashboard/settings*','dashboard/landing-page*','dashboard/hak-akses*','dashboard/master-tim*','dashboard/master-survei*']) }}">
                     <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
@@ -96,13 +101,13 @@
                     <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
                 </button>
                 <ul class="btr-nav-children {{ $group(['dashboard/footer-setting*','dashboard/settings*','dashboard/landing-page*','dashboard/hak-akses*','dashboard/master-tim*','dashboard/master-survei*']) }}">
-                    <li><a class="btr-nav-link {{ $is('dashboard/hak-akses*') }}" href="{{ route('admin.hak-akses.index') }}">Hak Akses</a></li>
-                    <li><a class="btr-nav-link {{ $is('dashboard/master-tim*') }}" href="{{ route('admin.master-tim.index') }}">Master Tim</a></li>
-                    <li><a class="btr-nav-link {{ $is('dashboard/master-survei*') }}" href="{{ route('admin.master-survei.index') }}">Master Survei</a></li>
-                    <li><a class="btr-nav-link {{ $is('dashboard/footer-setting*') || request()->is('dashboard/settings*') ? 'active' : '' }}" href="{{ url('dashboard/footer-setting') }}">Sistem</a></li>
+                    @if($can('manage-users'))<li><a class="btr-nav-link {{ $is('dashboard/hak-akses*') }}" href="{{ route('admin.hak-akses.index') }}">Hak Akses</a></li>@endif
+                    @if($can('manage-tim'))<li><a class="btr-nav-link {{ $is('dashboard/master-tim*') }}" href="{{ route('admin.master-tim.index') }}">Master Tim</a></li>@endif
+                    @if($can('manage-survei'))<li><a class="btr-nav-link {{ $is('dashboard/master-survei*') }}" href="{{ route('admin.master-survei.index') }}">Master Survei</a></li>@endif
+                    @if($can('manage-settings'))<li><a class="btr-nav-link {{ $is('dashboard/footer-setting*') || request()->is('dashboard/settings*') ? 'active' : '' }}" href="{{ url('dashboard/footer-setting') }}">Sistem</a></li>@endif
                 </ul>
             </li>
-        @endunless
+        @endif
     </ul>
 
     <div class="btr-logout">

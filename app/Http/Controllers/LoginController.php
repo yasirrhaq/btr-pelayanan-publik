@@ -54,10 +54,21 @@ class LoginController extends Controller
             'password' => $validatedData['password'],
         ];
 
-        if (Auth::attempt($credentials) && Auth::user()->is_verified == 1) {
+        if (!Auth::attempt($credentials)) {
+            return back()->with('loginError', 'Login failed!');
+        }
+
+        if ((int) Auth::user()->is_active !== 1) {
+            Auth::logout();
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+            return back()->with('loginError', 'Akun Anda sedang tidak aktif.');
+        }
+
+        if (Auth::user()->is_verified == 1) {
             $request->session()->regenerate();
             return redirect()->intended($this->redirectPathFor(Auth::user()));
-        } else if (Auth::attempt($credentials) && Auth::user()->is_verified == 0) {
+        } else if (Auth::user()->is_verified == 0) {
             return redirect()->intended('verify-email');
         }
 

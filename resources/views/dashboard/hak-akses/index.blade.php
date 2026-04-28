@@ -4,7 +4,12 @@
     <h1 class="btr-page-title">Manajemen Hak Akses</h1>
 
     <div class="btr-card" style="padding:16px 24px;">
-        <form method="GET" action="{{ route('admin.hak-akses.index') }}" style="display:flex; gap:12px; align-items:center; flex-wrap:wrap;">
+        <div style="display:flex; gap:12px; align-items:center; flex-wrap:wrap;">
+            <a href="{{ route('admin.hak-akses.create') }}" class="btr-btn">
+                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
+                Buat Akun Admin
+            </a>
+            <form method="GET" action="{{ route('admin.hak-akses.index') }}" style="display:flex; gap:12px; align-items:center; flex-wrap:wrap; flex:1;">
             <select name="role" class="btr-select" style="width:auto; min-width:180px;">
                 <option value="">Semua Role</option>
                 @foreach($roles as $role)
@@ -17,7 +22,8 @@
                     <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path stroke-linecap="round" d="m21 21-4.35-4.35"/></svg>
                 </button>
             </div>
-        </form>
+            </form>
+        </div>
     </div>
 
     <div class="btr-card">
@@ -28,7 +34,9 @@
                         <th>Nama</th>
                         <th>Email</th>
                         <th>Role</th>
+                        <th>Modul</th>
                         <th>Admin</th>
+                        <th>Status</th>
                         <th>Terdaftar</th>
                         <th>Aksi</th>
                     </tr>
@@ -47,10 +55,26 @@
                                 @endif
                             </td>
                             <td>
+                                @if($user->permissions->isNotEmpty())
+                                    <span style="display:inline-block; padding:2px 10px; border-radius:999px; font-size:11px; font-weight:600; background:#FEF3C7; color:#92400E; margin:2px;">
+                                        {{ $user->permissions->count() }} modul
+                                    </span>
+                                @else
+                                    <span style="color:var(--text-muted); font-size:12px;">-</span>
+                                @endif
+                            </td>
+                            <td>
                                 @if($user->is_admin)
                                     <span style="color:var(--success-green); font-weight:600;">Ya</span>
                                 @else
                                     <span style="color:var(--text-muted);">Tidak</span>
+                                @endif
+                            </td>
+                            <td>
+                                @if($user->is_active)
+                                    <span style="display:inline-block; padding:2px 10px; border-radius:999px; font-size:11px; font-weight:600; background:#DCFCE7; color:#166534; margin:2px;">Aktif</span>
+                                @else
+                                    <span style="display:inline-block; padding:2px 10px; border-radius:999px; font-size:11px; font-weight:600; background:#FEE2E2; color:#991B1B; margin:2px;">Nonaktif</span>
                                 @endif
                             </td>
                             <td>{{ $user->created_at->format('d/m/Y') }}</td>
@@ -61,7 +85,7 @@
                             </td>
                         </tr>
                     @empty
-                        <tr><td colspan="6" style="color:var(--text-muted);">Tidak ada user ditemukan.</td></tr>
+                        <tr><td colspan="8" style="color:var(--text-muted);">Tidak ada user ditemukan.</td></tr>
                     @endforelse
                 </tbody>
             </table>
