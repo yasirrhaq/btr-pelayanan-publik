@@ -1,7 +1,7 @@
 # Admin Layanan Role Audit
 
 Audit basis:
-- Spec: `.docs/ROLE_ACCESS.md`
+- Spec: `docs/architecture/ROLE_ACCESS.md`
 - Actual UI: headless Playwright run on 2026-04-23
 - Seed/code source: `database/seeders/UsersSeeder.php`, `database/seeders/RolesAndPermissionsSeeder.php`, `resources/views/dashboard/layanan/layouts/sidebar.blade.php`, `routes/web.php`, `app/Http/Middleware/CheckRole.php`
 

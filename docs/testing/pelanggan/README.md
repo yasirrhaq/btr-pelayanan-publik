@@ -1,7 +1,7 @@
 # Pelanggan Role Audit
 
 Audit basis:
-- Spec: `.docs/ROLE_ACCESS.md`
+- Spec: `docs/architecture/ROLE_ACCESS.md`
 - Actual UI: headless Playwright run on 2026-04-23
 - Seed/code source: `database/seeders/UsersSeeder.php`, `resources/views/pelanggan/layouts/sidebar.blade.php`, `resources/views/pelanggan/layouts/header.blade.php`, `routes/web.php`
 

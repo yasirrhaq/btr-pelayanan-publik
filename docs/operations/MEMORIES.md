@@ -1,5 +1,54 @@
 # Session Memory — BTR Pelayanan Publik
-> Last updated: 2026-04-13
+> Last updated: 2026-04-28
+
+## Current State Snapshot
+
+- `main` includes the recent media/public/admin fixes through commit `6e2cf52`
+- Docker stack is healthy:
+  - `btr_app` healthy
+  - `btr_db` healthy
+  - `btr_nginx` up
+- PPID public detail no longer returns blank body
+- Hak Akses / RBAC admin path is browser-verified
+- berita create/edit now support `lampiran` and the missing `admin.posts.attachment` route is fixed
+- `/foto` is now an aggregated gallery with search, category filter, pagination, and same-page lightbox
+- `/video` is now a managed gallery with upload + YouTube sources and stable `/video/embed/{slug}` embeds for Jodit reuse
+
+## 2026-04-28 Follow-up Work
+
+### Media and public content
+- `pengumuman` now uses:
+  - slug public URLs
+  - title-only search
+  - custom pagination
+  - dedicated thumbnail image
+  - real `views` counter
+  - Jodit editor with image upload
+- `foto` now aggregates:
+  - admin gallery photos
+  - berita featured images
+  - embedded `<img>` from berita body
+  - pengumuman thumbnails
+  - embedded `<img>` from pengumuman content
+- `video` now supports:
+  - local upload source
+  - YouTube source
+  - category filter
+  - managed embed route `/video/embed/{slug}`
+  - admin `Copy URL` and `Copy Embed`
+
+### Public/admin stability fixes
+- `PublicPpidController` now returns normal Blade responses again instead of pre-rendered string responses
+- `resources/views/frontend/ppid/show.blade.php` now uses `$currentSection` to avoid the direct-route blank-body issue
+- Playwright admin bypass uses seeded admin `id=1`, not `id=2`
+- `DashboardPostController` attachment uploader route is registered as `admin.posts.attachment`
+- `LandingPageController` constructor now guards requests without `type`, so `/dashboard/landing-page` no longer breaks
+- `TranslateResponse` now returns the original response if translation output collapses to empty content
+
+### Commits pushed on 2026-04-28
+- `61d1ca3` `fix: restore ppid public and admin checks`
+- `c576c8c` `feat: refresh cms editors and profile flows`
+- `6e2cf52` `chore: harden startup and public responses`
 
 ## What This Session Did
 
@@ -133,7 +182,7 @@ The previous session (before context compaction) built:
 - `public/css/pelanggan.css` — full design system CSS for customer portal
 - Controllers: HakAksesController, MasterTimController, MasterSurveiController, PengumumanController
 
-See `.docs/IMPLEMENTATION_TRACKER.md` for complete feature status.
+See `docs/operations/IMPLEMENTATION_TRACKER.md` for complete feature status.
 
 ---
 

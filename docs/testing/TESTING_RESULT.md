@@ -1,5 +1,5 @@
 # Playwright Testing Results — BTR Pelayanan Publik
-> Last updated: 2026-04-13
+> Last updated: 2026-04-28
 > Run command: `npx playwright test --reporter=list`
 > Base URL: `http://localhost:8080`
 > Browser: Chromium (headless)
@@ -18,6 +18,34 @@
 | Total duration | ~15.7 minutes |
 
 **Result: ALL 64 TESTS PASS** (3 required 1 retry due to server-side timing)
+
+---
+
+## Recent Targeted Verification — 2026-04-28
+
+The full-suite report above is still historically valid for the 2026-04-13 baseline. After the later media/RBAC/PPID work, focused smoke checks were rerun against the changed areas instead of another full-suite pass.
+
+### Focused Playwright checks that passed
+
+- public:
+  - `/dokumen`
+  - `/ppid`
+  - `/ppid/kebijakan-ppid`
+  - `/login`
+- admin web:
+  - `/dashboard/posts/create`
+  - `/dashboard/hak-akses`
+  - `/dashboard/hak-akses/create`
+  - `/dashboard/ppid`
+  - `/dashboard/landing-page`
+
+### Related fixes validated by those checks
+
+- fixed PPID direct-detail blank-body regression
+- fixed Playwright admin bypass to use the actual seeded `admin-master` account
+- fixed missing route `admin.posts.attachment` used by berita Jodit/lampiran views
+- confirmed Hak Akses create/edit/list flow renders under the new permission model
+- confirmed landing-page admin index works without `?type=...`
 
 ---
 

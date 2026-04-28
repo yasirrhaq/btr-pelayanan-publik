@@ -32,6 +32,14 @@ php artisan storage:link
 npm run build
 ```
 
+## Struktur Dokumentasi
+
+- `docs/plans/` untuk design doc dan rencana implementasi.
+- `docs/implementation/` untuk ringkasan fitur yang sudah dibangun.
+- `docs/testing/` untuk hasil QA, audit, dan bukti pengujian.
+- `docs/architecture/` untuk referensi struktur sistem, role, dan overview teknis.
+- `docs/operations/` untuk workflow internal repo, tracker, memory, dan handoff session.
+
 ## Lisensi
 
 Hak cipta © Balai Teknik Rawa. Seluruh hak dilindungi.

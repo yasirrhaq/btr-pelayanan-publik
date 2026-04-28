@@ -1,6 +1,6 @@
 # Implementation Tracker — BTR Pelayanan Publik
 
-> Last updated: 2026-04-23
+> Last updated: 2026-04-28
 
 ## Legend
 
@@ -19,9 +19,9 @@
 | Beranda + Banner | :white_check_mark: | Tailwind redesign, carousel, stats widget |
 | Widget Statistik Real-time (Antri/Proses/Selesai) | :white_check_mark: | HomeController passes statsLayanan |
 | Profil Instansi (Visi Misi, Sejarah, Tugas, Struktur, Fasilitas) | :white_check_mark: | Public shell unified; Visi/Misi/Tugas cleaned up; Sejarah split layout with image; Struktur and Info Pegawai simplified |
-| Portal Berita & Publikasi | :white_check_mark: | Posts + categories + slugs + redesigned `/berita` and `berita/{slug}` with local image fallback, server-side filtering, and real `lampiran_path` support surfaced on public detail and `/dokumen` |
+| Portal Berita & Publikasi | :white_check_mark: | Posts + categories + slugs + redesigned `/berita` and `berita/{slug}` with local image fallback, server-side filtering, Jodit image uploads, and real `lampiran_path` support surfaced on public detail and `/dokumen` |
 | Renstra / Publikasi Strategis | :white_check_mark: | Public `/renstra` and `/renstra/{slug}` are live; legacy `karya-ilmiah` URLs remain as compatibility redirects |
-| Galeri Foto & Video | :white_check_mark: | Separate pages |
+| Galeri Foto & Video | :white_check_mark: | `/foto` now aggregates admin gallery images plus berita/pengumuman-rich images with filter/search/pagination/lightbox; `/video` supports managed upload + YouTube sources, category/search/pagination, and stable embed routes for Jodit reuse |
 | Footer (Kontak, Lokasi, Links) | :white_check_mark: | FooterSetting model + admin CRUD |
 | Pencarian Global | :white_check_mark: | Search form in navbar |
 | Tanya Kaura (chatbot/floating button) | :white_check_mark: | Floating widget |
@@ -64,9 +64,9 @@
 | Manajemen Fasilitas | :white_check_mark: | Full CRUD |
 | Manajemen Struktur Organisasi | :white_check_mark: | Full CRUD |
 | Manajemen Banner / Foto Home | :white_check_mark: | Edit + update |
-| Manajemen Berita | :white_check_mark: | Full CRUD with slugs + Jodit editor on create/edit |
-| Manajemen Galeri Foto/Video | :white_check_mark: | Full CRUD |
-| Manajemen Pengumuman | :white_check_mark: | PengumumanController — full CRUD with lampiran file upload |
+| Manajemen Berita | :white_check_mark: | Full CRUD with slugs + Jodit editor on create/edit + `lampiran` upload + editor attachment upload route |
+| Manajemen Galeri Foto/Video | :white_check_mark: | Full CRUD with managed video source model (`upload` / `youtube`), stable slugged embeds, category assignment, and copyable URL/embed snippets |
+| Manajemen Pengumuman | :white_check_mark: | PengumumanController — full CRUD with slug URLs, search/pagination, thumbnail + views, Jodit editor, and lampiran file upload |
 | Manajemen PPID (4 kategori informasi) | :white_check_mark: | Tabbed PPID admin page with Jodit editor, upload handling, and landing-page-backed content |
 | Manajemen Dokumen Layanan (Standar/Maklumat PDF) | :construction: | Uses LandingPage model, no dedicated upload center |
 | Manajemen Renstra | :white_check_mark: | Repurposed Karya Ilmiah as Renstra in sidebar |
@@ -122,7 +122,9 @@
 | **Captcha (Login + Register)** | :white_check_mark: | mews/captcha flat style |
 | **Rate Limiting (Auth routes)** | :white_check_mark: | throttle:10,1 and 5,1 |
 | **CSRF Protection** | :white_check_mark: | Standard Laravel |
-| **Multi-language** | :white_check_mark: | TranslateResponse middleware |
+| **Multi-language** | :white_check_mark: | TranslateResponse middleware with blank-body guard for public pages |
+
+| **Image Optimization** | :white_check_mark: | Public image uploads now accept larger raw files, auto-resize/compress server-side, and preserve web-friendly output for berita/pengumuman/gallery flows |
 
 ---
 

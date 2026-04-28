@@ -4,7 +4,7 @@ Date:
 - 2026-04-23
 
 Spec source:
-- `.docs/ROLE_ACCESS.md`
+- `docs/architecture/ROLE_ACCESS.md`
 
 Expected by spec:
 - Full access to all admin web menus and features.

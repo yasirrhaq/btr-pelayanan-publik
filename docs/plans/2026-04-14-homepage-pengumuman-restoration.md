@@ -45,7 +45,7 @@
 
 **Files:**
 - Modify: `BUG_LIST.md`
-- Modify: `.docs/CRUD_AUDIT_REPORT.md`
+- Modify: `docs/testing/CRUD_AUDIT_REPORT.md`
 
 **Step 1:** Run the relevant Playwright public page test file.
 

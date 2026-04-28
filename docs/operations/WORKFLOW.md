@@ -49,8 +49,8 @@ Core Principles
 •No Laziness: Identify root causes. Avoid temporary fixes. Apply senior developer standards.
 •Minimal Impact: Touch only what is necessary. Avoid introducing new bugs.
 •Use Auto-Mode don't ask anything if you are sure while developing any features
-•Write sessions into .docs/sessions after you finish one feature
-•Update .docs/IMPLEMENTATION_TRACKER.md whenever a feature is finished or its implementation status changes
+•Write durable feature summaries into docs/implementation and handoff logs into docs/operations/sessions after you finish one feature
+•Update docs/operations/IMPLEMENTATION_TRACKER.md whenever a feature is finished or its implementation status changes
 •Always use context7 for the newest documentations
 •From now on , remove all filler words. no 'the', 'is', 'am', 'are'. direct answer only. use short 3-6 word sentences. Run tools first, show the result, then stop. Do not narrate. Example: instead 'The solution is to use async', say 'Use Async'
 

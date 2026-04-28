@@ -31,7 +31,7 @@
 - Use tools early.
 - Verify before calling work done.
 - Prefer minimal-impact fixes.
-- Write session reports to `.docs/sessions`.
+- Write durable feature summaries to `docs/implementation/` and handoff logs to `docs/operations/sessions/`.
 
 ## Project-Specific Working Rules
 
@@ -60,8 +60,8 @@
 ## Docs Rules
 
 - Update related `.md` docs after substantial feature or workflow changes.
-- Record completed work in `.docs/sessions`.
-- Always update `.docs/IMPLEMENTATION_TRACKER.md` when a feature is finished or an existing feature's implementation status or behavior changes.
+- Record completed work in `docs/implementation/` or `docs/operations/sessions/` based on whether it is durable documentation or a handoff log.
+- Always update `docs/operations/IMPLEMENTATION_TRACKER.md` when a feature is finished or an existing feature's implementation status or behavior changes.
 - Keep implementation tracker and bug list aligned with real code before closing work.
 
 ## UI Rules
@@ -104,7 +104,7 @@ Use this as the starting project rule prompt for new repos:
 ## Docs Defaults
 
 - Keep `RULES.md` short and high-signal.
-- Store longer decisions, plans, and session logs in `docs/` or `.docs/`.
+- Store all non-code project knowledge under `docs/`, using subfolders by purpose.
 - Update docs only when behavior, workflow, or architecture actually changes.
 ```
 - Do not make an update that could break everything we have code!

@@ -16,7 +16,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Workflow Defaults
 
-Primary workflow reference: `.docs/WORKFLOW.md`.
+Primary workflow reference: `docs/operations/WORKFLOW.md`.
 
 - Plan first for any non-trivial task; re-plan quickly if execution diverges.
 - Use subagents/tools aggressively for research, exploration, and parallel analysis to keep main context clean.
@@ -24,8 +24,8 @@ Primary workflow reference: `.docs/WORKFLOW.md`.
 - Prefer elegant, minimal-impact fixes over patchy quick wins.
 - Handle bug fixing autonomously when enough context is available.
 - Track work in `tasks/todo.md`, capture review notes there, and record recurring corrections in `tasks/lessons.md`.
-- Update `.docs/IMPLEMENTATION_TRACKER.md` whenever a feature is finished or an existing feature's implementation status changes.
-- Write completed feature sessions to `.docs/sessions`.
+- Update `docs/operations/IMPLEMENTATION_TRACKER.md` whenever a feature is finished or an existing feature's implementation status changes.
+- Write completed feature summaries to `docs/implementation/` and session handoffs to `docs/operations/sessions/`.
 - Prefer current external docs through Context7 when latest documentation matters.
 
 ## Common Commands

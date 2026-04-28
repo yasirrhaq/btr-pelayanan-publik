@@ -14,7 +14,7 @@
 
 **Files:**
 - Create: `BUG_LIST.md`
-- Modify: `.docs/CRUD_AUDIT_REPORT.md`
+- Modify: `docs/testing/CRUD_AUDIT_REPORT.md`
 
 **Step 1:** List confirmed runtime bugs from Playwright and prior audits.
 
@@ -75,9 +75,9 @@
 ### Task 6: Run verification and refresh docs
 
 **Files:**
-- Modify: `.docs/CRUD_AUDIT_REPORT.md`
-- Modify: `.docs/UI_UX_AUDIT_REPORT.md`
-- Modify: `.docs/SECURITY_AUDIT_REPORT.md`
+- Modify: `docs/testing/CRUD_AUDIT_REPORT.md`
+- Modify: `docs/testing/UI_UX_AUDIT_REPORT.md`
+- Modify: `docs/testing/SECURITY_AUDIT_REPORT.md`
 - Modify: `BUG_LIST.md`
 
 **Step 1:** Run `npx playwright test --reporter=list`.
