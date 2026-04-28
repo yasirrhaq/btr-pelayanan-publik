@@ -38,6 +38,47 @@ test.describe('Admin Web (CMS)', () => {
     expect(await hasAppError(page)).toBe(false);
   });
 
+  test('Galeri video supports YouTube source and managed embed route', async ({ page }) => {
+    const stamp = Date.now();
+    const title = `Video Playwright ${stamp}`;
+    const youtubeUrl = 'https://www.youtube.com/watch?v=dQw4w9WgXcQ';
+
+    await page.goto('/dashboard/galeri/foto-video/create?tab=video');
+    expect(await hasAppError(page)).toBe(false);
+
+    await page.locator('input[name="title"]').fill(title);
+    await page.locator('select[name="category"]').selectOption('Publikasi');
+    await page.locator('select[name="source_type"]').selectOption('youtube');
+    await page.locator('input[name="source_url"]').fill(youtubeUrl);
+    await page.getByRole('button', { name: 'Simpan' }).click();
+
+    await expect(page.locator('body')).toContainText('Berhasil menambahkan Data');
+    const card = page.locator('.btr-gallery-card', { hasText: title }).first();
+    await expect(card).toBeVisible();
+    await expect(card).toContainText('Publikasi');
+    await expect(card).toContainText('YouTube');
+
+    await card.locator('a[title="Lihat"]').click();
+    await expect(page.locator('body')).toContainText('Copy Embed');
+
+    const embedRoute = await page.locator('text=/\\/video\\/embed\\//').first().textContent();
+    expect(embedRoute).toBeTruthy();
+
+    await page.goto('/video?search=' + encodeURIComponent(title));
+    expect(await hasAppError(page)).toBe(false);
+    await expect(page.locator('body')).toContainText(title);
+
+    await page.goto((embedRoute || '').trim());
+    expect(await hasAppError(page)).toBe(false);
+    await expect(page.locator('iframe, video')).toBeVisible();
+
+    await page.goto('/dashboard/galeri/foto-video?tab=video&search=' + encodeURIComponent(title));
+    const deleteCard = page.locator('.btr-gallery-card', { hasText: title }).first();
+    page.once('dialog', dialog => dialog.accept());
+    await deleteCard.locator('button[title="Hapus"]').click();
+    await expect(page.locator('body')).toContainText('Data berhasil dihapus!');
+  });
+
   test('Karya Ilmiah (Renstra) list loads', async ({ page }) => {
     await page.goto('/dashboard/karya-ilmiah');
     expect(await hasAppError(page)).toBe(false);
@@ -117,7 +158,7 @@ test.describe('Admin Web (CMS)', () => {
     await page.goto('/dashboard/pengumuman/create');
     expect(await hasAppError(page)).toBe(false);
     await expect(page.locator('input[name="judul"]')).toBeVisible();
-    await expect(page.locator('textarea[name="isi"]')).toBeVisible();
+    await expect(page.locator('.jodit-wysiwyg').first()).toBeVisible();
   });
 
   test('Pengumuman create and delete flow works', async ({ page }) => {
@@ -128,7 +169,24 @@ test.describe('Admin Web (CMS)', () => {
     expect(await hasAppError(page)).toBe(false);
 
     await page.locator('input[name="judul"]').fill(title);
-    await page.locator('textarea[name="isi"]').fill('Pengumuman uji otomatis untuk verifikasi CRUD.');
+    await page.evaluate((html) => {
+      const textarea = document.querySelector('#isi') as HTMLTextAreaElement | null;
+      const wysiwyg = document.querySelector('.jodit-wysiwyg') as HTMLElement | null;
+      const instances = (window as unknown as { Jodit?: { instances?: Record<string, { value: string }> } }).Jodit?.instances ?? {};
+      const instance = Object.values(instances)[0];
+
+      if (instance) {
+        instance.value = html;
+      }
+
+      if (wysiwyg) {
+        wysiwyg.innerHTML = html;
+      }
+
+      if (textarea) {
+        textarea.value = html;
+      }
+    }, '<p>Pengumuman uji otomatis untuk verifikasi CRUD.</p>');
     await page.getByRole('button', { name: 'Simpan' }).click();
 
     await expect(page.locator('body')).toContainText('Pengumuman berhasil dibuat.');

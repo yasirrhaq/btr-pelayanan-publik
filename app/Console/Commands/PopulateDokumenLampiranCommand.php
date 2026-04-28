@@ -6,8 +6,6 @@ use App\Models\Pengumuman;
 use App\Models\Post;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
 
 class PopulateDokumenLampiranCommand extends Command
 {
@@ -27,7 +25,7 @@ class PopulateDokumenLampiranCommand extends Command
 
         $lampiranPath = $this->ensurePengumumanLampiranFile($sourcePath);
         $pengumumanUpdated = $this->populatePengumuman($lampiranPath);
-        $beritaUpdated = $this->populateBerita();
+        $beritaUpdated = $this->populateBerita($lampiranPath);
 
         $this->info("Pengumuman updated: {$pengumumanUpdated}");
         $this->info("Berita updated: {$beritaUpdated}");
@@ -71,25 +69,20 @@ class PopulateDokumenLampiranCommand extends Command
         return $updated;
     }
 
-    protected function populateBerita(): int
+    protected function populateBerita(string $lampiranPath): int
     {
         $updated = 0;
-        $relativeHref = '/assets/sample-dokumen.pdf';
 
         Post::latest()
             ->take(3)
             ->get()
-            ->each(function (Post $post) use ($relativeHref, &$updated) {
-                $body = $post->body ?? '';
-
-                if (Str::contains($body, 'sample-dokumen.pdf')) {
+            ->each(function (Post $post) use ($lampiranPath, &$updated) {
+                if ($post->lampiran_path) {
                     return;
                 }
 
-                $body .= '<p><a href="' . e($relativeHref) . '" target="_blank" rel="noopener">Unduh lampiran pendukung</a></p>';
-
                 $post->update([
-                    'body' => $body,
+                    'lampiran_path' => $lampiranPath,
                 ]);
 
                 $updated++;

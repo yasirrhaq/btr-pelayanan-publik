@@ -10,6 +10,7 @@ storage/framework/cache/*
 storage/framework/sessions/*
 storage/framework/views/*
 public/build
+public/storage
 docker/nginx
 docker-compose*.yml
 Dockerfile
